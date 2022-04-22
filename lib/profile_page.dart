@@ -108,14 +108,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             IconButton(
               icon: Icon(Icons.refresh),
-              onPressed: () async {
-                User? user = await FireAuth?.refreshUser(_currentUser!);
-                if (user != null) {
-                  setState(() {
-                    _currentUser = user;
-                  });
-                }
-              },
+              onPressed: () {
+                refreshUser();
+              }
             ),
             ElevatedButton(
                 onPressed: () async {
@@ -169,6 +164,10 @@ class _ProfilePageState extends State<ProfilePage> {
         _currentUser!.updatePhotoURL(value);
       });
     });
+    refreshUser();
+  }
+
+  Future refreshUser() async {
     User? user = await FireAuth?.refreshUser(_currentUser!);
     if (user != null) {
       setState(() {
