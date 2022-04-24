@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'fire_auth.dart';
+import '../fire_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'login_page.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
+import 'news_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -123,7 +124,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 },
                 child: Text('Sign out')
-            )
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => MyHomePage(title: 'LOL'),
+                    ),
+                  );
+                },
+                child: Text('Home page')
+            ),
             // Add widgets for verifying email
             // and, signing out the user
           ],
@@ -166,6 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
     refreshUser();
   }
+
 
   Future refreshUser() async {
     User? user = await FireAuth?.refreshUser(_currentUser!);

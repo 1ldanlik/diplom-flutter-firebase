@@ -1,8 +1,8 @@
-import 'validator.dart';
+import '../validator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'fire_auth.dart';
+import '../fire_auth.dart';
 import 'profile_page.dart';
 import 'register_page.dart';
 
