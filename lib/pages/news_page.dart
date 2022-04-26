@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io' as io;
+
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final CollectionReference _mainCollection = _firestore.collection('notes');
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -20,10 +24,11 @@ class _MyHomePageState extends State<MyHomePage> {
   String botName = '';
   var msgId = 0;
   String _image = 'https://upload.wikimedia.org/wikipedia/ru/7/7c/%D0%A2%D0%B0%D1%87%D0%BA%D0%B8_%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80.jpg';
-
   final _formKey = GlobalKey<FormState>();
+  static String? userUid;
   TextEditingController _controller = TextEditingController();
-  List<Map<String, Map<String, String>>> _msgs = [];
+  List<Map<String, String>> _msgs = [];
+  List<Map<int, String>> _imgs = [];
 
   final telegramApiKey = '5319164055:AAH44FhYObq6qHBr4_D_DVezT9kmk2cBvx0';
 
@@ -63,8 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Container(
-              height: 100,
-              width: 100,
+              height: 50,
+              width: 50,
               child: Image.network(
                   _image,
                   fit: BoxFit.cover),
@@ -81,11 +86,18 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Container(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                '${_msgs.isNotEmpty ? _msgs[index] : ''}',
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.normal),
+                              child: Column(
+                                children: [
+                                  // Container(
+                                  //   child: Image.network(),
+                                  // ),
+                                  Text(
+                                    '${_msgs.isNotEmpty ? _msgs[index] : ''}',
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                ],
                               ),
                             ),
                             decoration: BoxDecoration(
@@ -96,9 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     );
                   }),
-            ),
-            SizedBox(
-              height: 20.0,
             ),
             Form(
                 key: _formKey,
@@ -156,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .listen((message) {
         msgId = message.chat.id;
         setState(() {
-        _msgs.add({message.chat.username.toString(): {message.text! : message.photo.toString()}});
+        _msgs.add({message.chat.username.toString(): message.text!});
         });
         print('+++++++++++' + message.text!);
         print('-----------' + message.photo.toString());
@@ -168,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // message.reply('${message.from.first_name} say ${message.text}');
       msgId = message.chat.id;
       setState(() {
-        _msgs.add({message.chat.username.toString(): {message.text! : message.photo.toString()}});
+        _msgs.add({message.chat.username.toString(): message.text!});
       });
       print('+++++++++++' + message.text!);
       print('-----------' + message.photo.toString());
@@ -197,13 +206,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // print('_IIIIImage' + _image.toString());
           final tFileLink = tFile.getDownloadLink(telegramApiKey);
+          addItem(title: '', description: tFileLink.toString()).then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'));
           print('???????tFileLink' + tFileLink.toString() + '??????????');
           final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
           print('???????request' + request.toString() + '??????????');
           final response = await request.close();
           print('???????response' + response.toString() + '??????????');
           setState(() {
-            _image = tFileLink.toString();
+
           });
 
           final dir =
@@ -258,7 +268,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
     final response = await request.close();
     await response.pipe(io.File(path).openWrite()) as io.File;
-    print('АХУЕТЬ');
   }
 
 
@@ -276,7 +285,7 @@ class _MyHomePageState extends State<MyHomePage> {
   botSendMessage(String msg) {
     teleDart!.telegram.sendMessage(msgId, msg);
     setState(() {
-      _msgs.add({botName: {msg : ''}});
+      _msgs.add({botName: msg});
     });
   }
 
@@ -285,4 +294,23 @@ class _MyHomePageState extends State<MyHomePage> {
     teleDart!.stop();
     super.dispose();
   }
+
+  static Future<void> addItem({
+    required String title,
+    required String description,
+  }) async {
+    DocumentReference documentReferencer =
+    _mainCollection.doc(userUid).collection('items').doc();
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "title": title,
+      "description": description,
+    };
+
+    await documentReferencer
+        .set(data)
+        .whenComplete(() => print("Заметка добавлена в базу"))
+        .catchError((e) => print(e));
+  }
+
 }
