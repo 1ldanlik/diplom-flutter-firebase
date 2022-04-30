@@ -3,7 +3,10 @@ import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:test_diplom_first/widgets/telegram_list.dart';
 import 'dart:io' as io;
+
+import '../utils/database.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection = _firestore.collection('notes');
@@ -29,8 +32,8 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _controller = TextEditingController();
   List<Map<String, String>> _msgs = [];
   List<Map<int, String>> _imgs = [];
-
   final telegramApiKey = '5319164055:AAH44FhYObq6qHBr4_D_DVezT9kmk2cBvx0';
+  static String? title = 'null';
 
   @override
   void initState() {
@@ -76,38 +79,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               height: MediaQuery.of(context).size.height / 1.5,
-              child: ListView.builder(
-                  itemCount: _msgs.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Row(
-                      mainAxisAlignment: _getAligment(index),
-                      children: [
-                        Flexible(
-                          child: Container(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  // Container(
-                                  //   child: Image.network(),
-                                  // ),
-                                  Text(
-                                    '${_msgs.isNotEmpty ? _msgs[index] : ''}',
-                                    style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                                color: Colors.indigo,
-                                borderRadius: BorderRadius.circular(20.0)),
-                          ),
-                        )
-                      ],
-                    );
-                  }),
+              child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left:16.0,
+                  right:16.0,
+                  bottom:20.0,
+                ),
+                child: ItemList(),
+              ),
+              ),
             ),
             Form(
                 key: _formKey,
@@ -153,24 +134,24 @@ class _MyHomePageState extends State<MyHomePage> {
     teleDart = TeleDart(telegram, event);
     teleDart!.start();
 
-    teleDart!
-        .onMessage(entityType: 'bot_command', keyword: 'start')
-        .listen((message) {
-      msgId = message.chat.id;
-      teleDart!.telegram.sendMessage(msgId, 'Hello I am Flutter bot');
-    });
-
-    teleDart!
-        .onMessage(entityType: 'bot_command', keyword: 'dart')
-        .listen((message) {
-        msgId = message.chat.id;
-        setState(() {
-        _msgs.add({message.chat.username.toString(): message.text!});
-        });
-        print('+++++++++++' + message.text!);
-        print('-----------' + message.photo.toString());
-        print(_msgs);
-    });
+    // teleDart!
+    //     .onMessage(entityType: 'bot_command', keyword: 'start')
+    //     .listen((message) {
+    //   msgId = message.chat.id;
+    //   teleDart!.telegram.sendMessage(msgId, 'Hello I am Flutter bot');
+    // });
+    //
+    // teleDart!
+    //     .onMessage(entityType: 'bot_command', keyword: 'dart')
+    //     .listen((message) {
+    //   msgId = message.chat.id;
+    //   setState(() {
+    //     _msgs.add({message.chat.username.toString(): message.text!});
+    //   });
+    //   print('+++++++++++' + message.text!);
+    //   print('-----------' + message.photo.toString());
+    //   print(_msgs);
+    // });
 
 
     teleDart!.onMessage().listen((message) {
@@ -184,20 +165,20 @@ class _MyHomePageState extends State<MyHomePage> {
       print(_msgs);
     });
 
-    teleDart!.onMessage(keyword: 'Load images').listen((message) async {
-
-      // ask user to select one photo
-      teleDart!.telegram.sendMessage(message.chat.id, 'choose one');
+    // teleDart!.onMessage(keyword: 'Load images').listen((message) async {
+    //
+    //   // ask user to select one photo
+    //   teleDart!.telegram.sendMessage(message.chat.id, 'choose one');
 
       // subscribe to user input
       final subscription = teleDart!.onMessage().listen((_) {});
 
       // listen subscription
       subscription.onData((data) async {
-
+        teleDart!.telegram.getChat(data.message_id);
         // if user upload photo do the following
         if (data.photo != null) {
-          print('|||||||||||||||||||||||||||||||||||||||||||||||||||||||||----' + data.photo.toString() + '&&&&&&&&&&&&&&&&' );
+          print('|||||||||||||||||||||||||||||||||||||||||||||||||||||||||----' + data.text.toString() + '-----&&&&&&&&&&&&&&&&' );
           // create the dicrectory on the host
           final tPhoto = data.photo!.last;
           print('???????tPhoto' + tPhoto.toString() + '??????????');
@@ -206,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // print('_IIIIImage' + _image.toString());
           final tFileLink = tFile.getDownloadLink(telegramApiKey);
-          addItem(title: '', description: tFileLink.toString()).then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'));
+          Database.addItem(title: data.caption.toString(), description: tFileLink.toString()).then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'+ data.caption.toString()));
           print('???????tFileLink' + tFileLink.toString() + '??????????');
           final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
           print('???????request' + request.toString() + '??????????');
@@ -215,24 +196,19 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
 
           });
+          //
+          // final dir =
+          // await io.Directory('/var/upload/${message.chat.id}').create();
+          // print('/var/upload/${message.chat.id}, -------${message.photo.toString()}-----');
 
-          final dir =
-          await io.Directory('/var/upload/${message.chat.id}').create();
-          print('/var/upload/${message.chat.id}, -------${message.photo.toString()}-----');
-
-          // download photo to the directory
-
-          downloadPhoto(
-            '${dir.path}/img.png',
-            telegramApiKey,
-            data,
-            teleDart!,
-          ).then((value) =>
-              teleDart!.telegram.sendMessage(data.chat.id, 'image loaded'));
         }
       });
-    });
+    // });
+    // teleDart!.onMessage(keyword: 'lol').listen((message) {
+    //   print('--------MESAGETEXT----------' + message.text.toString() + '------');
+    //   teleDart!.telegram.sendMessage(message.chat.id, 'image deleted' + message.caption.toString());
 
+    // });
     // execute this if user hit 'Delete images' button
     teleDart!.onMessage(keyword: 'Delete images').listen((message) {
       // delete folder and image in it
@@ -272,14 +248,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 // teleDart!.fetcher.onUpdate().listen((event) {
-    //   msgId = event.message!.chat.id;
-    //   setState(() {
-    //     _msgs.add({event.message!.chat.username.toString(): {event.message!.text! : event.message!.photo.toString()}});
-    //   });
-    //   print('+++++++++++' + event.message!.text!);
-    //   print('-----------' + event.message!.photo.toString());
-    //   print(_msgs);
-    // });
+  //   msgId = event.message!.chat.id;
+  //   setState(() {
+  //     _msgs.add({event.message!.chat.username.toString(): {event.message!.text! : event.message!.photo.toString()}});
+  //   });
+  //   print('+++++++++++' + event.message!.text!);
+  //   print('-----------' + event.message!.photo.toString());
+  //   print(_msgs);
+  //   print(_msgs);
+  // });
 
 
   botSendMessage(String msg) {
@@ -294,23 +271,4 @@ class _MyHomePageState extends State<MyHomePage> {
     teleDart!.stop();
     super.dispose();
   }
-
-  static Future<void> addItem({
-    required String title,
-    required String description,
-  }) async {
-    DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('items').doc();
-
-    Map<String, dynamic> data = <String, dynamic>{
-      "title": title,
-      "description": description,
-    };
-
-    await documentReferencer
-        .set(data)
-        .whenComplete(() => print("Заметка добавлена в базу"))
-        .catchError((e) => print(e));
-  }
-
 }

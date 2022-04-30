@@ -1,8 +1,9 @@
-import '../validator.dart';
+import '../utils/validator.dart';
+import '../utils/database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../fire_auth.dart';
+import '../utils/fire_auth.dart';
 import 'profile_page.dart';
 import 'register_page.dart';
 
@@ -61,6 +62,7 @@ class LoginPage extends StatelessWidget {
                               password: _passwordTextController.text,
                             );
                             if (user != null) {
+                              Database.userUid = '1234';
                               Navigator.of(context)
                                   .pushReplacement(
                                 MaterialPageRoute(builder: (context) => ProfilePage(user: user)),

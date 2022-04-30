@@ -1,9 +1,9 @@
 import 'dart:io';
-
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../fire_auth.dart';
+import '../utils/fire_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'login_page.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -54,26 +54,53 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: uploadFile,
               child: Text('Upload'),
             ),
-            Container(
-              height: 100,
-              width: 100,
-              child: Image.network(
-                  _currentUser!.photoURL.toString(),
-                  fit: BoxFit.cover),
-            ),
-            Text(
-              'NAME: ${_currentUser!.photoURL}',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyText1,
-            ),
+            // Container(
+            //   height: 100,
+            //   width: 100,
+               ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: ClipRRect(
+                child: Image.network(
+                    _currentUser!.photoURL.toString(),
+                    fit: BoxFit.cover,
+                  height: 100,
+                  width: 100,
+                ),
+                ),
+
+                ),
+            // ),
+            // Text(
+            //   'NAME: ${_currentUser!.photoURL}',
+            //   style: Theme
+            //       .of(context)
+            //       .textTheme
+            //       .bodyText1,
+            // ),
             Text(
               'NAME: ${_currentUser!.displayName}',
               style: Theme
                   .of(context)
                   .textTheme
                   .bodyText1,
+            ),
+            TextButton(onPressed: () {
+                DatePicker.showDatePicker(context,
+                showTitleActions: true,
+                minTime: DateTime(1920, 1, 1),
+                maxTime: DateTime(2004, 12, 31), onChanged: (date) {
+                print('change $date');
+                }, onConfirm: (date) {
+                  setState(() {
+
+                  });
+                print('confirm $date');
+                }, currentTime: DateTime.now(), locale: LocaleType.en);
+            },
+            child: Text(
+              'show date time picker',
+              style: TextStyle(color: Colors.blue),
+              ),
             ),
             SizedBox(height: 16.0),
             Text(
@@ -129,7 +156,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => MyHomePage(title: 'LOL'),
+                      builder: (context) =>
+                          MyHomePage(title: 'LOL'),
+                      // DashboardScreen()
                     ),
                   );
                 },
