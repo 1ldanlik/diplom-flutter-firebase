@@ -187,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // print('_IIIIImage' + _image.toString());
           final tFileLink = tFile.getDownloadLink(telegramApiKey);
-          Database.addItem(title: data.caption.toString(), description: tFileLink.toString()).then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'+ data.caption.toString()));
+          Database.addItem(title: data.caption.toString(), description: tFileLink.toString(), date: Timestamp.fromDate(data.date_)).then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'+ data.caption.toString()));
           print('???????tFileLink' + tFileLink.toString() + '??????????');
           final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
           print('???????request' + request.toString() + '??????????');

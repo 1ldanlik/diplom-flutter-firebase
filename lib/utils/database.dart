@@ -1,20 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:test_diplom_first/pages/profile_page.dart';
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection = _firestore.collection('notes');
 
 class Database {
+  static String? commonId;
   static String? userUid;
 
   static Future<void> addItem({
     required String title,
     required String description,
+    required Timestamp date
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('items').doc();
+    _mainCollection.doc(commonId).collection('items').doc();
 
     Map<String, dynamic> data = <String, dynamic>{
       "title": title,
       "description": description,
+      "date": date
     };
 
     await documentReferencer
@@ -29,7 +33,7 @@ class Database {
     required String subdivision,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('userSubdivisionData').doc();
+    _mainCollection.doc(commonId).collection('userSubdivisionData').doc(userUid);
 
     Map<String, dynamic> data = <String, dynamic>{
       "subdivision": subdivision,
@@ -42,14 +46,17 @@ class Database {
     // data.clear();
   }
   static Future<void> addUserDateOfBirth({
-    required String dateOfBirth,
+    required Timestamp dateOfBirth,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('userDateOfBirthData').doc();
+    _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(userUid);
 
-    Map<String, dynamic> data = <String, dynamic>{
+    Map<String, Timestamp> data = <String, Timestamp>{
       "dateOfBirth": dateOfBirth,
     };
+
+
+    print(data.toString() + 'loooooooooooool');
 
     await documentReferencer
         .set(data)
@@ -63,7 +70,7 @@ class Database {
     required String docId,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('userSubdivisionData').doc(docId);
+    _mainCollection.doc(commonId).collection('userSubdivisionData').doc(userUid);
 
     Map<String, dynamic> data = <String, dynamic>{
 
@@ -81,7 +88,7 @@ class Database {
     required String docId,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('items').doc(docId);
+    _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(userUid);
 
     Map<String, dynamic> data = <String, dynamic>{
 
@@ -101,12 +108,11 @@ class Database {
     required String docId,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('items').doc(docId);
+    _mainCollection.doc(commonId).collection('items').doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
-
       "description": description,
-      "title": title,
+        "title": title,
     };
 
     await documentReferencer
@@ -116,18 +122,35 @@ class Database {
   }
 
   static Stream<QuerySnapshot> readItems() {
-    CollectionReference notesItemCollection =
-    _mainCollection.doc(userUid).collection('items');
+    Query notesItemCollection =
+    _mainCollection.doc(commonId).collection('items').orderBy("date");
 
     print('11111111111111111111111111111111111111' + notesItemCollection.snapshots.toString());
     return notesItemCollection.snapshots();
+  }
+  // static Stream<DocumentSnapshot> readDateOfBirthday(String? userId) {
+  //   DocumentReference notesItemCollection =
+  //   _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(userId);
+  //
+  //   print('11111111111111111111111111111111111111' + notesItemCollection.snapshots.toString());
+  //   return notesItemCollection.snapshots();
+  // }
+  static Future<DateTime> readDateOfBirthday(String? userID) async{
+    var notesItemCollection =
+    _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(userID);
+    var lol = await notesItemCollection.get();
+    Map<String, dynamic>? data = lol.data();
+    Timestamp kruto = data!['dateOfBirth'];
+    ProfilePage.dateBirth = kruto.toDate();
+    print('11111111111111111111111111111111111111' + kruto.toString());
+    return kruto.toDate();
   }
 
   static Future<void> deleteItem({
     required String docId,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(userUid).collection('items').doc(docId);
+    _mainCollection.doc(commonId).collection('items').doc(docId);
 
     await documentReferencer
         .delete()

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
+import 'package:intl/intl.dart';
 
 import '../utils/database.dart';
 
@@ -24,6 +25,8 @@ class ItemList extends StatelessWidget {
               print(noteInfo.toString() + 'ppppppppppppppppppppppppppppppppp');
               String title = noteInfo['title'];
               String description = noteInfo['description'];
+              Timestamp date = noteInfo['date'];
+              String date2 = DateFormat("yyyy-MM-dd - kk:mm").format(date.toDate());
 
               return Ink(
                 decoration: BoxDecoration(
@@ -45,6 +48,11 @@ class ItemList extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
+                      Text(date2,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500
+                      )),
                       SizedBox(height: 20),
                       ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
@@ -65,27 +73,6 @@ class ItemList extends StatelessWidget {
                     ],
                   ),
                 ),
-                // ListTile(
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(8.0),
-                //   ),
-                //   title: Text(
-                //     title,
-                //     maxLines: 1,
-                //     overflow: TextOverflow.ellipsis,
-                //   ),
-                //   subtitle:
-                //   // Text(
-                //   //   description,
-                //   //   maxLines: 1,
-                //   //   overflow: TextOverflow.ellipsis,
-                //   // ),
-                //   Container(
-                //     child: Image.network(description),
-                //     height: 50,
-                //     width: 50,
-                //   )
-                // ),
               );
             },
           );

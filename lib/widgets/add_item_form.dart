@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../utils/database.dart';
 import '../utils/validator.dart';
@@ -123,6 +124,7 @@ class _AddItemFormState extends State<AddItemForm> {
                   await Database.addItem(
                     title: _titleController.text,
                     description: _descriptionController.text,
+                    date: Timestamp.fromDate(DateTime.now())
                   );
 
                   setState(() {

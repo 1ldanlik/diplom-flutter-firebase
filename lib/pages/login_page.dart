@@ -1,3 +1,5 @@
+import 'package:test_diplom_first/pages/news_page.dart';
+
 import '../utils/validator.dart';
 import '../utils/database.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -62,7 +64,7 @@ class LoginPage extends StatelessWidget {
                               password: _passwordTextController.text,
                             );
                             if (user != null) {
-                              Database.userUid = '1234';
+                              Database.commonId = '1234';
                               Navigator.of(context)
                                   .pushReplacement(
                                 MaterialPageRoute(builder: (context) => ProfilePage(user: user)),

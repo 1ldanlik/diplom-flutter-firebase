@@ -1,18 +1,23 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:test_diplom_first/widgets/birthday_list.dart';
 import '../utils/fire_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'login_page.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
 import 'news_page.dart';
+import '../utils/database.dart';
+import '../widgets/birthday_list.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
   const ProfilePage({required this.user});
+  static DateTime? dateBirth;
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -24,14 +29,27 @@ class _ProfilePageState extends State<ProfilePage> {
   late User? _currentUser;
   firebase_storage.Reference? ref;
   final picker = ImagePicker();
-
+  // Map<String, dynamic> _dateOfBirth = Database.readDateOfBirthday(_currentUser!.uid).data;
+  // String? _dateOfBirth;
   // List<File> _image = [];
   late  File _image;
+  late Future<DateTime> time;
+  late DateTime? dateTime;
 
 
   @override
   void initState() {
     _currentUser = widget.user;
+    BirthdayList.userId = _currentUser!.uid.toString();
+      Database.readDateOfBirthday(_currentUser!.uid).then((value) =>
+          method()
+      );
+    setState(()  {
+      dateTime = ProfilePage.dateBirth;
+    });
+
+    // print('[[[[[[[[[[[[[[[[[[[[[' + Database.readDateOfBirthday(_currentUser!.uid).toString());
+    // print('[[[[[[[[[[[[[[[[[[[[[' + dateTime.toString());
     super.initState();
   }
 
@@ -54,6 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: uploadFile,
               child: Text('Upload'),
             ),
+            Text(_currentUser!.uid),
             // Container(
             //   height: 100,
             //   width: 100,
@@ -70,13 +89,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 ),
             // ),
-            // Text(
-            //   'NAME: ${_currentUser!.photoURL}',
-            //   style: Theme
-            //       .of(context)
-            //       .textTheme
-            //       .bodyText1,
-            // ),
+            Text(
+              dateTime.toString(),
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyText1,
+            ),
             Text(
               'NAME: ${_currentUser!.displayName}',
               style: Theme
@@ -84,24 +103,75 @@ class _ProfilePageState extends State<ProfilePage> {
                   .textTheme
                   .bodyText1,
             ),
-            TextButton(onPressed: () {
-                DatePicker.showDatePicker(context,
-                showTitleActions: true,
-                minTime: DateTime(1920, 1, 1),
-                maxTime: DateTime(2004, 12, 31), onChanged: (date) {
-                print('change $date');
-                }, onConfirm: (date) {
-                  setState(() {
+            // Text(Database.readDateOfBirthday().where((event) => event == _currentUser!.uid)).toString()),
+            // Container(
+            //   height: MediaQuery.of(context).size.height / 1.5,
+            //   child: SafeArea(
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(
+            //         left:16.0,
+            //         right:16.0,
+            //         bottom:20.0,
+            //       ),
+            //       child: BirthdayList(),
+            //     ),
+            //   ),
+            // ),
+            // Text(_dateOfBirth.toString(),
+            //   style: TextStyle(
+            //       fontSize: 18,
+            //       fontWeight: FontWeight.w500
+            //   ),),
+            // Container(
+            //   child: _dateOfBirth != null ? TextButton(onPressed: () {
+            //     DatePicker.showDatePicker(context,
+            //         showTitleActions: true,
+            //         minTime: DateTime(1920, 1, 1),
+            //         maxTime: DateTime(2004, 12, 31), onChanged: (date) {
+            //           print('change $date');
+            //         }, onConfirm: (date) {
+            //           // Database.userUid = _currentUser!.uid;
+            //           Database.addUserDateOfBirth(dateOfBirth: Timestamp.fromDate(date));
+            //           setState(() {
+            //             // _dateOfBirth = date.toString();
+            //           });
+            //           print('confirm $date');
+            //         }, currentTime: DateTime.now(), locale: LocaleType.en);
+            //   },
+            //     child: Text(
+            //       'show date time picker',
+            //       style: TextStyle(color: Colors.blue),
+            //     ),
+            //   ) : Row(
+            //     children: [
+            //       Text(_dateOfBirth.toString(),
+            //       style: TextStyle(
+            //           fontSize: 18,
+            //           fontWeight: FontWeight.w500
+            //       ),),
+            //       TextButton(onPressed: () {
+            //         DatePicker.showDatePicker(context,
+            //             showTitleActions: true,
+            //             minTime: DateTime(1920, 1, 1),
+            //             maxTime: DateTime(2004, 12, 31), onChanged: (date) {
+            //               print('change $date');
+            //             }, onConfirm: (date) {
+            //               Database.updateUserDateOfBirth(dateOfBirth: date.toString(), docId: _currentUser!.uid);
+            //               setState(() {
+            //                 // _dateOfBirth = date.toString();
+            //               });
+            //               print('confirm $date');
+            //             }, currentTime: DateTime.now(), locale: LocaleType.en);
+            //       },
+            //         child: Text(
+            //           'show date time picker',
+            //           style: TextStyle(color: Colors.blue),
+            //         ),
+            //       )
+            //     ],
+            //   )
+            // ),
 
-                  });
-                print('confirm $date');
-                }, currentTime: DateTime.now(), locale: LocaleType.en);
-            },
-            child: Text(
-              'show date time picker',
-              style: TextStyle(color: Colors.blue),
-              ),
-            ),
             SizedBox(height: 16.0),
             Text(
               'EMAIL: ${_currentUser!.email}',
@@ -216,4 +286,19 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+
+  // timeMethod() async{
+  //     var time2 = await Database.readDateOfBirthday(_currentUser!.uid);
+  //     setState(() {
+  //       dateTime = time2;
+  //     });
+  // }
+  method() {
+    setState(() {
+      dateTime = ProfilePage.dateBirth;
+      print(ProfilePage.dateBirth.toString() + 'oooooooooooo');
+    });
+  }
+
+
 }
