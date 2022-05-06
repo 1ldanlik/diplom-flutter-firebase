@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:test_diplom_first/widgets/birthday_list.dart';
+import 'package:intl/intl.dart';
+import 'package:test_diplom_first/utils/jira_auth.dart';
 import '../utils/fire_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'login_page.dart';
@@ -11,7 +13,8 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
 import 'news_page.dart';
 import '../utils/database.dart';
-import '../widgets/birthday_list.dart';
+import '../utils/jira_auth.dart';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -34,31 +37,25 @@ class _ProfilePageState extends State<ProfilePage> {
   // List<File> _image = [];
   late  File _image;
   late Future<DateTime> time;
-  late DateTime? dateTime;
+  late DateTime? dateTime = null;
 
 
   @override
   void initState() {
     _currentUser = widget.user;
-    BirthdayList.userId = _currentUser!.uid.toString();
-      Database.readDateOfBirthday(_currentUser!.uid).then((value) =>
-          method()
-      );
+    main();
+    Database.readDateOfBirthday(_currentUser!.uid).then((value) =>
+        method()
+    );
     setState(()  {
-      dateTime = ProfilePage.dateBirth;
-    });
 
-    // print('[[[[[[[[[[[[[[[[[[[[[' + Database.readDateOfBirthday(_currentUser!.uid).toString());
-    // print('[[[[[[[[[[[[[[[[[[[[[' + dateTime.toString());
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -76,18 +73,18 @@ class _ProfilePageState extends State<ProfilePage> {
             // Container(
             //   height: 100,
             //   width: 100,
-               ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: ClipRRect(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: ClipRRect(
                 child: Image.network(
-                    _currentUser!.photoURL.toString(),
-                    fit: BoxFit.cover,
+                  _currentUser!.photoURL.toString(),
+                  fit: BoxFit.cover,
                   height: 100,
                   width: 100,
                 ),
-                ),
+              ),
 
-                ),
+            ),
             // ),
             Text(
               dateTime.toString(),
@@ -103,74 +100,52 @@ class _ProfilePageState extends State<ProfilePage> {
                   .textTheme
                   .bodyText1,
             ),
-            // Text(Database.readDateOfBirthday().where((event) => event == _currentUser!.uid)).toString()),
-            // Container(
-            //   height: MediaQuery.of(context).size.height / 1.5,
-            //   child: SafeArea(
-            //     child: Padding(
-            //       padding: const EdgeInsets.only(
-            //         left:16.0,
-            //         right:16.0,
-            //         bottom:20.0,
-            //       ),
-            //       child: BirthdayList(),
-            //     ),
-            //   ),
-            // ),
-            // Text(_dateOfBirth.toString(),
-            //   style: TextStyle(
-            //       fontSize: 18,
-            //       fontWeight: FontWeight.w500
-            //   ),),
-            // Container(
-            //   child: _dateOfBirth != null ? TextButton(onPressed: () {
-            //     DatePicker.showDatePicker(context,
-            //         showTitleActions: true,
-            //         minTime: DateTime(1920, 1, 1),
-            //         maxTime: DateTime(2004, 12, 31), onChanged: (date) {
-            //           print('change $date');
-            //         }, onConfirm: (date) {
-            //           // Database.userUid = _currentUser!.uid;
-            //           Database.addUserDateOfBirth(dateOfBirth: Timestamp.fromDate(date));
-            //           setState(() {
-            //             // _dateOfBirth = date.toString();
-            //           });
-            //           print('confirm $date');
-            //         }, currentTime: DateTime.now(), locale: LocaleType.en);
-            //   },
-            //     child: Text(
-            //       'show date time picker',
-            //       style: TextStyle(color: Colors.blue),
-            //     ),
-            //   ) : Row(
-            //     children: [
-            //       Text(_dateOfBirth.toString(),
-            //       style: TextStyle(
-            //           fontSize: 18,
-            //           fontWeight: FontWeight.w500
-            //       ),),
-            //       TextButton(onPressed: () {
-            //         DatePicker.showDatePicker(context,
-            //             showTitleActions: true,
-            //             minTime: DateTime(1920, 1, 1),
-            //             maxTime: DateTime(2004, 12, 31), onChanged: (date) {
-            //               print('change $date');
-            //             }, onConfirm: (date) {
-            //               Database.updateUserDateOfBirth(dateOfBirth: date.toString(), docId: _currentUser!.uid);
-            //               setState(() {
-            //                 // _dateOfBirth = date.toString();
-            //               });
-            //               print('confirm $date');
-            //             }, currentTime: DateTime.now(), locale: LocaleType.en);
-            //       },
-            //         child: Text(
-            //           'show date time picker',
-            //           style: TextStyle(color: Colors.blue),
-            //         ),
-            //       )
-            //     ],
-            //   )
-            // ),
+            Container(
+                child: dateTime == null ? TextButton(onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime(1920, 1, 1),
+                      maxTime: DateTime(2004, 12, 31), onChanged: (date) {
+                        print('change $date');
+                      }, onConfirm: (date) {
+                        Database.userUid = _currentUser!.uid;
+                        Database.addUserDateOfBirth(dateOfBirth: Timestamp.fromDate(date));
+                        setState(() {
+                          dateTime = date;
+                        });
+                        print('confirm $date');
+                      }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                  child: Text(
+                    'Add date time picker',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ) : Row(
+                  children: [
+                    Text(DateFormat('yyyy-MM-dd').format(dateTime!),
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500
+                      ),),
+                    IconButton(
+                      icon: Icon(Icons.edit),onPressed: () {
+                      DatePicker.showDatePicker(context,
+                          showTitleActions: true,
+                          minTime: DateTime(1920, 1, 1),
+                          maxTime: DateTime(2004, 12, 31), onChanged: (date) {
+                            print('change $date');
+                          }, onConfirm: (date) {
+                            Database.updateUserDateOfBirth(dateOfBirth: date.toString(), docId: _currentUser!.uid);
+                            setState(() {
+                              dateTime = date;
+                            });
+                            print('confirm $date');
+                          }, currentTime: DateTime.now(), locale: LocaleType.en);
+                    },
+                    )
+                  ],
+                )
+            ),
 
             SizedBox(height: 16.0),
             Text(
@@ -205,10 +180,10 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text('Verify email'),
             ),
             IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {
-                refreshUser();
-              }
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  refreshUser();
+                }
             ),
             ElevatedButton(
                 onPressed: () async {
@@ -233,6 +208,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 },
                 child: Text('Home page')
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  main();
+                },
+                child: Text('Test')
             ),
             // Add widgets for verifying email
             // and, signing out the user
@@ -299,6 +280,34 @@ class _ProfilePageState extends State<ProfilePage> {
       print(ProfilePage.dateBirth.toString() + 'oooooooooooo');
     });
   }
+
+void main() async {
+    var headers = {
+      'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    String body23 = '{ "name": "Pizza da Mario", "cuisine": "Italian", "reviews": [{"score": 4.5,"review": "The pizza was amazing!"},{"score": 5.0,"review": "Very friendly staff, excellent service!"}]}';
+    String body = '{ "fields": { "project": { "key": "GEEK" }, "summary": "REST ye merry gentlemen.", "description": "Creating of an issue using project keys and issue type names using the REST API", "issuetype": { "id": "10001" } } }';
+
+    Map<String, dynamic> parsedData = jsonDecode(body);
+
+    // Map<String, dynamic> body2 = json.decode(body.toString());
+
+
+    var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
+    var lol = await http.post(url, headers: headers, body: body, encoding: Encoding.getByName("utf-8"));
+    print(lol.body.toString() + 'lllllllllll');
+    if (lol.statusCode != 201) throw Exception('http.get error: statusCode= ${lol.statusCode}');
+    print(lol.body.toString() + 'lllllllllll');
+
+    // var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/auth/1/session/');
+    // var res = await http.get(url, headers: headers);
+    // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
+    // print(res.body.toString() + '999999999999999999');
+  }
+
 
 
 }
