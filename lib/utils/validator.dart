@@ -26,6 +26,17 @@ class Validator {
     return null;
   }
 
+  static String? validateSubdivision({required String? subDivis}) {
+    if (subDivis == null) {
+      return null;
+    }
+    if (subDivis.isEmpty) {
+      return 'Name can\'t be empty';
+    }
+
+    return null;
+  }
+
   static String? validatePassword({required String? password}) {
     if (password == null) {
       return null;

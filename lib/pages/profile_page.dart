@@ -22,6 +22,7 @@ class ProfilePage extends StatefulWidget {
   final User? user;
   const ProfilePage({required this.user});
   static DateTime? dateBirth;
+  static String? subdivision;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -40,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late  File _image;
   late Future<DateTime> time;
   late DateTime? dateTime = null;
+  late String? subDiv = null;
 
 
   @override
@@ -48,7 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
     _currentUser = widget.user;
     main();
     Database.readDateOfBirthday(_currentUser!.uid).then((value) =>
-        method()
+        methodDateBirth()
+    );
+    Database.readSubdivision(_currentUser!.uid).then((value) =>
+        methodSub()
     );
     super.initState();
   }
@@ -147,6 +152,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
 
             SizedBox(height: 16.0),
+            Text(subDiv != null ? 'Подразделение: ${subDiv.toString()}' : 'Подразделение:'),
+            SizedBox(height: 16.0),
             Text(
               'EMAIL: ${_currentUser!.email}',
               style: Theme
@@ -189,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) =>
-                            EditProfilePage(name: _currentUser!.displayName, mail: _currentUser!.email, user: _currentUser!)
+                            EditProfilePage(name: _currentUser!.displayName, mail: _currentUser!.email, subdivision: subDiv, user: _currentUser!)
                     ));
               },
               child: Text('Редактировать профиль'),),
@@ -289,10 +296,15 @@ class _ProfilePageState extends State<ProfilePage> {
   //       dateTime = time2;
   //     });
   // }
-  method() {
+  methodDateBirth() {
     setState(() {
       dateTime = ProfilePage.dateBirth;
-      print(ProfilePage.dateBirth.toString() + 'oooooooooooo');
+    });
+  }
+
+  methodSub() {
+    setState(() {
+      subDiv = ProfilePage.subdivision;
     });
   }
 

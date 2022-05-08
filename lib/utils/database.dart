@@ -72,7 +72,7 @@ class Database {
     required String docId,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(commonId).collection('userSubdivisionData').doc(userUid);
+    _mainCollection.doc(commonId).collection('userSubdivisionData').doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
 
@@ -90,7 +90,7 @@ class Database {
     required String docId,
   }) async {
     DocumentReference documentReferencer =
-    _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(userUid);
+    _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
 
@@ -146,6 +146,17 @@ class Database {
     ProfilePage.dateBirth = kruto.toDate();
     print('11111111111111111111111111111111111111' + kruto.toString());
     return kruto.toDate();
+  }
+
+  static Future<String?> readSubdivision(String? userID) async{
+    var notesItemCollection =
+    _mainCollection.doc(commonId).collection('userSubdivisionData').doc(userID);
+    var lol = await notesItemCollection.get();
+    Map<String, dynamic>? data = lol.data();
+    String kruto = data!['subdivision'];
+    ProfilePage.subdivision = kruto.toString();
+    print('11111111111111111111111111111111111111' + kruto.toString());
+    return kruto;
   }
 
   static Future<void> deleteItem({

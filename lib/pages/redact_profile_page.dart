@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../utils/database.dart';
 import 'profile_page.dart';
 import '../utils/fire_auth.dart';
 import '../utils/validator.dart';
@@ -7,11 +8,13 @@ import '../utils/validator.dart';
 class EditProfilePage extends StatefulWidget {
   final String? name;
   final String? mail;
+  final String? subdivision;
   final User? user;
 
   EditProfilePage({
     required this.name,
     required this.mail,
+    required this.subdivision,
     required this.user,
   });
 
@@ -25,11 +28,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   final _nameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
-  final _passwordTextController = TextEditingController();
+  final _subdivisionTextController = TextEditingController();
 
   final _focusName = FocusNode();
   final _focusEmail = FocusNode();
-  final _focusPassword = FocusNode();
+  final _focusSubdivision = FocusNode();
 
   bool _isProcessing = false;
 
@@ -47,7 +50,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       onTap: () {
         _focusName.unfocus();
         _focusEmail.unfocus();
-        _focusPassword.unfocus();
+        _focusSubdivision.unfocus();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -97,6 +100,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                       ),
                       SizedBox(height: 16.0),
+                      TextFormField(
+                        controller: _subdivisionTextController,
+                        // focusNode: _focusSubdivision,
+                        validator: (value) => Validator.validateSubdivision(
+                          subDivis: value,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: "Subdivision",
+                          errorBorder: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
                       SizedBox(height: 32.0),
                       _isProcessing
                           ? CircularProgressIndicator()
@@ -117,6 +137,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   if(_emailTextController.text != null) {
                                     widget.user!.updateEmail(_emailTextController.text);
                                   }
+                                  if(widget.subdivision == null)
+                                    {
+                                      Database.addUserSubdivision(subdivision: _subdivisionTextController.text);
+                                    }
+                                  else
+                                    {
+                                      Database.updateUserSubdivision(subdivision: _subdivisionTextController.text, docId: widget.user!.uid);
+                                    }
 
 
 
