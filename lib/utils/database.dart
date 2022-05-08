@@ -10,7 +10,8 @@ class Database {
   static Future<void> addItem({
     required String title,
     required String description,
-    required Timestamp date
+    required Timestamp date,
+    required String type,
   }) async {
     DocumentReference documentReferencer =
     _mainCollection.doc(commonId).collection('items').doc();
@@ -18,7 +19,8 @@ class Database {
     Map<String, dynamic> data = <String, dynamic>{
       "title": title,
       "description": description,
-      "date": date
+      "date": date,
+      "type": type,
     };
 
     await documentReferencer

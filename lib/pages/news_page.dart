@@ -26,10 +26,8 @@ class _MyHomePageState extends State<MyHomePage> {
   TeleDart? teleDart;
   String botName = '';
   var msgId = 0;
-  String _image = 'https://upload.wikimedia.org/wikipedia/ru/7/7c/%D0%A2%D0%B0%D1%87%D0%BA%D0%B8_%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80.jpg';
   final _formKey = GlobalKey<FormState>();
   static String? userUid;
-  TextEditingController _controller = TextEditingController();
   List<Map<String, String>> _msgs = [];
   List<Map<int, String>> _imgs = [];
   final telegramApiKey = '5319164055:AAH44FhYObq6qHBr4_D_DVezT9kmk2cBvx0';
@@ -70,13 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ])),
         child: Column(
           children: [
-            Container(
-              height: 50,
-              width: 50,
-              child: Image.network(
-                  _image,
-                  fit: BoxFit.cover),
-            ),
+            SizedBox(height: 20,),
             Container(
               height: MediaQuery.of(context).size.height / 1.5,
               child: SafeArea(
@@ -84,38 +76,35 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.only(
                   left:16.0,
                   right:16.0,
-                  bottom:20.0,
+                  // bottom:20.0,
                 ),
                 child: ItemList(),
               ),
               ),
             ),
-            Form(
-                key: _formKey,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Message',
-                      hintText: 'input text',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      )),
-                  controller: _controller,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Enter text';
-                    }
-                    return null;
-                  },
-                )),
+            // Form(
+            //     key: _formKey,
+            //     child: TextFormField(
+            //       decoration: InputDecoration(
+            //           labelText: 'Message',
+            //           hintText: 'input text',
+            //           border: OutlineInputBorder(
+            //             borderRadius: BorderRadius.circular(25.0),
+            //             borderSide: BorderSide(),
+            //           )),
+            //       controller: _controller,
+            //       validator: (value) {
+            //         if (value!.isEmpty) {
+            //           return 'Enter text';
+            //         }
+            //         return null;
+            //       },
+            //     )),
             IconButton(
                 icon: Icon(Icons.send),
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    botSendMessage(_controller.text);
-                    _controller.text = '';
-                  }
-                })
+
+                  })
           ],
         ),
       ),
@@ -187,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // print('_IIIIImage' + _image.toString());
           final tFileLink = tFile.getDownloadLink(telegramApiKey);
-          Database.addItem(title: data.caption.toString(), description: tFileLink.toString(), date: Timestamp.fromDate(data.date_)).then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'+ data.caption.toString()));
+          Database.addItem(title: data.caption.toString(), description: tFileLink.toString(), date: Timestamp.fromDate(data.date_), type: 'Telegram').then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'+ data.caption.toString()));
           print('???????tFileLink' + tFileLink.toString() + '??????????');
           final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
           print('???????request' + request.toString() + '??????????');

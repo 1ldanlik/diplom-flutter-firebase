@@ -124,7 +124,8 @@ class _AddItemFormState extends State<AddItemForm> {
                   await Database.addItem(
                     title: _titleController.text,
                     description: _descriptionController.text,
-                    date: Timestamp.fromDate(DateTime.now())
+                    date: Timestamp.fromDate(DateTime.now()),
+                    type: 'App'
                   );
 
                   setState(() {

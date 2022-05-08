@@ -5,8 +5,31 @@ import 'package:intl/intl.dart';
 
 import '../utils/database.dart';
 
-class ItemList extends StatelessWidget {
+class ItemList extends StatefulWidget {
   @override
+  static const IconData telegram = IconData(0xf0586, fontFamily: 'MaterialIcons');
+
+  @override
+  State<ItemList> createState() => _ItemListState();
+}
+
+class _ItemListState extends State<ItemList> {
+  // final ScrollController _scrollController = ScrollController();
+  final _scrollController = ScrollController(initialScrollOffset: 50.0);
+  final scrollController = ScrollController(initialScrollOffset: 0);
+
+  @override
+  void initState() {
+    super.initState();
+    // WidgetsBinding.instance?.addPostFrameCallback((_){
+    //   if (_scrollController.hasClients)
+    //     _scrollController.position.maxScrollExtent;
+    //   else{
+    //     print('nononononononononon');
+    //   }
+    // });
+  }
+
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Database.readItems(),
@@ -17,6 +40,7 @@ class ItemList extends StatelessWidget {
         } else if (snapshot.hasData || snapshot.data != null) {
           print('OKOKKOKOKKOKOKKOKOKOK');
           return ListView.separated(
+            controller: _scrollController,
             separatorBuilder: (context, index) => SizedBox(height: 16.0),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
@@ -26,6 +50,7 @@ class ItemList extends StatelessWidget {
               String title = noteInfo['title'];
               String description = noteInfo['description'];
               Timestamp date = noteInfo['date'];
+              String type = noteInfo['type'];
               String date2 = DateFormat("yyyy-MM-dd - kk:mm").format(date.toDate());
 
               return Ink(
@@ -48,11 +73,26 @@ class ItemList extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
+                      Row(
+                        children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                          top: 5.0,
+                          left: 10.0),
+                        child: type == "Telegram" ? Icon(
+                          ItemList.telegram,
+                          color: Colors.blue,
+                          size: 30,
+                        ) : null
+                      ),
+                      SizedBox(width: 70,),
                       Text(date2,
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500
                       )),
+                        ],
+                      ),
                       SizedBox(height: 20),
                       ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
@@ -62,14 +102,16 @@ class ItemList extends StatelessWidget {
                           ),
                         ),
                       SizedBox(height: 20),
-                      Text(
-                        title,
+                      Container(
+                        child: title != 'null' ? Column(
+                           children:[ Text(
+                        title != 'null' ? title : '',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500
                         ),
+                      ), SizedBox(height: 10)]) : null
                       ),
-                      SizedBox(height: 20)
                     ],
                   ),
                 ),
@@ -88,4 +130,6 @@ class ItemList extends StatelessWidget {
       },
     );
   }
+
+
 }

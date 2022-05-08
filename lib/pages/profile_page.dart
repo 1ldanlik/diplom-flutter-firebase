@@ -5,6 +5,8 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:test_diplom_first/pages/jira_issues_list.dart';
+import 'package:test_diplom_first/pages/redact_profile_page.dart';
 import 'package:test_diplom_first/utils/jira_auth.dart';
 import '../utils/fire_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,7 +19,7 @@ import '../utils/jira_auth.dart';
 import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
-  final User user;
+  final User? user;
   const ProfilePage({required this.user});
   static DateTime? dateBirth;
 
@@ -42,14 +44,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    refreshUser();
     _currentUser = widget.user;
     main();
     Database.readDateOfBirthday(_currentUser!.uid).then((value) =>
         method()
     );
-    setState(()  {
-
-    });
     super.initState();
   }
 
@@ -60,11 +60,9 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () => chooseImage()),
-            ),
+            // Center(
+            //   child:
+            // ),
             ElevatedButton(
               onPressed: uploadFile,
               child: Text('Upload'),
@@ -73,25 +71,25 @@ class _ProfilePageState extends State<ProfilePage> {
             // Container(
             //   height: 100,
             //   width: 100,
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: ClipRRect(
-                child: Image.network(
-                  _currentUser!.photoURL.toString(),
-                  fit: BoxFit.cover,
-                  height: 100,
-                  width: 100,
+            Row(
+              children: [
+                SizedBox(width: 30,),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: ClipRRect(
+                    child: _currentUser!.photoURL != null ? Image.network(
+                      _currentUser!.photoURL.toString(),
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 100,
+                    ) : null
+                  ),
                 ),
-              ),
-
-            ),
-            // ),
-            Text(
-              dateTime.toString(),
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyText1,
+                SizedBox(width: 30,),
+                        ElevatedButton(
+                            onPressed: () => chooseImage(),
+                            child: Text('Выбрать картинку',),),
+              ],
             ),
             Text(
               'NAME: ${_currentUser!.displayName}',
@@ -122,7 +120,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ) : Row(
                   children: [
-                    Text(DateFormat('yyyy-MM-dd').format(dateTime!),
+                    SizedBox(width: 60,),
+                    Text('Дата рождения: ${DateFormat('yyyy-MM-dd').format(dateTime!)}',
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500
@@ -186,6 +185,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 }
             ),
             ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EditProfilePage(name: _currentUser!.displayName, mail: _currentUser!.email, user: _currentUser!)
+                    ));
+              },
+              child: Text('Редактировать профиль'),),
+            ElevatedButton(
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
 
@@ -211,7 +219,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  main();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          JiraIssuesList(),
+                      // DashboardScreen()
+                    ),
+                  );
                 },
                 child: Text('Test')
             ),
@@ -229,8 +243,9 @@ class _ProfilePageState extends State<ProfilePage> {
       // _image.add(File(pickedFile!.path));
       _image = File(pickedFile!.path);
     });
-    if (pickedFile!.path == null) retrieveLostData();
     print(_image.path);
+    await uploadFile();
+    if (pickedFile!.path == null) retrieveLostData();
   }
 
   Future<void> retrieveLostData() async {
@@ -281,31 +296,20 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-void main() async {
+  void main() async {
     var headers = {
       'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     };
 
-    String body23 = '{ "name": "Pizza da Mario", "cuisine": "Italian", "reviews": [{"score": 4.5,"review": "The pizza was amazing!"},{"score": 5.0,"review": "Very friendly staff, excellent service!"}]}';
-    String body = '{ "fields": { "project": { "key": "GEEK" }, "summary": "REST ye merry gentlemen.", "description": "Creating of an issue using project keys and issue type names using the REST API", "issuetype": { "id": "10001" } } }';
-
-    Map<String, dynamic> parsedData = jsonDecode(body);
-
-    // Map<String, dynamic> body2 = json.decode(body.toString());
-
+    String body = '{ "expand": "names,schema", "startAt": 0, "maxResults": 50, "total": 1, "issues": [ { "expand": "", "id": "10001", "self": "https://jirasoftwareildan.atlassian.net/rest/api/2/issue/10001", "key": "GEEK-4"} ] }';
 
     var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
     var lol = await http.post(url, headers: headers, body: body, encoding: Encoding.getByName("utf-8"));
-    print(lol.body.toString() + 'lllllllllll');
     if (lol.statusCode != 201) throw Exception('http.get error: statusCode= ${lol.statusCode}');
-    print(lol.body.toString() + 'lllllllllll');
+    print(lol.body.toString() + 'GET ISSUES');
 
-    // var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/auth/1/session/');
-    // var res = await http.get(url, headers: headers);
-    // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
-    // print(res.body.toString() + '999999999999999999');
   }
 
 
