@@ -26,80 +26,86 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Firebase Authentication'),
       ),
-      body: FutureBuilder(
-        future: _initializeFirebase(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: [
-                Text('Login'),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: _emailTextController,
-                        focusNode: _focusEmail,
-                        validator: (value) => Validator.validateEmail(email: value),
-                      ),
-                      SizedBox(height: 8.0),
-                      TextFormField(
-                        controller: _passwordTextController,
-                        focusNode: _focusPassword,
-                        obscureText: true,
-                        validator: (value) => Validator.validatePassword(password: value),
-                      ),
-                    ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 200, left: 20, right: 20),
+        child: FutureBuilder(
+          future: _initializeFirebase(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Column(
+                children: [
+                  Text('Login'),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: _emailTextController,
+                          focusNode: _focusEmail,
+                          validator: (value) => Validator.validateEmail(email: value),
+                        ),
+                        SizedBox(height: 8.0),
+                        TextFormField(
+                          controller: _passwordTextController,
+                          focusNode: _focusPassword,
+                          obscureText: true,
+                          validator: (value) => Validator.validatePassword(password: value),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            User? user = await FireAuth.signInUsingEmailPassword(
-                              email: _emailTextController.text,
-                              password: _passwordTextController.text,
-                            );
-                            if (user != null) {
-                              Database.commonId = '1234';
-                              Navigator.of(context)
-                                  .pushReplacement(
-                                MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(height: 20.0,),
+                      Container(
+                        width: 200,
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                User? user = await FireAuth.signInUsingEmailPassword(
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text,
+                                );
+                                if (user != null) {
+                                  Database.commonId = '1234';
+                                  Navigator.of(context)
+                                      .pushReplacement(
+                                    MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+                                  );
+                                }
+                              }
+                            },
+                            child: Text(
+                              'Sign In',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                      ),
+                          Container(
+                            width: 200,
+                            child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => RegisterPage()),
                               );
-                            }
-                          }
-                        },
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(color: Colors.white),
+                            },
+                            child: Text(
+                              'Register',
+                              style: TextStyle(color: Colors.white),
+                            ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => RegisterPage()),
-                          );
-                        },
-                        child: Text(
-                          'Register',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+                          ),
+                    ],
+                  )
+                ],
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

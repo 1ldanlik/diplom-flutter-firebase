@@ -42,6 +42,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     _nameTextController.text = widget.name!;
     _emailTextController.text = widget.mail!;
+    _subdivisionTextController.text = widget.subdivision!;
   }
 
   @override
@@ -143,7 +144,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     }
                                   else
                                     {
-                                      Database.updateUserSubdivision(subdivision: _subdivisionTextController.text, docId: widget.user!.uid);
+                                      Database.updateUserSubdivision(subdivision: _subdivisionTextController.text, docId: widget.user!.uid).whenComplete(() =>
+                                          print('PRINT USER UID' + widget.user!.uid));
                                     }
 
 

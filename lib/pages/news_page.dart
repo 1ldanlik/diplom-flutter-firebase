@@ -3,10 +3,12 @@ import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:test_diplom_first/widgets/add_item_form.dart';
 import 'package:test_diplom_first/widgets/telegram_list.dart';
 import 'dart:io' as io;
 
 import '../utils/database.dart';
+import 'add_news_page.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection = _firestore.collection('notes');
@@ -101,9 +103,13 @@ class _MyHomePageState extends State<MyHomePage> {
             //       },
             //     )),
             IconButton(
-                icon: Icon(Icons.send),
+                icon: Icon(Icons.add),
                 onPressed: () {
-
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          AddNewsPage()
+                      ));
                   })
           ],
         ),

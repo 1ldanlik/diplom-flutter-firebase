@@ -51,7 +51,8 @@ class _ItemListState extends State<ItemList> {
               String description = noteInfo['description'];
               Timestamp date = noteInfo['date'];
               String type = noteInfo['type'];
-              String date2 = DateFormat("yyyy-MM-dd - kk:mm").format(date.toDate());
+              final duration = Duration(hours: 3);
+              String date2 = DateFormat("yyyy-MM-dd - kk:mm").format(date.toDate().add(duration));
 
               return Ink(
                 decoration: BoxDecoration(

@@ -49,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
     refreshUser();
     _currentUser = widget.user;
     main();
+    Database.userUid = _currentUser!.uid.toString();
     Database.readDateOfBirthday(_currentUser!.uid).then((value) =>
         methodDateBirth()
     );
@@ -68,10 +69,6 @@ class _ProfilePageState extends State<ProfilePage> {
             // Center(
             //   child:
             // ),
-            ElevatedButton(
-              onPressed: uploadFile,
-              child: Text('Upload'),
-            ),
             Text(_currentUser!.uid),
             // Container(
             //   height: 100,
