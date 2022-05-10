@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
             //   width: 100,
             Row(
               children: [
-                SizedBox(width: 30,),
+                SizedBox(width: 65,),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: ClipRRect(
@@ -93,110 +93,120 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Text('Выбрать картинку',),),
               ],
             ),
-            Text(
-              'NAME: ${_currentUser!.displayName}',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyText1,
-            ),
+            SizedBox(height: 30,),
             Container(
-                child: dateTime == null ? TextButton(onPressed: () {
-                  DatePicker.showDatePicker(context,
-                      showTitleActions: true,
-                      minTime: DateTime(1920, 1, 1),
-                      maxTime: DateTime(2004, 12, 31), onChanged: (date) {
-                        print('change $date');
-                      }, onConfirm: (date) {
-                        Database.userUid = _currentUser!.uid;
-                        Database.addUserDateOfBirth(dateOfBirth: Timestamp.fromDate(date));
-                        setState(() {
-                          dateTime = date;
-                        });
-                        print('confirm $date');
-                      }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                  child: Text(
-                    'Add date time picker',
-                    style: TextStyle(color: Colors.blue),
+              decoration: BoxDecoration(
+                color: Color(0xffCCCCCC),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              width: 320,
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Имя: ${_currentUser!.displayName}',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18)
                   ),
-                ) : Row(
-                  children: [
-                    SizedBox(width: 60,),
-                    Text('Дата рождения: ${DateFormat('yyyy-MM-dd').format(dateTime!)}',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500
-                      ),),
-                    IconButton(
-                      icon: Icon(Icons.edit),onPressed: () {
-                      DatePicker.showDatePicker(context,
-                          showTitleActions: true,
-                          minTime: DateTime(1920, 1, 1),
-                          maxTime: DateTime(2004, 12, 31), onChanged: (date) {
-                            print('change $date');
-                          }, onConfirm: (date) {
-                            Database.updateUserDateOfBirth(dateOfBirth: date.toString(), docId: _currentUser!.uid);
-                            setState(() {
-                              dateTime = date;
-                            });
-                            print('confirm $date');
-                          }, currentTime: DateTime.now(), locale: LocaleType.en);
-                    },
-                    )
-                  ],
-                )
-            ),
+                  Container(
+                      child: dateTime == null ? TextButton(onPressed: () {
+                        DatePicker.showDatePicker(context,
+                            showTitleActions: true,
+                            minTime: DateTime(1920, 1, 1),
+                            maxTime: DateTime(2004, 12, 31), onChanged: (date) {
+                              print('change $date');
+                            }, onConfirm: (date) {
+                              Database.userUid = _currentUser!.uid;
+                              Database.addUserDateOfBirth(dateOfBirth: Timestamp.fromDate(date));
+                              setState(() {
+                                dateTime = date;
+                              });
+                              print('confirm $date');
+                            }, currentTime: DateTime.now(), locale: LocaleType.en);
+                      },
+                        child: Text(
+                          'Add date time picker',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ) : Row(
+                        children: [
+                          SizedBox(width: 30,),
+                          Text('Дата рождения: ${DateFormat('yyyy-MM-dd').format(dateTime!)}',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500
+                            ),),
+                          IconButton(
+                            icon: Icon(Icons.edit),onPressed: () {
+                            DatePicker.showDatePicker(context,
+                                showTitleActions: true,
+                                minTime: DateTime(1920, 1, 1),
+                                maxTime: DateTime(2004, 12, 31), onChanged: (date) {
+                                  print('change $date');
+                                }, onConfirm: (date) {
+                                  Database.updateUserDateOfBirth(dateOfBirth: date.toString(), docId: _currentUser!.uid);
+                                  setState(() {
+                                    dateTime = date;
+                                  });
+                                  print('confirm $date');
+                                }, currentTime: DateTime.now(), locale: LocaleType.en);
+                          },
+                          )
+                        ],
+                      )
+                  ),
 
-            SizedBox(height: 16.0),
-            Text(subDiv != null ? 'Подразделение: ${subDiv.toString()}' : 'Подразделение:'),
-            SizedBox(height: 16.0),
-            Text(
-              'EMAIL: ${_currentUser!.email}',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyText1,
+                  SizedBox(height: 16.0),
+                  Text(subDiv != null ? 'Подразделение: ${subDiv.toString()}' : 'Подразделение:', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),),
+                  SizedBox(height: 16.0),
+                  Text(
+                    'EMAIL: ${_currentUser!.email}',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1,
+                  ),
+                  SizedBox(height: 16.0),
+                  _currentUser!.emailVerified
+                      ? Text(
+                    'Email verified',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: Colors.green),
+                  )
+                      : Text(
+                    'Email not verified',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: Colors.red),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _currentUser!.sendEmailVerification();
+                    },
+                    child: Text('Verify email'),
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () {
+                        refreshUser();
+                      }
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  EditProfilePage(name: _currentUser!.displayName, mail: _currentUser!.email, subdivision: subDiv, user: _currentUser!)
+                          ));
+                    },
+                    child: Text('Редактировать профиль'),),
+                ],
+              ),
             ),
-            SizedBox(height: 16.0),
-            _currentUser!.emailVerified
-                ? Text(
-              'Email verified',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyText1!
-                  .copyWith(color: Colors.green),
-            )
-                : Text(
-              'Email not verified',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyText1!
-                  .copyWith(color: Colors.red),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                await _currentUser!.sendEmailVerification();
-              },
-              child: Text('Verify email'),
-            ),
-            IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: () {
-                  refreshUser();
-                }
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            EditProfilePage(name: _currentUser!.displayName, mail: _currentUser!.email, subdivision: subDiv, user: _currentUser!)
-                    ));
-              },
-              child: Text('Редактировать профиль'),),
             ElevatedButton(
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();

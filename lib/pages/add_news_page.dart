@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import '../widgets/add_item_form.dart';
 
-class AddNewsPage extends StatelessWidget {
+class AddNewsPage extends StatefulWidget {
+  @override
+  State<AddNewsPage> createState() => _AddNewsPageState();
+}
+
+class _AddNewsPageState extends State<AddNewsPage> {
   final FocusNode _titleFocusNode = FocusNode();
+
   final FocusNode _descriptionFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,15 @@
+import 'dart:ffi';
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../utils/database.dart';
 import '../utils/validator.dart';
 import '../widgets/custom_form_field.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart' as Path;
 
 class AddItemForm extends StatefulWidget {
   final FocusNode titleFocusNode;
@@ -19,6 +26,10 @@ class AddItemForm extends StatefulWidget {
 
 class _AddItemFormState extends State<AddItemForm> {
   final _addItemFormKey = GlobalKey<FormState>();
+  firebase_storage.Reference? ref;
+  late File _choosedImage;
+  String _choosedImageStr = 'null';
+  final picker = ImagePicker();
 
   bool _isProcessing = false;
 
@@ -51,21 +62,29 @@ class _AddItemFormState extends State<AddItemForm> {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                CustomFormField(
-                  isLabelEnabled: false,
-                  controller: _titleController,
-                  focusNode: widget.titleFocusNode,
-                  keyboardType: TextInputType.text,
-                  inputAction: TextInputAction.next,
-                  validator: (value) => Validator.validateField(
-                    value: value,
-                  ),
-                  label: 'Title',
-                  hint: 'Enter your note title',
+                Row(
+                  children: [
+                    SizedBox(width: 30,),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: ClipRRect(
+                          child: _choosedImageStr != 'null' ? Image.file(
+                            _choosedImage,
+                            fit: BoxFit.cover,
+                            height: 100,
+                            width: 100,
+                          ) : null
+                      ),
+                    ),
+                    SizedBox(width: 30,),
+                    ElevatedButton(
+                      onPressed: () => chooseImage(),
+                      child: Text('Выбрать картинку',),),
+                  ],
                 ),
                 SizedBox(height: 24.0),
                 Text(
-                  'Description',
+                  'Сообщение',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 22.0,
@@ -84,8 +103,8 @@ class _AddItemFormState extends State<AddItemForm> {
                   validator: (value) => Validator.validateField(
                     value: value,
                   ),
-                  label: 'Description',
-                  hint: 'Enter your note description',
+                  label: 'Сообщение',
+                  hint: 'Введите ваше сообщение',
                 ),
               ],
             ),
@@ -121,12 +140,7 @@ class _AddItemFormState extends State<AddItemForm> {
                     _isProcessing = true;
                   });
 
-                  await Database.addItem(
-                    title: _titleController.text,
-                    description: _descriptionController.text,
-                    date: Timestamp.fromDate(DateTime.now()),
-                    type: 'App'
-                  );
+                  await uploadFile();
 
                   setState(() {
                     _isProcessing = false;
@@ -153,4 +167,27 @@ class _AddItemFormState extends State<AddItemForm> {
       ),
     );
   }
+
+  Future uploadFile() async {
+    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/${Path.basename(_choosedImage.path)}');
+    await ref!.putFile(_choosedImage).whenComplete(() async {
+      await ref!.getDownloadURL().then((value) {
+        Database.addItem(title: _descriptionController.text, description: value, date: Timestamp.now(), type: 'App');
+      });
+    });
+  }
+
+  chooseImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      // _image.add(File(pickedFile!.path));
+      _choosedImage = File(pickedFile!.path);
+      _choosedImageStr = _choosedImage.toString();
+    });
+    print(_choosedImage.toString());
+    // await uploadFile();
+    // if (pickedFile!.path == null) retrieveLostData();
+  }
+
+
 }

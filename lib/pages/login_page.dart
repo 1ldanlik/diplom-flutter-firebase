@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../utils/fire_auth.dart';
+import '../widgets/custom_form_field.dart';
 import 'profile_page.dart';
 import 'register_page.dart';
 
@@ -34,18 +35,58 @@ class LoginPage extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               return Column(
                 children: [
-                  Text('Login'),
+                  Text('Авторизация', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
                   Form(
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
                         TextFormField(
+                          decoration: const InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(30.0),
+                                  )
+                              ),
+                              border: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(30.0),
+                                  )
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(30.0),
+                                  )
+                              )
+                          ),
                           controller: _emailTextController,
                           focusNode: _focusEmail,
                           validator: (value) => Validator.validateEmail(email: value),
                         ),
                         SizedBox(height: 8.0),
                         TextFormField(
+                          decoration: const InputDecoration(
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                            )
+                          ),
                           controller: _passwordTextController,
                           focusNode: _focusPassword,
                           obscureText: true,

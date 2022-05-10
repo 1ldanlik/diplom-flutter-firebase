@@ -18,6 +18,7 @@ class _ItemListState extends State<ItemList> {
   final _scrollController = ScrollController(initialScrollOffset: 50.0);
   final scrollController = ScrollController(initialScrollOffset: 0);
 
+
   @override
   void initState() {
     super.initState();
@@ -84,7 +85,7 @@ class _ItemListState extends State<ItemList> {
                           ItemList.telegram,
                           color: Colors.blue,
                           size: 30,
-                        ) : null
+                        ) : SizedBox(width: 25.0,),
                       ),
                       SizedBox(width: 70,),
                       Text(date2,
