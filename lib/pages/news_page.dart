@@ -45,11 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.orangeAccent,
-        title: Text(widget.title),
-        // actions: [
-        //   IconButton(icon: Icon(Icons.play_arrow), onPressed: () => _startBot())
-        // ],
+        // title: Text(widget.title),
       ),
       body: Container(
         decoration: BoxDecoration(

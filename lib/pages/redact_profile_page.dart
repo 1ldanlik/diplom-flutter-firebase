@@ -53,7 +53,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _focusEmail.unfocus();
         _focusSubdivision.unfocus();
       },
-      child: Scaffold(
+      child:
+      Scaffold(
         appBar: AppBar(
           title: Text('Register'),
         ),

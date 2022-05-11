@@ -221,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           MyHomePage(title: 'LOL'),
@@ -241,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 },
-                child: Text('Test')
+                child: Text('Задачи Jira')
             ),
             // Add widgets for verifying email
             // and, signing out the user
@@ -257,8 +257,8 @@ class _ProfilePageState extends State<ProfilePage> {
       // _image.add(File(pickedFile!.path));
       _image = File(pickedFile!.path);
     });
-    print(_image.path);
     await uploadFile();
+    print(_image.path);
     if (pickedFile!.path == null) retrieveLostData();
   }
 

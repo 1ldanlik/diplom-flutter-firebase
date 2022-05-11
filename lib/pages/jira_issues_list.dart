@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_diplom_first/utils/issues_get.dart';
@@ -69,12 +71,22 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                       child: Column(
                         children: [
                           SizedBox(height: 10.0,),
+                          Text(issueList![index].key != null ? 'Срок окончания: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                          SizedBox(height: 10.0,),
                           Text(issueList![index].fields.duedate != null ? 'Срок окончания: ${issueList![index].fields.duedate}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Text(issueList![index].fields.summary.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
+                          Row(
+                            children: [
+                              ElevatedButton(onPressed: () async {
+                                deleteIssue(issueList![index].key);
+                                await getData();
+                              }, child: Icon(Icons.delete))
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -136,6 +148,39 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
       throw Exception('http.get error: statusCode= ${lol.statusCode}');
     }
 
+  }
+
+  Future deleteIssue(String issueKey) async {
+
+    String credentials = "dawani2016@mail.ru:Xm6EN8qHwuRFXvLXclBUA0BB";
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(credentials);
+    print('ENCODED' + encoded.toString());
+
+    var headers = {
+      'Authorization': 'Basic $encoded',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    var deleteUrl = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/api/3/issue/$issueKey');
+
+    var deleteRequest = await http.delete(deleteUrl, headers: headers);
+
+    if (deleteRequest.statusCode == 200 || deleteRequest.statusCode == 201 || deleteRequest.statusCode == 204) {
+      var json1 = deleteRequest.body;
+      print('LLLLLLLLLL' + getIssuesFromJson(json1).issues.toString());
+      // JiraIssuesList.strIssues = jsonDecode(lol.body);
+      return getIssuesFromJson(json1).issues;
+      // setState(() {
+      //   issues = lol.body.toString();
+      //   print('HOHOHOH' + issues.toString());
+      //   print('KOKOKOKO' + lol.toString());
+      // });
+    }
+    else {
+      throw Exception('http.get error: statusCode= ${deleteRequest.statusCode}');
+    }
   }
 
 }
