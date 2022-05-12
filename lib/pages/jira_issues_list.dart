@@ -1,7 +1,6 @@
-// import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:test_diplom_first/utils/issues_get.dart';
 import 'package:test_diplom_first/utils/jira_auth.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +18,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   var isLoaded = false;
   List<Issue>? issueList;
   DateTime? dateTime;
+  final zero = DateTime;
 
   @override
   void initState() {
@@ -48,6 +48,17 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
         ListView.builder(
             itemCount: issueList?.length,
             itemBuilder: (context, index) {
+              int hours = 0;
+              int minutes = 0;
+              if(issueList![index].fields.timeestimate != null) {
+                hours = Duration(
+                    minutes: issueList![index].fields.timeestimate ~/ 60)
+                    .inHours;
+                minutes = Duration(
+                    minutes: issueList![index].fields.timeestimate ~/ 60)
+                    .inMinutes - hours * 60;
+              }
+
               return Column(
                 children: [
                   SizedBox(height: 8,),
@@ -71,7 +82,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                       child: Column(
                         children: [
                           SizedBox(height: 10.0,),
-                          Text(issueList![index].key != null ? 'Срок окончания: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                          Text(issueList![index].key != null ? 'Ключ: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Text(issueList![index].fields.duedate != null ? 'Срок окончания: ${issueList![index].fields.duedate}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
@@ -79,12 +90,21 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                           SizedBox(height: 10.0,),
                           Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
+                          Text(issueList![index].fields.timeestimate != null ? 'Срок окончания: ${hours}ч. ${minutes}м.' : 'Без срока', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                          SizedBox(height: 10.0,),
                           Row(
                             children: [
+                              Container(
+                                child: ElevatedButton(onPressed: () {
+                                  // timeToDate(issueList![index].fields.timeestimate);
+                                }, child: Icon(Icons.alarm_add_outlined)),
+                                width: 50,
+                              ),
+                              SizedBox(width: 20.0,),
                               ElevatedButton(onPressed: () async {
                                 deleteIssue(issueList![index].key);
                                 await getData();
-                              }, child: Icon(Icons.delete))
+                              }, child: Icon(Icons.delete)),
                             ],
                           )
                         ],
@@ -182,5 +202,6 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
       throw Exception('http.get error: statusCode= ${deleteRequest.statusCode}');
     }
   }
+
 
 }

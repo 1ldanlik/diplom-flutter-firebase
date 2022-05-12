@@ -233,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           JiraIssuesList(),
