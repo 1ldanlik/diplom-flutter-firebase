@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_diplom_first/utils/projects_get.dart';
@@ -13,18 +14,23 @@ class AddIssuePage extends StatefulWidget {
 
 class _AddIssuePageState extends State<AddIssuePage> {
   late List<Value> projectsList;
+  late List<String> strCB;
+  String dropdownValue = 'Все';
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    for(var proj in )
+    getData();
   }
 
   getData() async {
     projectsList = await getProjects();
     if(projectsList != null){
       setState(() {
+        for(var proj in projectsList)
+          {
+            strCB.add(proj.name);
+          }
         // isLoaded = true;
       });
     }
@@ -39,11 +45,33 @@ class _AddIssuePageState extends State<AddIssuePage> {
             Row(
               children: [
                 Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                // DropdownButton(
-                //     items: projectsList.map((List<Value> {
-                //
-                //     }),
-                //     onChanged: onChanged)
+                DropdownButton<String>(
+                  value: dropdownValue,
+                    items: strCB.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },),
+                Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                DropdownButton<String>(
+                  value: dropdownValue,
+                    items: <String>['Task', 'Epic'].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },),
               ],
             )
           ],
