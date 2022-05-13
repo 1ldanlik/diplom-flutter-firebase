@@ -26,6 +26,19 @@ class Validator {
     return null;
   }
 
+  static String? validateNumber({required String? number}) {
+    if (number == null) {
+      return null;
+    }
+    RegExp numberRegExp = RegExp("r'[0-9]");
+
+    if (!numberRegExp.hasMatch(number)) {
+      return 'Можно вводить только цифры';
+    }
+
+    return null;
+  }
+
   static String? validateSummary({required String? summary}) {
     if (summary == null) {
       return null;

@@ -25,6 +25,8 @@ class _AddIssuePageState extends State<AddIssuePage> {
   String priorityValue = 'Medium';
   late int hours;
   late int minutes;
+  int _hours = 0;
+  int _minutes = 0;
 
   @override
   void initState() {
@@ -164,30 +166,42 @@ class _AddIssuePageState extends State<AddIssuePage> {
                 focusNode: _focusEmail,
                 validator: (value) => Validator.validateSummary(summary: value),
               ),
-              // Row(
-              //   children: [
-              //     Text('Часы:'),
-              //     NumberInputPrefabbed.roundedButtons(
-              //       controller: TextEditingController(),
-              //       incDecBgColor: Color(0xff4F4FD9),
-              //       onChanged: (num incHour) {
-              //         hours = int.parse(incHour.toString());
-              //       },
-              //     ),
-              //   ],
-              // ),
-              // Row(
-              //   children: [
-              //     Text('Минуты:'),
-              //     NumberInputPrefabbed.roundedButtons(
-              //       controller: TextEditingController(),
-              //       incDecBgColor: Color(0xff4F4FD9),
-              //       onChanged: (num incMinute) {
-              //         minutes = int.parse(incMinute.toString());
-              //       },
-              //     ),
-              //   ],
-              // ),
+                  Text('Часы:', style: TextStyle(fontSize: 18),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FloatingActionButton(
+                    onPressed: addHours,
+                    child: Icon(Icons.add, color: Colors.black,),
+                    backgroundColor: Colors.white,),
+
+                  Text('$_hours',
+                      style: TextStyle(fontSize: 24.0)),
+
+                  FloatingActionButton(
+                    onPressed: minusHours,
+                    child: Icon(Icons.remove),
+                  backgroundColor: Colors.white,),
+                ],
+              ),
+                  Text('Минуты:', style: TextStyle(fontSize: 18),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FloatingActionButton(
+                    onPressed: addMinutes,
+                    child: Icon(Icons.add, color: Colors.black,),
+                    backgroundColor: Colors.white,),
+
+                  Text('$_minutes',
+                      style: TextStyle(fontSize: 24.0)),
+
+                  FloatingActionButton(
+                    onPressed: minusMinutes,
+                    child: Icon(Icons.remove),
+                  backgroundColor: Colors.white,),
+                ],
+              ),
             ],
           ),
         ),
@@ -219,6 +233,32 @@ class _AddIssuePageState extends State<AddIssuePage> {
     else {
       throw Exception('http.get error: statusCode= ${getRequest.statusCode}');
     }
+  }
+
+  void minusHours() {
+    setState(() {
+      if (_hours != 0)
+        _hours--;
+    });
+  }
+
+  void addHours() {
+    setState(() {
+      _hours++;
+    });
+  }
+
+  void minusMinutes() {
+    setState(() {
+      if (_minutes != 0)
+        _minutes--;
+    });
+  }
+
+  void addMinutes() {
+    setState(() {
+      _minutes++;
+    });
   }
 
 }
