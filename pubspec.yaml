@@ -43,6 +43,7 @@ dependencies:
   flutter_datetime_picker: ^1.5.0
   intl: ^0.17.0
   http: ^0.13.4
+  number_inc_dec: ^0.8.0
 #  atlassian_apis: ^0.7.0
 #  flutter_session: ^0.1.1
 
@@ -68,6 +69,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/high.svg
+    - assets/highest.svg
+    - assets/medium.svg
+    - assets/low.svg
+    - assets/lowest.svg
     - assets/telegram_logo.png
 
   # To add assets to your application, add an assets section, like this:

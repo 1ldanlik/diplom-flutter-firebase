@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:test_diplom_first/pages/add_issue_page.dart';
 import 'package:test_diplom_first/utils/issues_get.dart';
 import 'package:test_diplom_first/utils/jira_auth.dart';
 import 'package:http/http.dart' as http;
@@ -40,6 +41,24 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Issues'),
+        actions: [
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                    AddIssuePage())
+                  );
+                },
+                child: Icon(
+                  Icons.add,
+                  size: 26.0,
+                ),
+              )
+          ),
+        ],
       ),
       body:
       Visibility(
@@ -96,14 +115,12 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                             children: [
                               Container(
                                 child: ElevatedButton(onPressed: () {
-                                  // timeToDate(issueList![index].fields.timeestimate);
                                 }, child: Icon(Icons.alarm_add_outlined)),
                                 width: 50,
                               ),
                               SizedBox(width: 20.0,),
                               ElevatedButton(onPressed: () async {
-                                deleteIssue(issueList![index].key);
-                                await getData();
+                                deleteIssue(issueList![index].key).whenComplete(() => getData());
                               }, child: Icon(Icons.delete)),
                             ],
                           )

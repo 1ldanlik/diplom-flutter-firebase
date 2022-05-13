@@ -1,9 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:number_inc_dec/number_inc_dec.dart';
 import 'package:test_diplom_first/utils/projects_get.dart';
+
+import '../utils/validator.dart';
 
 class AddIssuePage extends StatefulWidget {
   const AddIssuePage({Key? key}) : super(key: key);
@@ -13,9 +16,15 @@ class AddIssuePage extends StatefulWidget {
 }
 
 class _AddIssuePageState extends State<AddIssuePage> {
+  final _focusEmail = FocusNode();
+  final _summaryTextController = TextEditingController();
   late List<Value> projectsList;
-  late List<String> strCB;
-  String dropdownValue = 'Все';
+  List<String> strCB = [];
+  late String projectValue;
+  String typeIssueValue = 'Task';
+  String priorityValue = 'Medium';
+  late int hours;
+  late int minutes;
 
   @override
   void initState() {
@@ -27,10 +36,13 @@ class _AddIssuePageState extends State<AddIssuePage> {
     projectsList = await getProjects();
     if(projectsList != null){
       setState(() {
+        strCB.add('Все');
         for(var proj in projectsList)
           {
             strCB.add(proj.name);
+            print(strCB);
           }
+        projectValue = strCB[0];
         // isLoaded = true;
       });
     }
@@ -39,28 +51,36 @@ class _AddIssuePageState extends State<AddIssuePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                DropdownButton<String>(
-                  value: dropdownValue,
-                    items: strCB.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },),
-                Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                DropdownButton<String>(
-                  value: dropdownValue,
+      body: Container(
+        padding: EdgeInsets.only(top: 150.0),
+        child: Center(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                  DropdownButton(
+                    value: projectValue,
+                      items:
+                      strCB.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          projectValue = newValue!;
+                        });
+                      },),
+                ],
+              ),
+              SizedBox(height: 30,),
+              Row(
+                children: [
+                  Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                  DropdownButton<String>(
+                    value: typeIssueValue,
                     items: <String>['Task', 'Epic'].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -69,12 +89,107 @@ class _AddIssuePageState extends State<AddIssuePage> {
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        dropdownValue = newValue!;
+                        typeIssueValue = newValue!;
                       });
                     },),
-              ],
-            )
-          ],
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Приоритет:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                  DropdownButton<String>(
+                    value: priorityValue,
+                    items: <String>['Highest', 'High', 'Medium', 'Low', 'Lowest'].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        priorityValue = newValue!;
+                      });
+                    },),
+                ],
+              ),
+              Text('Название', style: TextStyle(fontSize: 18),),
+              TextFormField(
+                decoration: const InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30.0),
+                        )
+                    ),
+                    border: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30.0),
+                        )
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30.0),
+                        )
+                    )
+                ),
+                controller: _summaryTextController,
+                focusNode: _focusEmail,
+                validator: (value) => Validator.validateSummary(summary: value),
+              ),
+              Text('Описание', style: TextStyle(fontSize: 18),),
+              TextFormField(
+                decoration: const InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30.0),
+                        )
+                    ),
+                    border: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30.0),
+                        )
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30.0),
+                        )
+                    )
+                ),
+                controller: _summaryTextController,
+                focusNode: _focusEmail,
+                validator: (value) => Validator.validateSummary(summary: value),
+              ),
+              // Row(
+              //   children: [
+              //     Text('Часы:'),
+              //     NumberInputPrefabbed.roundedButtons(
+              //       controller: TextEditingController(),
+              //       incDecBgColor: Color(0xff4F4FD9),
+              //       onChanged: (num incHour) {
+              //         hours = int.parse(incHour.toString());
+              //       },
+              //     ),
+              //   ],
+              // ),
+              // Row(
+              //   children: [
+              //     Text('Минуты:'),
+              //     NumberInputPrefabbed.roundedButtons(
+              //       controller: TextEditingController(),
+              //       incDecBgColor: Color(0xff4F4FD9),
+              //       onChanged: (num incMinute) {
+              //         minutes = int.parse(incMinute.toString());
+              //       },
+              //     ),
+              //   ],
+              // ),
+            ],
+          ),
         ),
       ),
     );

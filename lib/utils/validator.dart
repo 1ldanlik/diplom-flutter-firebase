@@ -18,9 +18,21 @@ class Validator {
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
     if (email.isEmpty) {
-      return 'Email can\'t be empty';
+      return 'Поле Email не может быть пустым';
     } else if (!emailRegExp.hasMatch(email)) {
-      return 'Enter a correct email';
+      return 'Введите корректный Email';
+    }
+
+    return null;
+  }
+
+  static String? validateSummary({required String? summary}) {
+    if (summary == null) {
+      return null;
+    }
+
+    if (summary.isEmpty) {
+      return 'Название задачи не может быть пустым';
     }
 
     return null;
