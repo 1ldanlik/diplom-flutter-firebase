@@ -1,11 +1,8 @@
 import 'dart:convert';
-
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
-import 'package:number_inc_dec/number_inc_dec.dart';
 import 'package:test_diplom_first/utils/projects_get.dart';
-
 import '../utils/validator.dart';
 
 class AddIssuePage extends StatefulWidget {
@@ -31,6 +28,13 @@ class _AddIssuePageState extends State<AddIssuePage> {
   int _days = 0;
   int _hours = 0;
   int _minutes = 0;
+  List<Map> priorityMap = [
+    {"name": 'Highest', "image": "assets/highest.svg"},
+    {"name": 'High', "image": "assets/high.svg"},
+    {"name": 'Medium', "image": "assets/medium.svg"},
+    {"name": 'Low', "image": "assets/low.svg"},
+    {"name": 'Lowest', "image": "assets/lowest.svg"},
+  ];
 
   @override
   void initState() {
@@ -57,120 +61,175 @@ class _AddIssuePageState extends State<AddIssuePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Добавление задачи'),
+        backgroundColor: Colors.purple,
+        title: Text('Добавление задачи', style: TextStyle(fontSize: 24, color: Colors.white),),
+        actions: [
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AddIssuePage())
+                  );
+                },
+                child: Icon(
+                  Icons.confirmation_num,
+                  size: 26.0,
+                ),
+              )
+          ),
+        ],
       ),
       body: Container(
         // padding: EdgeInsets.only(top: 40.0),
         child: Center(
           child: Column(
             children: [
+              SizedBox(height: 10,),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                  DropdownButton(
-                    value: projectValue,
-                      items:
-                      strCB.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          projectValue = newValue!;
-                        });
-                      },),
+                  Row(
+                    children: [
+                      Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                      DropdownButton(
+                        value: projectValue,
+                          items:
+                          strCB.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              projectValue = newValue!;
+                            });
+                          },),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                      DropdownButton<String>(
+                        value: typeIssueValue,
+                        items: <String>['Task', 'Epic'].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            typeIssueValue = newValue!;
+                          });
+                        },),
+                    ],
+                  ),
                 ],
               ),
               Row(
-                children: [
-                  Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                  DropdownButton<String>(
-                    value: typeIssueValue,
-                    items: <String>['Task', 'Epic'].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        typeIssueValue = newValue!;
-                      });
-                    },),
-                ],
-              ),
-              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Приоритет:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                  DropdownButton<String>(
-                    value: priorityValue,
-                    items: <String>['Highest', 'High', 'Medium', 'Low', 'Lowest'].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        priorityValue = newValue!;
-                      });
-                    },),
-                ],
+                  Expanded(
+                  child: DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                  child: DropdownButton<String>(
+                  value: priorityValue,
+                  onChanged: (String? newValue) {
+                  setState(() {
+                    priorityValue = newValue!;
+                  });
+
+                  print(priorityValue);
+                  },
+                  items: priorityMap.map((Map map) {
+                  return new DropdownMenuItem<String>(
+                  value: map["name"].toString(),
+                  // value: _mySelection,
+                  child: Row(
+                  children: <Widget>[
+                    SvgPicture.asset(map['image']
+                  // Image.asset(
+                  // map["image"],
+                  ),
+                  Container(
+                  margin: EdgeInsets.only(left: 10),
+                  child: Text(map["name"])),
+                  ],
+                  ),
+                  );
+                  }).toList(),
+                  ),
+                  ),
+                  ),
+                  ),
+                ]
               ),
-              Text('Название', style: TextStyle(fontSize: 18),),
-              TextFormField(
-                decoration: const InputDecoration(
-                    enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(30.0),
-                        )
+              Container(
+                padding: EdgeInsets.only(left: 15, right: 15),
+                child: Column(
+                  children: [
+                    Text('Название', style: TextStyle(fontSize: 18),),
+                    TextFormField(
+                      maxLength: 100,
+                      decoration: const InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          ),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          )
+                      ),
+                      controller: _summaryTextController,
+                      focusNode: _focusSummary,
+                      validator: (value) => Validator.validateSummary(summary: value),
                     ),
-                    border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(30.0),
-                        )
+                    Text('Описание', style: TextStyle(fontSize: 18),),
+                    TextFormField(
+                      maxLength: 500,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          ),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          )
+                      ),
+                      controller: _descriptionTextController,
+                      focusNode: _focusDescription,
+                      validator: (value) => Validator.validateSummary(summary: value),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(30.0),
-                        )
-                    )
+                  ],
                 ),
-                controller: _summaryTextController,
-                focusNode: _focusSummary,
-                validator: (value) => Validator.validateSummary(summary: value),
-              ),
-              Text('Описание', style: TextStyle(fontSize: 18),),
-              TextFormField(
-                maxLines: 4,
-                decoration: const InputDecoration(
-                    enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(30.0),
-                        )
-                    ),
-                    border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(30.0),
-                        )
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(30.0),
-                        )
-                    )
-                ),
-                controller: _descriptionTextController,
-                focusNode: _focusDescription,
-                validator: (value) => Validator.validateSummary(summary: value),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -359,6 +418,57 @@ class _AddIssuePageState extends State<AddIssuePage> {
     setState(() {
       _days++;
     });
+  }
+
+  void createIssue(String projectValue,
+      String typeIssueValue,
+      String priorityValue,
+      String summary,
+      String description) async {
+    var headers = {
+      'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    String body = '{ "fields": { "project": { "key": "$projectValue" }, "summary": "$summary", "description": "$description", "issuetype": { "name": "$typeIssueValue" }, "priority":{ "name": "$priorityValue" } } }';
+
+    var url = Uri.parse(
+        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
+    var lol = await http.post(url, headers: headers,
+        body: body,
+        encoding: Encoding.getByName("utf-8"));
+    if (lol.statusCode != 201) throw Exception(
+        'http.get error: statusCode= ${lol.statusCode}');
+    print(lol.body.toString() + 'lllllllllll');
+
+    // var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/auth/1/session/');
+    // var res = await http.get(url, headers: headers);
+    // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
+    // print(res.body.toString() + '999999999999999999');
+  }
+
+  void createWorkLog(int week,
+      int day,
+      int hour,
+      int minute) async {
+    var headers = {
+      'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    String body = '{ "timeSpent": "${week}w${day}d${hour}h${minute}m" }';
+
+    var url = Uri.parse(
+        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
+    var lol = await http.post(url, headers: headers,
+        body: body,
+        encoding: Encoding.getByName("utf-8"));
+    if (lol.statusCode != 201) throw Exception(
+        'http.get error: statusCode= ${lol.statusCode}');
+    print(lol.body.toString() + 'lllllllllll');
+
   }
 
 }
