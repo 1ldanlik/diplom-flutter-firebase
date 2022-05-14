@@ -16,15 +16,19 @@ class AddIssuePage extends StatefulWidget {
 }
 
 class _AddIssuePageState extends State<AddIssuePage> {
-  final _focusEmail = FocusNode();
+  final _focusSummary = FocusNode();
+  final _focusDescription = FocusNode();
   final _summaryTextController = TextEditingController();
+  final _descriptionTextController = TextEditingController();
   late List<Value> projectsList;
   List<String> strCB = [];
-  late String projectValue;
+  String projectValue = 'null';
   String typeIssueValue = 'Task';
   String priorityValue = 'Medium';
   late int hours;
   late int minutes;
+  int _weeks = 0;
+  int _days = 0;
   int _hours = 0;
   int _minutes = 0;
 
@@ -38,7 +42,6 @@ class _AddIssuePageState extends State<AddIssuePage> {
     projectsList = await getProjects();
     if(projectsList != null){
       setState(() {
-        strCB.add('Все');
         for(var proj in projectsList)
           {
             strCB.add(proj.name);
@@ -53,8 +56,11 @@ class _AddIssuePageState extends State<AddIssuePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Добавление задачи'),
+      ),
       body: Container(
-        padding: EdgeInsets.only(top: 150.0),
+        // padding: EdgeInsets.only(top: 40.0),
         child: Center(
           child: Column(
             children: [
@@ -77,7 +83,6 @@ class _AddIssuePageState extends State<AddIssuePage> {
                       },),
                 ],
               ),
-              SizedBox(height: 30,),
               Row(
                 children: [
                   Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
@@ -137,11 +142,12 @@ class _AddIssuePageState extends State<AddIssuePage> {
                     )
                 ),
                 controller: _summaryTextController,
-                focusNode: _focusEmail,
+                focusNode: _focusSummary,
                 validator: (value) => Validator.validateSummary(summary: value),
               ),
               Text('Описание', style: TextStyle(fontSize: 18),),
               TextFormField(
+                maxLines: 4,
                 decoration: const InputDecoration(
                     enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey, width: 3.0),
@@ -162,44 +168,112 @@ class _AddIssuePageState extends State<AddIssuePage> {
                         )
                     )
                 ),
-                controller: _summaryTextController,
-                focusNode: _focusEmail,
+                controller: _descriptionTextController,
+                focusNode: _focusDescription,
                 validator: (value) => Validator.validateSummary(summary: value),
               ),
-                  Text('Часы:', style: TextStyle(fontSize: 18),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  FloatingActionButton(
-                    onPressed: addHours,
-                    child: Icon(Icons.add, color: Colors.black,),
-                    backgroundColor: Colors.white,),
-
-                  Text('$_hours',
+                  Text('Недели:', style: TextStyle(fontSize: 18),),
+                  SizedBox(width: 30,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: addWeeks,
+                      child: Icon(Icons.add, color: Colors.black,),
+                      backgroundColor: Colors.white,),
+                  ),
+                  SizedBox(width: 10,),
+                  Text('$_weeks',
                       style: TextStyle(fontSize: 24.0)),
-
-                  FloatingActionButton(
-                    onPressed: minusHours,
-                    child: Icon(Icons.remove),
-                  backgroundColor: Colors.white,),
+                  SizedBox(width: 10,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: minusWeeks,
+                      child: Icon(Icons.remove),
+                    backgroundColor: Colors.white,),
+                  ),
                 ],
               ),
-                  Text('Минуты:', style: TextStyle(fontSize: 18),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  FloatingActionButton(
-                    onPressed: addMinutes,
-                    child: Icon(Icons.add, color: Colors.black,),
+                  Text('Дни:', style: TextStyle(fontSize: 18),),
+                  SizedBox(width: 60,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: addDays,
+                      child: Icon(Icons.add, color: Colors.black,),
+                      backgroundColor: Colors.white,),
+                  ),
+                  SizedBox(width: 10,),
+                  Text('$_days',
+                      style: TextStyle(fontSize: 24.0)),
+                  SizedBox(width: 10,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: minusDays,
+                      child: Icon(Icons.remove),
                     backgroundColor: Colors.white,),
-
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Часы:', style: TextStyle(fontSize: 18),),
+                  SizedBox(width: 50,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: addHours,
+                      child: Icon(Icons.add, color: Colors.black,),
+                      backgroundColor: Colors.white,),
+                  ),
+                  SizedBox(width: 10,),
+                  Text('$_hours',
+                      style: TextStyle(fontSize: 24.0)),
+                  SizedBox(width: 10,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: minusHours,
+                      child: Icon(Icons.remove),
+                    backgroundColor: Colors.white,),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Минуты:', style: TextStyle(fontSize: 18),),
+                  SizedBox(width: 30,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: addMinutes,
+                      child: Icon(Icons.add, color: Colors.black,),
+                      backgroundColor: Colors.white,),
+                  ),
+                  SizedBox(width: 10,),
                   Text('$_minutes',
                       style: TextStyle(fontSize: 24.0)),
-
-                  FloatingActionButton(
-                    onPressed: minusMinutes,
-                    child: Icon(Icons.remove),
-                  backgroundColor: Colors.white,),
+                  SizedBox(width: 10,),
+                  Container(
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: minusMinutes,
+                      child: Icon(Icons.remove),
+                    backgroundColor: Colors.white,),
+                  ),
                 ],
               ),
             ],
@@ -258,6 +332,32 @@ class _AddIssuePageState extends State<AddIssuePage> {
   void addMinutes() {
     setState(() {
       _minutes++;
+    });
+  }
+
+  void minusWeeks() {
+    setState(() {
+      if (_weeks != 0)
+        _weeks--;
+    });
+  }
+
+  void addWeeks() {
+    setState(() {
+      _weeks++;
+    });
+  }
+
+  void minusDays() {
+    setState(() {
+      if (_days != 0)
+        _days--;
+    });
+  }
+
+  void addDays() {
+    setState(() {
+      _days++;
     });
   }
 
