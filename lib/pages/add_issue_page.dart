@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:test_diplom_first/utils/created_issue_get.dart';
 import 'package:test_diplom_first/utils/projects_get.dart';
 import '../utils/validator.dart';
 
@@ -68,11 +69,16 @@ class _AddIssuePageState extends State<AddIssuePage> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              AddIssuePage())
-                  );
+                  if(_summaryTextController.text !='null')
+                  createIssue(projectValue,
+                      typeIssueValue,
+                      priorityValue,
+                      _summaryTextController.text,
+                      _descriptionTextController.text,
+                      _weeks,
+                      _days,
+                      _hours,
+                      _minutes);
                 },
                 child: Icon(
                   Icons.confirmation_num,
@@ -152,7 +158,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   // value: _mySelection,
                   child: Row(
                   children: <Widget>[
-                    SvgPicture.asset(map['image']
+                    SvgPicture.asset(map['image'],width: 30,
                   // Image.asset(
                   // map["image"],
                   ),
@@ -420,11 +426,15 @@ class _AddIssuePageState extends State<AddIssuePage> {
     });
   }
 
-  void createIssue(String projectValue,
+  Future createIssue(String projectValue,
       String typeIssueValue,
       String priorityValue,
       String summary,
-      String description) async {
+      String description,
+      int week,
+      int hour,
+      int day,
+      int minute, ) async {
     var headers = {
       'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
       'Accept': 'application/json',
@@ -440,32 +450,36 @@ class _AddIssuePageState extends State<AddIssuePage> {
         encoding: Encoding.getByName("utf-8"));
     if (lol.statusCode != 201) throw Exception(
         'http.get error: statusCode= ${lol.statusCode}');
-    print(lol.body.toString() + 'lllllllllll');
+    print(lol.body.toString() + 'CreateIssue');
+    var _json = await getCreatedIssueFromJson(lol.body);
 
     // var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/auth/1/session/');
     // var res = await http.get(url, headers: headers);
     // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
     // print(res.body.toString() + '999999999999999999');
+    await createWorkLog(week, day, hour, minute, _json.key);
   }
 
-  void createWorkLog(int week,
-      int day,
-      int hour,
-      int minute) async {
+  createWorkLog(int _week,
+      int _day,
+      int _hour,
+      int _minute,
+      String _issueKey) async {
     var headers = {
       'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     };
 
-    String body = '{ "timeSpent": "${week}w${day}d${hour}h${minute}m" }';
+    // String body = '{ "timeSpent": "${week}w${day}d${hour}h${minute}m" }';
+    String body = '{ "update": { "timetracking":[ { "edit": { "originalEstimate":"${_week}w ${_day}d ${_hour}h ${_minute}m", "remainingEstimate":"${_week}w ${_day}d ${_hour}h ${_minute}m" } } ] } }';
 
     var url = Uri.parse(
-        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
-    var lol = await http.post(url, headers: headers,
+        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/$_issueKey');
+    var lol = await http.put(url, headers: headers,
         body: body,
         encoding: Encoding.getByName("utf-8"));
-    if (lol.statusCode != 201) throw Exception(
+    if (lol.statusCode != 201 || lol.statusCode != 204) throw Exception(
         'http.get error: statusCode= ${lol.statusCode}');
     print(lol.body.toString() + 'lllllllllll');
 
