@@ -74,6 +74,7 @@ flutter:
     - assets/medium.svg
     - assets/low.svg
     - assets/lowest.svg
+    - assets/jira_icon.png
 
   # To add assets to your application, add an assets section, like this:
 #assets:

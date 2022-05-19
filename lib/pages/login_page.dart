@@ -40,8 +40,41 @@ class LoginPage extends StatelessWidget {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-                        TextFormField(
-                          decoration: const InputDecoration(
+                        Container(
+                          height: 50,
+                          child: TextFormField(
+                            style: TextStyle(fontSize: 24),
+                            decoration: const InputDecoration(
+                                enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(30.0),
+                                    )
+                                ),
+                                border: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(30.0),
+                                    )
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(30.0),
+                                    )
+                                )
+                            ),
+                            controller: _emailTextController,
+                            focusNode: _focusEmail,
+                            validator: (value) => Validator.validateEmail(email: value),
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Container(
+                          height: 50,
+                          child: TextFormField(
+                            style: TextStyle(fontSize: 24),
+                            decoration: const InputDecoration(
                               enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                   borderRadius: const BorderRadius.all(
@@ -55,42 +88,17 @@ class LoginPage extends StatelessWidget {
                                   )
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(30.0),
-                                  )
-                              )
-                          ),
-                          controller: _emailTextController,
-                          focusNode: _focusEmail,
-                          validator: (value) => Validator.validateEmail(email: value),
-                        ),
-                        SizedBox(height: 8.0),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(30.0),
-                                )
-                            ),
-                            border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue, width: 5.0),
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(30.0),
                                 )
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(30.0),
                               )
-                            )
+                            ),
+                            controller: _passwordTextController,
+                            focusNode: _focusPassword,
+                            obscureText: true,
+                            validator: (value) => Validator.validatePassword(password: value),
                           ),
-                          controller: _passwordTextController,
-                          focusNode: _focusPassword,
-                          obscureText: true,
-                          validator: (value) => Validator.validatePassword(password: value),
                         ),
                       ],
                     ),

@@ -146,14 +146,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     teleDart!.onMessage().listen((message) {
-      // message.reply('${message.from.first_name} say ${message.text}');
       msgId = message.chat.id;
       setState(() {
         _msgs.add({message.chat.username.toString(): message.text!});
       });
-      print('+++++++++++' + message.text!);
-      print('-----------' + message.photo.toString());
-      print(_msgs);
     });
 
     // teleDart!.onMessage(keyword: 'Load images').listen((message) async {
@@ -164,21 +160,17 @@ class _MyHomePageState extends State<MyHomePage> {
       // subscribe to user input
       final subscription = teleDart!.onMessage().listen((_) {});
 
-      // listen subscription
       subscription.onData((data) async {
         teleDart!.telegram.getChat(data.message_id);
-        // if user upload photo do the following
         if (data.photo != null) {
-          print('|||||||||||||||||||||||||||||||||||||||||||||||||||||||||----' + data.text.toString() + '-----&&&&&&&&&&&&&&&&' );
-          // create the dicrectory on the host
           final tPhoto = data.photo!.last;
-          print('???????tPhoto' + tPhoto.toString() + '??????????');
           final tFile = await teleDart!.telegram.getFile(tPhoto.file_id);
-          print('???????tFile' + tFile.toString() + '??????????');
-
-          // print('_IIIIImage' + _image.toString());
           final tFileLink = tFile.getDownloadLink(telegramApiKey);
-          Database.addItem(title: data.caption.toString(), description: tFileLink.toString(), date: Timestamp.fromDate(data.date_), type: 'Telegram').then((value) => print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'+ data.caption.toString()));
+          Database.addItem(title: data.caption.toString(),
+              description: tFileLink.toString(),
+              date: Timestamp.fromDate(data.date_),
+              type: 'Telegram').then((value) => print(''
+              'Message'+ data.caption.toString()));
           print('???????tFileLink' + tFileLink.toString() + '??????????');
           final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
           print('???????request' + request.toString() + '??????????');
@@ -187,11 +179,6 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
 
           });
-          //
-          // final dir =
-          // await io.Directory('/var/upload/${message.chat.id}').create();
-          // print('/var/upload/${message.chat.id}, -------${message.photo.toString()}-----');
-
         }
       });
     // });

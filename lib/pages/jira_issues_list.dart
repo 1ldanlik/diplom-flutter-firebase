@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:test_diplom_first/pages/add_issue_page.dart';
+import 'package:test_diplom_first/res/custom_colors.dart';
 import 'package:test_diplom_first/utils/issues_get.dart';
 import 'package:test_diplom_first/utils/jira_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import '../utils/validator.dart';
 
 class JiraIssuesList extends StatefulWidget {
   const JiraIssuesList({Key? key}) : super(key: key);
@@ -20,6 +23,12 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   List<Issue>? issueList;
   DateTime? dateTime;
   final zero = DateTime;
+  int _hours = 0;
+  int _minutes = 0;
+  final _focusHour = FocusNode();
+  final _focusMinute = FocusNode();
+  final _hourTextController = TextEditingController();
+  final _minuteTextController = TextEditingController();
 
   @override
   void initState() {
@@ -40,7 +49,15 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Issues'),
+        backgroundColor: Color(0xff4F4FD9),
+        title: Row(
+          children: [
+            Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
+            SizedBox(width: 20,),
+            Text('Задачи',
+                style: TextStyle(fontSize: 24, color: Colors.white),),
+          ],
+        ),
         actions: [
           Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -80,12 +97,13 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
 
               return Column(
                 children: [
-                  SizedBox(height: 8,),
+                  SizedBox(height: 13,),
                   Ink(
                     width: 370,
                     decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(8.0),
+                      color: CustomColors.customWhite,
+                      borderRadius: BorderRadius.circular(18.0),
+                      border: Border.all(width: 2),
                       boxShadow: [
                         BoxShadow(
                             offset: Offset(0, 5),
@@ -115,6 +133,114 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                             children: [
                               Container(
                                 child: ElevatedButton(onPressed: () {
+                                  showDialog<dynamic>(
+                                    context: context,
+                                    builder: (BuildContext context) => Container(
+                                      child: AlertDialog(
+                                        title: Row(
+                                          children: [
+                                            const Text('Добавить время',
+                                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                                            SizedBox(width: 20,),
+                                            IconButton(onPressed: () => Navigator.pop(context, 'Отменить'), icon: Icon(Icons.cancel_rounded), iconSize: 30,)
+                                          ],
+                                        ),
+                                        content:  Container(
+                                          child: Column(
+                                            children: [
+                                              const Text('Часы:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
+                                              const SizedBox(height: 10,),
+                                              Container(
+                                                height: 50,
+                                                width: 200,
+                                                child: TextFormField(
+                                                  style: TextStyle(fontSize: 24),
+                                                  decoration: const InputDecoration(
+                                                      enabledBorder:  OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                          borderRadius: BorderRadius.all(
+                                                             Radius.circular(30.0),
+                                                          )
+                                                      ),
+                                                      border: OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                          borderRadius: BorderRadius.all(
+                                                             Radius.circular(30.0),
+                                                          )
+                                                      ),
+                                                      focusedBorder:  OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                          borderRadius:  BorderRadius.all(
+                                                             Radius.circular(30.0),
+                                                          )
+                                                      )
+                                                  ),
+                                                  controller: _hourTextController,
+                                                  focusNode: _focusHour,
+                                                  validator: (value) => Validator.validateNumber(number: value),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10,),
+                                              const Text('Минуты:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
+                                              const SizedBox(height: 10,),
+                                              Container(
+                                                height: 50,
+                                                width: 200,
+                                                child: TextFormField(
+                                                  style: TextStyle(fontSize: 24),
+                                                  decoration: const InputDecoration(
+                                                      enabledBorder:  OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                          borderRadius: BorderRadius.all(
+                                                             Radius.circular(30.0),
+                                                          )
+                                                      ),
+                                                      border: OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                          borderRadius: BorderRadius.all(
+                                                             Radius.circular(30.0),
+                                                          )
+                                                      ),
+                                                      focusedBorder:  OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                          borderRadius:  BorderRadius.all(
+                                                             Radius.circular(30.0),
+                                                          )
+                                                      )
+                                                  ),
+                                                  controller: _minuteTextController,
+                                                  focusNode: _focusMinute,
+                                                  validator: (value) => Validator.validateNumber(number: value),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          height: 192,
+                                        ),
+                                        actions: <Widget>[
+                                          Row(
+                                            children: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, 'Добавить');
+                                                  logSpentTime(_hours, _minutes,
+                                                      issueList![index].key).whenComplete(() {
+                                                        getData();
+                                                        toNull();
+                                                      }
+                                                  );
+                                                },
+                                                child: Text('Добавить',
+                                                  style: TextStyle(fontSize: 24),),
+                                              ),
+                                            ],
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+
                                 }, child: Icon(Icons.alarm_add_outlined)),
                                 width: 50,
                               ),
@@ -149,7 +275,6 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   // }
 
   Future<List<Issue>?> getIssues() async {
-
     String credentials = "dawani2016@mail.ru:Xm6EN8qHwuRFXvLXclBUA0BB";
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String encoded = stringToBase64.encode(credentials);
@@ -173,13 +298,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     if (lol.statusCode == 200 || lol.statusCode == 201) {
       var json1 = lol.body;
       print('LLLLLLLLLL' + getIssuesFromJson(json1).issues.toString());
-      // JiraIssuesList.strIssues = jsonDecode(lol.body);
       return getIssuesFromJson(json1).issues;
-      // setState(() {
-      //   issues = lol.body.toString();
-      //   print('HOHOHOH' + issues.toString());
-      //   print('KOKOKOKO' + lol.toString());
-      // });
     }
     else {
       throw Exception('http.get error: statusCode= ${lol.statusCode}');
@@ -218,6 +337,62 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     else {
       throw Exception('http.get error: statusCode= ${deleteRequest.statusCode}');
     }
+  }
+
+  Future logSpentTime(
+      int _hour,
+      int _minute,
+      String _issueKey) async {
+    var headers = {
+      'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    String body = '{ "timeSpent": "${_hour}h ${_minute}m" }';
+
+    var url = Uri.parse(
+        'https://jirasoftwareildan.atlassian.net/rest/api/3/issue/$_issueKey/worklog');
+    var lol = await http.post(url, headers: headers,
+        body: body,
+        encoding: Encoding.getByName("utf-8"));
+    if (lol.statusCode != 201 || lol.statusCode != 204) throw Exception(
+        'http.get error: statusCode= ${lol.statusCode}');
+    print(lol.body.toString() + 'lllllllllll');
+
+  }
+
+  toNull() {
+    setState(() {
+      _hours = 0;
+      _minutes = 0;
+    });
+  }
+
+  void addMinutes() {
+    setState(() {
+      _minutes++;
+    });
+  }
+
+  void minusHours() {
+    setState(() {
+      if (_hours != 0)
+        _hours--;
+    });
+  }
+
+  void addHours() {
+    setState(() {
+      _hours++;
+    });
+  }
+
+  void minusMinutes() {
+    setState(() {
+      if (_minutes != 0)
+        _minutes--;
+    });
   }
 
 
