@@ -140,39 +140,37 @@ class _AddIssuePageState extends State<AddIssuePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Приоритет:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                  Expanded(
-                  child: DropdownButtonHideUnderline(
-                  child: ButtonTheme(
-                  child: DropdownButton<String>(
-                  value: priorityValue,
-                  onChanged: (String? newValue) {
-                  setState(() {
-                    priorityValue = newValue!;
-                  });
+                  // Expanded(
+                  // child:
+                  DropdownButtonHideUnderline(
+                    child: ButtonTheme(
+                      child: DropdownButton<String>(
+                        value: priorityValue,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            priorityValue = newValue!;
+                          });
 
-                  print(priorityValue);
-                  },
-                  items: priorityMap.map((Map map) {
-                  return new DropdownMenuItem<String>(
-                  value: map["name"].toString(),
-                  // value: _mySelection,
-                  child: Row(
-                  children: <Widget>[
-                    SvgPicture.asset(map['image'],width: 30,
-                  // Image.asset(
-                  // map["image"],
+                          print(priorityValue);
+                        },
+                        items: priorityMap.map((Map map) {
+                          return new DropdownMenuItem<String>(
+                            value: map["name"].toString(),
+                            child: Row(
+                              children: <Widget>[
+                                SvgPicture.asset(map['image'],width: 30,
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Text(map["name"])),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   ),
-                  Container(
-                  margin: EdgeInsets.only(left: 10),
-                  child: Text(map["name"])),
-                  ],
-                  ),
-                  );
-                  }).toList(),
-                  ),
-                  ),
-                  ),
-                  ),
+                  // ),
                 ]
               ),
               Container(

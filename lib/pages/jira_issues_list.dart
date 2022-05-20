@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:test_diplom_first/pages/add_issue_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
@@ -21,6 +22,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   late String? issues;
   var isLoaded = false;
   List<Issue>? issueList;
+  List<Issue>? filterList;
   DateTime? dateTime;
   final zero = DateTime;
   int _hours = 0;
@@ -29,6 +31,15 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   final _focusMinute = FocusNode();
   final _hourTextController = TextEditingController();
   final _minuteTextController = TextEditingController();
+  String priorityValue = 'Все';
+  List<Map> priorityMap = [
+    {"name": 'Все', "image": "null"},
+    {"name": 'Highest', "image": "assets/highest.svg"},
+    {"name": 'High', "image": "assets/high.svg"},
+    {"name": 'Medium', "image": "assets/medium.svg"},
+    {"name": 'Low', "image": "assets/low.svg"},
+    {"name": 'Lowest', "image": "assets/lowest.svg"},
+  ];
 
   @override
   void initState() {
@@ -37,9 +48,17 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   }
 
   getData() async{
-    issueList = await getIssues();
+    if(priorityValue == 'Все') {
+      issueList = await getIssues();
+    }
+    else
+      {
+        issueList = await issueList!.where((element) => element.fields.priority.toString() == priorityValue).toList();
+      }
     if(issueList != null){
           setState(() {
+
+            // issueList = issueList!.where((element) => element.key == 'GEEK').toList();
             isLoaded = true;
         });
     }
@@ -49,7 +68,8 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff4F4FD9),
+        backgroundColor: CustomColors.customPurple,
+        leading: BackButton(color: CustomColors.customWhite,),
         title: Row(
           children: [
             Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
@@ -61,18 +81,56 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
         actions: [
           Padding(
               padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) =>
-                    AddIssuePage())
-                  );
-                },
-                child: Icon(
-                  Icons.add,
-                  size: 26.0,
-                ),
+              child: Row(
+                children: [
+                  Container(
+                    height: 30,
+                    color: CustomColors.customWhite,
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        child: DropdownButton<String>(
+                          value: priorityValue,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              priorityValue = newValue!;
+                              sortMethod()!.whenComplete(() => getData());
+                            });
+
+                            print(priorityValue);
+                          },
+                          items: priorityMap.map((Map map) {
+                            return new DropdownMenuItem<String>(
+                              value: map["name"].toString(),
+                              child: Row(
+                                children: <Widget>[
+                                  map['image'] != 'null' ?
+                                  SvgPicture.asset(map['image'],width: 30,
+                                  ) : SizedBox(),
+                                  Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      child: Text(map["name"])),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                        AddIssuePage())
+                      );
+                    },
+                    child: Icon(
+                      Icons.add, color: CustomColors.customWhite,
+                      size: 26.0,
+                    ),
+                  ),
+                ],
               )
           ),
         ],
@@ -119,15 +177,14 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                       child: Column(
                         children: [
                           SizedBox(height: 10.0,),
-                          Text(issueList![index].key != null ? 'Ключ: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                          Text(issueList![index].fields.timeestimate != null && issueList![index].fields.timeestimate != 0  ? 'Срок окончания: ${hours}ч. ${minutes}м.' : 'Без срока', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
-                          Text(issueList![index].fields.duedate != null ? 'Срок окончания: ${issueList![index].fields.duedate}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                          Text(issueList![index].key != null ? 'Ключ: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Text(issueList![index].fields.summary.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                          SizedBox(height: 10.0,),
-                          Text(issueList![index].fields.timeestimate != null ? 'Срок окончания: ${hours}ч. ${minutes}м.' : 'Без срока', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                          Text(issueList![index].fields.priority.toString().toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Row(
                             children: [
@@ -241,15 +298,33 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                     ),
                                   );
 
-                                }, child: Icon(Icons.alarm_add_outlined)),
-                                width: 50,
+                                }, child: Icon(Icons.alarm_add_outlined, color: CustomColors.customWhite,),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: CustomColors.customPurple,
+                                      textStyle: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                width: 60,
+                                height: 40,
                               ),
                               SizedBox(width: 20.0,),
-                              ElevatedButton(onPressed: () async {
-                                deleteIssue(issueList![index].key).whenComplete(() => getData());
-                              }, child: Icon(Icons.delete)),
+                              Container(
+                                width: 60,
+                                height: 40,
+                                child: ElevatedButton(onPressed: () async {
+                                  deleteIssue(issueList![index].key).whenComplete(() => getData());
+                                }, child: Icon(Icons.delete, color: CustomColors.customWhite,),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: CustomColors.customRed,
+                                      textStyle: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ),
                             ],
-                          )
+                          ),
+                          SizedBox(height: 10,)
                         ],
                       ),
                     ),
@@ -395,5 +470,8 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     });
   }
 
+  Future? sortMethod () async {
+    issueList = await issueList!.where((element) => element.fields.priority.toString() == priorityValue).toList();
+  }
 
 }
