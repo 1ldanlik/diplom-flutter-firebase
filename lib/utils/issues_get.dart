@@ -628,10 +628,14 @@ class Priority {
   };
 }
 
-enum PriorityName { MEDIUM }
+enum PriorityName {HIGHEST, HIGH, MEDIUM, LOW, LOWEST }
 
 final priorityNameValues = EnumValues({
-  "Medium": PriorityName.MEDIUM
+  "Highest": PriorityName.HIGHEST,
+  "High": PriorityName.HIGH,
+  "Medium": PriorityName.MEDIUM,
+  "Low": PriorityName.LOW,
+  "Lowest": PriorityName.LOWEST
 });
 
 class Project {

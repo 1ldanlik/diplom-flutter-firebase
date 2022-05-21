@@ -53,12 +53,11 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     }
     else
       {
-        issueList = await issueList!.where((element) => element.fields.priority.toString() == priorityValue).toList();
+        issueList = await getIssues();
+        issueList = issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)).toList();
       }
     if(issueList != null){
           setState(() {
-
-            // issueList = issueList!.where((element) => element.key == 'GEEK').toList();
             isLoaded = true;
         });
     }
@@ -93,7 +92,8 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                           onChanged: (String? newValue) {
                             setState(() {
                               priorityValue = newValue!;
-                              sortMethod()!.whenComplete(() => getData());
+                              // sortMethod()!.whenComplete(() => getData());
+                              getData();
                             });
 
                             print(priorityValue);
@@ -153,6 +153,8 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                     .inMinutes - hours * 60;
               }
 
+              String? priority = priorityToNameMethod(int.parse(issueList![index].fields.priority.id));
+
               return Column(
                 children: [
                   SizedBox(height: 13,),
@@ -184,7 +186,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                           Text(issueList![index].fields.summary.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                          Text(issueList![index].fields.priority.toString().toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                          Text(priority.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                           SizedBox(height: 10.0,),
                           Row(
                             children: [
@@ -340,15 +342,6 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     );
   }
 
-  // method() {
-  //
-  //   setState(() async{
-  //     await JiraService().getIssues();
-  //     issues = await JiraIssuesList.strIssues;
-  //     print('ISSUES LOL' + issues.toString());
-  //   });
-  // }
-
   Future<List<Issue>?> getIssues() async {
     String credentials = "dawani2016@mail.ru:Xm6EN8qHwuRFXvLXclBUA0BB";
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
@@ -471,7 +464,33 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   }
 
   Future? sortMethod () async {
-    issueList = await issueList!.where((element) => element.fields.priority.toString() == priorityValue).toList();
+    issueList = await issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)).toList();
+  }
+
+  String? priorityToNameMethod(int id) {
+    if(id == 1)
+      return 'Highest';
+    if(id == 2)
+      return 'High';
+    if(id == 3)
+      return 'Medium';
+    if(id == 4)
+      return 'Low';
+    if(id == 5)
+      return 'Lowest';
+  }
+
+  String? priorityToIdMethod(String name) {
+    if(name == 'Highest')
+      return '1';
+    if(name == 'High')
+      return '2';
+    if(name == 'Medium')
+      return '3';
+    if(name == 'Low')
+      return '4';
+    if(name == 'Lowest')
+      return '5';
   }
 
 }
