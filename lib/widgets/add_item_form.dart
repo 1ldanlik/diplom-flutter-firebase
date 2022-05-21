@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:test_diplom_first/res/custom_colors.dart';
 import '../utils/database.dart';
 import '../utils/validator.dart';
 import '../widgets/custom_form_field.dart';
@@ -53,9 +54,8 @@ class _AddItemFormState extends State<AddItemForm> {
               children: [
                 SizedBox(height: 24.0),
                 Text(
-                  'Title',
+                  'Изображение',
                   style: TextStyle(
-                    color: Colors.grey,
                     fontSize: 22.0,
                     letterSpacing: 1,
                     fontWeight: FontWeight.bold,
@@ -79,34 +79,49 @@ class _AddItemFormState extends State<AddItemForm> {
                     SizedBox(width: 30,),
                     ElevatedButton(
                       onPressed: () => chooseImage(),
-                      child: Text('Выбрать картинку',),),
+                      child: Text('Выбрать изображение', style: TextStyle(color: CustomColors.customWhite),),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(CustomColors.customPurple)
+                    ),),
                   ],
                 ),
                 SizedBox(height: 24.0),
                 Text(
                   'Сообщение',
                   style: TextStyle(
-                    color: Colors.grey,
                     fontSize: 22.0,
                     letterSpacing: 1,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 8.0),
-                CustomFormField(
+                TextFormField(
                   maxLines: 10,
-                  isLabelEnabled: false,
+                  // isLabelEnabled: false,
                   controller: _descriptionController,
                   focusNode: widget.descriptionFocusNode,
                   keyboardType: TextInputType.text,
-                  inputAction: TextInputAction.done,
+                  // inputAction: TextInputAction.done,
                   validator: (value) => Validator.validateField(
-                    value: value,
+                    value: value!,
                   ),
-                  label: 'Сообщение',
-                  hint: 'Введите ваше сообщение',
-                ),
-              ],
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 5.0),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30.0),
+                        ),
+                    ),
+                    labelStyle: TextStyle(color: Colors.yellow),
+                    hintText: 'Введите ваше сообщение',
+                    errorStyle: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  // label: 'Сообщение',
+                  // hintText: 'Введите ваше сообщение',
+                )
+                )],
             ),
           ),
           _isProcessing
@@ -123,11 +138,11 @@ class _AddItemFormState extends State<AddItemForm> {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
-                  Colors.orange,
+                  CustomColors.customPurple,
                 ),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(18),
                   ),
                 ),
               ),
@@ -140,11 +155,11 @@ class _AddItemFormState extends State<AddItemForm> {
                     _isProcessing = true;
                   });
 
-                  await uploadFile();
-
-                  setState(() {
-                    _isProcessing = false;
-                  });
+                  await uploadFile().whenComplete(() =>
+                      setState(() {
+                        _isProcessing = false;
+                      })
+                  );
 
                   Navigator.of(context).pop();
                 }
@@ -152,11 +167,11 @@ class _AddItemFormState extends State<AddItemForm> {
               child: Padding(
                 padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
                 child: Text(
-                  'ADD ITEM',
+                  'Добавить',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange,
+                    color: CustomColors.customWhite,
                     letterSpacing: 2,
                   ),
                 ),

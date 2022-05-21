@@ -136,207 +136,230 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
         ],
       ),
       body:
-      Visibility(
-        visible: isLoaded,
-        child:
-        ListView.builder(
-            itemCount: issueList?.length,
-            itemBuilder: (context, index) {
-              int hours = 0;
-              int minutes = 0;
-              if(issueList![index].fields.timeestimate != null) {
-                hours = Duration(
-                    minutes: issueList![index].fields.timeestimate ~/ 60)
-                    .inHours;
-                minutes = Duration(
-                    minutes: issueList![index].fields.timeestimate ~/ 60)
-                    .inMinutes - hours * 60;
-              }
+      Container(
+        color: CustomColors.customWhite,
+        child: Column(
+          children: [
+            Container(
+              height: 500,
+              child: Visibility(
+                visible: isLoaded,
+                child:
+                ListView.builder(
+                    itemCount: issueList?.length,
+                    itemBuilder: (context, index) {
+                      int hours = 0;
+                      int minutes = 0;
+                      if(issueList![index].fields.timeestimate != null) {
+                        hours = Duration(
+                            minutes: issueList![index].fields.timeestimate ~/ 60)
+                            .inHours;
+                        minutes = Duration(
+                            minutes: issueList![index].fields.timeestimate ~/ 60)
+                            .inMinutes - hours * 60;
+                      }
 
-              String? priority = priorityToNameMethod(int.parse(issueList![index].fields.priority.id));
+                      String? priority = priorityToNameMethod(int.parse(issueList![index].fields.priority.id));
 
-              return Column(
-                children: [
-                  SizedBox(height: 13,),
-                  Ink(
-                    width: 370,
-                    decoration: BoxDecoration(
-                      color: CustomColors.customWhite,
-                      borderRadius: BorderRadius.circular(18.0),
-                      border: Border.all(width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, 5),
-                            blurRadius: 5,
-                            color: Colors.grey
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          right: 10.0,
-                          left: 10.0),
-                      child: Column(
+                      return Column(
                         children: [
-                          SizedBox(height: 10.0,),
-                          Text(issueList![index].fields.timeestimate != null && issueList![index].fields.timeestimate != 0  ? 'Срок окончания: ${hours}ч. ${minutes}м.' : 'Без срока', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                          SizedBox(height: 10.0,),
-                          Text(issueList![index].key != null ? 'Ключ: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-                          SizedBox(height: 10.0,),
-                          Text(issueList![index].fields.summary.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                          SizedBox(height: 10.0,),
-                          Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                          Text(priority.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                          SizedBox(height: 10.0,),
-                          Row(
-                            children: [
-                              Container(
-                                child: ElevatedButton(onPressed: () {
-                                  showDialog<dynamic>(
-                                    context: context,
-                                    builder: (BuildContext context) => Container(
-                                      child: AlertDialog(
-                                        title: Row(
-                                          children: [
-                                            const Text('Добавить время',
-                                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                                            SizedBox(width: 20,),
-                                            IconButton(onPressed: () => Navigator.pop(context, 'Отменить'), icon: Icon(Icons.cancel_rounded), iconSize: 30,)
-                                          ],
-                                        ),
-                                        content:  Container(
-                                          child: Column(
-                                            children: [
-                                              const Text('Часы:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
-                                              const SizedBox(height: 10,),
-                                              Container(
-                                                height: 50,
-                                                width: 200,
-                                                child: TextFormField(
-                                                  style: TextStyle(fontSize: 24),
-                                                  decoration: const InputDecoration(
-                                                      enabledBorder:  OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                                          borderRadius: BorderRadius.all(
-                                                             Radius.circular(30.0),
-                                                          )
-                                                      ),
-                                                      border: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                          borderRadius: BorderRadius.all(
-                                                             Radius.circular(30.0),
-                                                          )
-                                                      ),
-                                                      focusedBorder:  OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                          borderRadius:  BorderRadius.all(
-                                                             Radius.circular(30.0),
-                                                          )
-                                                      )
-                                                  ),
-                                                  controller: _hourTextController,
-                                                  focusNode: _focusHour,
-                                                  validator: (value) => Validator.validateNumber(number: value),
+                          SizedBox(height: 13,),
+                          Ink(
+                            width: 370,
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  right: 10.0,
+                                  left: 10.0),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10.0,),
+                                  Text(issueList![index].fields.timeestimate != null && issueList![index].fields.timeestimate != 0  ? 'Срок окончания: ${hours}ч. ${minutes}м.' : 'Без срока', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                  SizedBox(height: 10.0,),
+                                  Text(issueList![index].key != null ? 'Ключ: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                                  SizedBox(height: 10.0,),
+                                  Text(issueList![index].fields.summary.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                                  SizedBox(height: 10.0,),
+                                  Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                  Text(priority.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                  SizedBox(height: 10.0,),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        child: ElevatedButton(onPressed: () {
+                                          showDialog<dynamic>(
+                                            context: context,
+                                            builder: (BuildContext context) => Container(
+                                              child: AlertDialog(
+                                                title: Row(
+                                                  children: [
+                                                    const Text('Добавить время',
+                                                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                                                    SizedBox(width: 20,),
+                                                    IconButton(onPressed: () => Navigator.pop(context, 'Отменить'), icon: Icon(Icons.cancel_rounded), iconSize: 30,)
+                                                  ],
                                                 ),
-                                              ),
-                                              const SizedBox(height: 10,),
-                                              const Text('Минуты:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
-                                              const SizedBox(height: 10,),
-                                              Container(
-                                                height: 50,
-                                                width: 200,
-                                                child: TextFormField(
-                                                  style: TextStyle(fontSize: 24),
-                                                  decoration: const InputDecoration(
-                                                      enabledBorder:  OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                                          borderRadius: BorderRadius.all(
-                                                             Radius.circular(30.0),
-                                                          )
+                                                content:  Container(
+                                                  child: Column(
+                                                    children: [
+                                                      const Text('Часы:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
+                                                      const SizedBox(height: 10,),
+                                                      Container(
+                                                        height: 50,
+                                                        width: 200,
+                                                        child: TextFormField(
+                                                          style: TextStyle(fontSize: 24),
+                                                          decoration: const InputDecoration(
+                                                              enabledBorder:  OutlineInputBorder(
+                                                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                                  borderRadius: BorderRadius.all(
+                                                                     Radius.circular(30.0),
+                                                                  )
+                                                              ),
+                                                              border: OutlineInputBorder(
+                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                  borderRadius: BorderRadius.all(
+                                                                     Radius.circular(30.0),
+                                                                  )
+                                                              ),
+                                                              focusedBorder:  OutlineInputBorder(
+                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                  borderRadius:  BorderRadius.all(
+                                                                     Radius.circular(30.0),
+                                                                  )
+                                                              )
+                                                          ),
+                                                          controller: _hourTextController,
+                                                          focusNode: _focusHour,
+                                                          validator: (value) => Validator.validateNumber(number: value),
+                                                        ),
                                                       ),
-                                                      border: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                          borderRadius: BorderRadius.all(
-                                                             Radius.circular(30.0),
-                                                          )
+                                                      const SizedBox(height: 10,),
+                                                      const Text('Минуты:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
+                                                      const SizedBox(height: 10,),
+                                                      Container(
+                                                        height: 50,
+                                                        width: 200,
+                                                        child: TextFormField(
+                                                          style: TextStyle(fontSize: 24),
+                                                          decoration: const InputDecoration(
+                                                              enabledBorder:  OutlineInputBorder(
+                                                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                                  borderRadius: BorderRadius.all(
+                                                                     Radius.circular(30.0),
+                                                                  )
+                                                              ),
+                                                              border: OutlineInputBorder(
+                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                  borderRadius: BorderRadius.all(
+                                                                     Radius.circular(30.0),
+                                                                  )
+                                                              ),
+                                                              focusedBorder:  OutlineInputBorder(
+                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                  borderRadius:  BorderRadius.all(
+                                                                     Radius.circular(30.0),
+                                                                  )
+                                                              )
+                                                          ),
+                                                          controller: _minuteTextController,
+                                                          focusNode: _focusMinute,
+                                                          validator: (value) => Validator.validateNumber(number: value),
+                                                        ),
                                                       ),
-                                                      focusedBorder:  OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                          borderRadius:  BorderRadius.all(
-                                                             Radius.circular(30.0),
-                                                          )
-                                                      )
+                                                    ],
                                                   ),
-                                                  controller: _minuteTextController,
-                                                  focusNode: _focusMinute,
-                                                  validator: (value) => Validator.validateNumber(number: value),
+                                                  height: 192,
                                                 ),
+                                                actions: <Widget>[
+                                                  Row(
+                                                    children: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context, 'Добавить');
+                                                          logSpentTime(_hours, _minutes,
+                                                              issueList![index].key).whenComplete(() {
+                                                                getData();
+                                                                toNull();
+                                                              }
+                                                          );
+                                                        },
+                                                        child: Text('Добавить',
+                                                          style: TextStyle(fontSize: 24),),
+                                                      ),
+                                                    ],
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                          height: 192,
-                                        ),
-                                        actions: <Widget>[
-                                          Row(
-                                            children: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context, 'Добавить');
-                                                  logSpentTime(_hours, _minutes,
-                                                      issueList![index].key).whenComplete(() {
-                                                        getData();
-                                                        toNull();
-                                                      }
-                                                  );
-                                                },
-                                                child: Text('Добавить',
-                                                  style: TextStyle(fontSize: 24),),
-                                              ),
-                                            ],
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                            ),
+                                          );
 
-                                }, child: Icon(Icons.alarm_add_outlined, color: CustomColors.customWhite,),
-                                  style: ElevatedButton.styleFrom(
-                                      primary: CustomColors.customPurple,
-                                      textStyle: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                                width: 60,
-                                height: 40,
+                                        }, child: Icon(Icons.alarm_add_outlined, color: CustomColors.customWhite,),
+                                          style: ElevatedButton.styleFrom(
+                                              primary: CustomColors.customPurple,
+                                              textStyle: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                        width: 60,
+                                        height: 40,
+                                      ),
+                                      SizedBox(width: 20.0,),
+                                      Container(
+                                        width: 60,
+                                        height: 40,
+                                        child: ElevatedButton(onPressed: () async {
+                                          deleteIssue(issueList![index].key).whenComplete(() => getData());
+                                        }, child: Icon(Icons.delete, color: CustomColors.customWhite,),
+                                          style: ElevatedButton.styleFrom(
+                                              primary: CustomColors.customRed,
+                                              textStyle: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10,)
+                                ],
                               ),
-                              SizedBox(width: 20.0,),
-                              Container(
-                                width: 60,
-                                height: 40,
-                                child: ElevatedButton(onPressed: () async {
-                                  deleteIssue(issueList![index].key).whenComplete(() => getData());
-                                }, child: Icon(Icons.delete, color: CustomColors.customWhite,),
-                                  style: ElevatedButton.styleFrom(
-                                      primary: CustomColors.customRed,
-                                      textStyle: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold)),
-                                ),
+                              decoration: BoxDecoration(
+                                color: CustomColors.customWhite,
+                                borderRadius: BorderRadius.circular(18.0),
+                                border: Border.all(width: 2),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 5),
+                                      blurRadius: 5,
+                                      color: Colors.grey
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                          SizedBox(height: 10,)
                         ],
-                      ),
+                      );
+                    },
                     ),
-                  ),
-                ],
-              );
-            },
+                replacement: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             ),
-        replacement: const Center(
-          child: CircularProgressIndicator(),
+
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                  color: CustomColors.customPurple,
+                  borderRadius: BorderRadius.circular(30)
+              ),
+              child: IconButton(
+                  icon: Icon(Icons.add, color: CustomColors.customWhite, size: 40,),
+                  onPressed: () {
+                  }),
+            )
+          ],
         ),
       )
     );

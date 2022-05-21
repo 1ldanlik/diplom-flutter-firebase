@@ -52,9 +52,6 @@ class CustomFormField extends StatelessWidget {
         labelText: isLabelEnabled ? _label : null,
         labelStyle: TextStyle(color: Colors.yellow),
         hintText: _hint,
-        hintStyle: TextStyle(
-          color: Colors.grey,
-        ),
         errorStyle: TextStyle(
           color: Colors.redAccent,
           fontWeight: FontWeight.bold,
@@ -62,7 +59,7 @@ class CustomFormField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Colors.amber,
+            color: Colors.grey,
             width: 2,
           ),
         ),

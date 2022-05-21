@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:intl/intl.dart';
+import 'package:test_diplom_first/res/custom_colors.dart';
 
 import '../utils/database.dart';
 
@@ -37,17 +38,14 @@ class _ItemListState extends State<ItemList> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           // return Text('Something went wrong');
-          return Text(snapshot.error.toString() + 'wwwwwwwwwwwwwwwwwwwwwww');
+          return Text(snapshot.error.toString());
         } else if (snapshot.hasData || snapshot.data != null) {
-          print('OKOKKOKOKKOKOKKOKOKOK');
           return ListView.separated(
             controller: _scrollController,
             separatorBuilder: (context, index) => SizedBox(height: 16.0),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var noteInfo = snapshot.data!.docs[index].data();
-              // String docID = snapshot.data!.docs[index].id;
-              print(noteInfo.toString() + 'ppppppppppppppppppppppppppppppppp');
               String title = noteInfo['title'];
               String description = noteInfo['description'];
               Timestamp date = noteInfo['date'];
@@ -56,25 +54,24 @@ class _ItemListState extends State<ItemList> {
               String date2 = DateFormat("yyyy-MM-dd - kk:mm").format(date.toDate().add(duration));
 
               return Ink(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Container(
+                child:
+                  Container(
                   width: 160,
                   decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(29),
+                    color: CustomColors.customWhite,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(width: 2),
                     boxShadow: [
                       BoxShadow(
-                        offset: Offset(0, 10),
-                        blurRadius: 33,
-                        color: Colors.grey
+                          offset: Offset(0, 3),
+                          blurRadius: 3,
+                          color: Colors.grey
                       ),
                     ],
                   ),
                   child: Column(
                     children: [
+                      SizedBox(height: 10,),
                       Row(
                         children: [
                       Container(
@@ -95,7 +92,7 @@ class _ItemListState extends State<ItemList> {
                       )),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
                       ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(

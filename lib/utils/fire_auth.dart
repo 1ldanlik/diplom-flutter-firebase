@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:test_diplom_first/pages/login_page.dart';
 
 class FireAuth {
   static Future<User?> registerUsingEmailPassword({
@@ -45,8 +48,10 @@ class FireAuth {
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
+        LoginPage.textExceptionSt = 'Пользователь не найден!';
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
+        LoginPage.textExceptionSt = 'Неверный пароль!';
         print('Wrong password provided.');
       }
     }
@@ -62,4 +67,33 @@ class FireAuth {
 
     return refreshedUser;
   }
+
+  static Future<void> _showMyDialog(String text) async {
+    var context;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('$text', style: TextStyle(fontSize: 18),)
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ок'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

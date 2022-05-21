@@ -7,6 +7,7 @@ import 'package:test_diplom_first/widgets/add_item_form.dart';
 import 'package:test_diplom_first/widgets/telegram_list.dart';
 import 'dart:io' as io;
 
+import '../res/custom_colors.dart';
 import '../utils/database.dart';
 import 'add_news_page.dart';
 
@@ -45,30 +46,24 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text(widget.title),
+        backgroundColor: CustomColors.customPurple,
+        leading: BackButton(color: CustomColors.customWhite,),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
+            // SizedBox(width: 20,),
+            Text('Новости',
+              style: TextStyle(fontSize: 24, color: Colors.white),),
+          ],
+        ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: [
-                  0.1,
-                  0.4,
-                  0.6,
-                  0.9
-                ],
-                colors: [
-                  Colors.yellow,
-                  Colors.red,
-                  Colors.indigo,
-                  Colors.teal
-                ])),
         child: Column(
           children: [
             SizedBox(height: 20,),
             Container(
-              height: MediaQuery.of(context).size.height / 1.5,
+              height: MediaQuery.of(context).size.height / 1.38,
               child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -80,33 +75,24 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ),
             ),
-            // Form(
-            //     key: _formKey,
-            //     child: TextFormField(
-            //       decoration: InputDecoration(
-            //           labelText: 'Message',
-            //           hintText: 'input text',
-            //           border: OutlineInputBorder(
-            //             borderRadius: BorderRadius.circular(25.0),
-            //             borderSide: BorderSide(),
-            //           )),
-            //       controller: _controller,
-            //       validator: (value) {
-            //         if (value!.isEmpty) {
-            //           return 'Enter text';
-            //         }
-            //         return null;
-            //       },
-            //     )),
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) =>
-                          AddNewsPage()
-                      ));
-                  })
+            SizedBox(height: 20,),
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: CustomColors.customPurple,
+                borderRadius: BorderRadius.circular(30)
+              ),
+              child: IconButton(
+                  icon: Icon(Icons.add, color: CustomColors.customWhite, size: 40,),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                            AddNewsPage()
+                        ));
+                    }),
+            )
           ],
         ),
       ),

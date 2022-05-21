@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../res/custom_colors.dart';
 import '../widgets/add_item_form.dart';
 
 class AddNewsPage extends StatefulWidget {
@@ -25,10 +26,19 @@ class _AddNewsPageState extends State<AddNewsPage> {
         _descriptionFocusNode.unfocus();
       },
       child: Scaffold(
-        backgroundColor: Colors.red,
+        backgroundColor: CustomColors.customWhite,
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.red,
+          backgroundColor: CustomColors.customPurple,
+          leading: BackButton(color: CustomColors.customWhite,),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
+              // SizedBox(width: 20,),
+              Text('Добавление новости',
+                style: TextStyle(fontSize: 24, color: Colors.white),),
+            ],
+          ),
         ),
         body: SafeArea(
           child: Padding(
