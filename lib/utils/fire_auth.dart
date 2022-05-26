@@ -49,9 +49,13 @@ class FireAuth {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         LoginPage.textExceptionSt = 'Пользователь не найден!';
+        LoginPage.noUser = true;
+        print('No user found for that email.' + LoginPage.noUser.toString());
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         LoginPage.textExceptionSt = 'Неверный пароль!';
+        LoginPage.wrongPassword = true;
+        print('Wrong password provided.' + LoginPage.wrongPassword.toString());
         print('Wrong password provided.');
       }
     }

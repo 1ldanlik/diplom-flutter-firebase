@@ -42,6 +42,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     _nameTextController.text = widget.name!;
     _emailTextController.text = widget.mail!;
+    if(widget.subdivision != null)
     _subdivisionTextController.text = widget.subdivision!;
   }
 
@@ -75,7 +76,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           name: value,
                         ),
                         decoration: InputDecoration(
-                          hintText: "Name",
+                          hintText: "ФИО",
                           errorBorder: UnderlineInputBorder(
                             borderRadius: BorderRadius.circular(6.0),
                             borderSide: BorderSide(
@@ -109,7 +110,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           subDivis: value,
                         ),
                         decoration: InputDecoration(
-                          hintText: "Subdivision",
+                          hintText: "Подразделение",
                           errorBorder: UnderlineInputBorder(
                             borderRadius: BorderRadius.circular(6.0),
                             borderSide: BorderSide(

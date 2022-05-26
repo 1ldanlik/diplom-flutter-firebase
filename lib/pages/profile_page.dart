@@ -5,8 +5,10 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:test_diplom_first/pages/choose_page.dart';
 import 'package:test_diplom_first/pages/jira_issues_list.dart';
 import 'package:test_diplom_first/pages/redact_profile_page.dart';
+import 'package:test_diplom_first/res/custom_colors.dart';
 import 'package:test_diplom_first/utils/jira_auth.dart';
 import '../utils/fire_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -96,8 +98,9 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 30,),
             Container(
               decoration: BoxDecoration(
-                color: Color(0xffCCCCCC),
-                borderRadius: BorderRadius.circular(20.0),
+                // border: ,
+                color: CustomColors.customWhite,
+                borderRadius: BorderRadius.circular(18.0),
               ),
               width: 320,
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -231,17 +234,33 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 child: Text('Home page')
             ),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          JiraIssuesList(),
-                      // DashboardScreen()
-                    ),
-                  );
-                },
-                child: Text('Задачи Jira')
+            Row(
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              JiraIssuesList(),
+                          // DashboardScreen()
+                        ),
+                      );
+                    },
+                    child: Text('Задачи1 Jira')
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ChoosePage(user: _currentUser,),
+                          // DashboardScreen()
+                        ),
+                      );
+                    },
+                    child: Text('Выбор')
+                ),
+              ],
             ),
             // Add widgets for verifying email
             // and, signing out the user

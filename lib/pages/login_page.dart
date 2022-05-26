@@ -1,3 +1,4 @@
+import 'package:test_diplom_first/pages/choose_page.dart';
 import 'package:test_diplom_first/pages/news_page.dart';
 
 import '../res/custom_colors.dart';
@@ -13,6 +14,8 @@ import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   static String? textExceptionSt = '';
+  static bool noUser = false;
+  static bool wrongPassword = false;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -30,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final _focusPassword = FocusNode();
 
+  static bool _noUser = LoginPage.noUser;
+  static bool _wrongPassword = LoginPage.wrongPassword;
   @override
   void initState() {
     super.initState();
@@ -152,14 +157,24 @@ class _LoginPageState extends State<LoginPage> {
                                 User? user = await FireAuth.signInUsingEmailPassword(
                                   email: _emailTextController.text,
                                   password: _passwordTextController.text,
-                                );
+                                ).whenComplete(() => exceptionMethod(_noUser, _wrongPassword));
+
+                                setState(() {
+                                  _noUser = false;
+                                  _wrongPassword = false;
+                                });
+
                                 if (user != null) {
-                                  Database.commonId = '1234';
+                                  Database.commonId = 'main';
                                   Navigator.of(context)
                                       .pushReplacement(
-                                    MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+                                    MaterialPageRoute(builder: (context) => ChoosePage(user: user)),
                                   );
                                 }
+                                else
+                                  {
+                                    exceptionMethod(_noUser, _wrongPassword);
+                                  }
                               }
                             },
                             child: Text(
@@ -215,4 +230,38 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  exceptionMethod(bool userBool, bool passBool) {
+    if(userBool == true || passBool == true)
+      {
+        // _noUser = false;
+        // _wrongPassword = false;
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Пользователь не найден!', style: TextStyle(fontSize: 18),)
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Ок'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    else return null;
+  }
+
 }
