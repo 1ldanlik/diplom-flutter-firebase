@@ -74,24 +74,24 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: const InputDecoration(
                               hintText: 'Email',
                               contentPadding: EdgeInsets.only(left: 20, right: 20),
-                                enabledBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(30.0),
-                                    )
-                                ),
-                                border: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(30.0),
-                                    )
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(30.0),
-                                    )
-                                ),
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(30.0),
+                                  )
+                              ),
+                              border: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(30.0),
+                                  )
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(30.0),
+                                  )
+                              ),
                               errorBorder: const OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(30.0),
@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(fontSize: 24),
                             decoration: const InputDecoration(
                               hintText: 'Пароль',
-                                contentPadding: EdgeInsets.only(left: 20, right: 20),
+                              contentPadding: EdgeInsets.only(left: 20, right: 20),
                               enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                   borderRadius: const BorderRadius.all(
@@ -152,35 +152,31 @@ class _LoginPageState extends State<LoginPage> {
                         width: 250,
                         height: 40,
                         child: ElevatedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                User? user = await FireAuth.signInUsingEmailPassword(
-                                  email: _emailTextController.text,
-                                  password: _passwordTextController.text,
-                                ).whenComplete(() => exceptionMethod(_noUser, _wrongPassword));
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              User? user = await FireAuth.signInUsingEmailPassword(
+                                email: _emailTextController.text,
+                                password: _passwordTextController.text,
+                              );
 
-                                setState(() {
-                                  _noUser = false;
-                                  _wrongPassword = false;
-                                });
 
-                                if (user != null) {
-                                  Database.commonId = 'main';
-                                  Navigator.of(context)
-                                      .pushReplacement(
-                                    MaterialPageRoute(builder: (context) => ChoosePage(user: user)),
-                                  );
-                                }
-                                else
-                                  {
-                                    exceptionMethod(_noUser, _wrongPassword);
-                                  }
+                              if (user != null) {
+                                Database.commonId = 'main';
+                                Navigator.of(context)
+                                    .pushReplacement(
+                                  MaterialPageRoute(builder: (context) => ChoosePage(user: user)),
+                                );
                               }
-                            },
-                            child: Text(
-                              'Войти',
-                              style: TextStyle(color: Colors.white, fontSize: 18),
-                            ),
+                              else
+                              {
+                                exceptionMethod(_noUser, _wrongPassword);
+                              }
+                            }
+                          },
+                          child: Text(
+                            'Войти',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -189,34 +185,34 @@ class _LoginPageState extends State<LoginPage> {
                                   )
                               )
                           ),
-                          ),
+                        ),
                       ),
-                          SizedBox(height: 20,),
-                          SizedBox(
-                            width: 250,
-                            height: 40,
-                            child:
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                                  );
-                                },
-                                child: Text(
-                                  'Регистрация',
-                                  style: TextStyle(color: Colors.white, fontSize: 18),
-                                ),
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(18.0),
-                                        )
-                                    )
-                                ),
-                            ),
+                      SizedBox(height: 20,),
+                      SizedBox(
+                        width: 250,
+                        height: 40,
+                        child:
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => RegisterPage()),
+                            );
+                          },
+                          child: Text(
+                            'Регистрация',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  )
+                              )
+                          ),
+                        ),
 
-                          )
+                      )
                     ],
                   )
                 ],
@@ -233,34 +229,34 @@ class _LoginPageState extends State<LoginPage> {
 
   exceptionMethod(bool userBool, bool passBool) {
     if(userBool == true || passBool == true)
-      {
-        // _noUser = false;
-        // _wrongPassword = false;
-        return showDialog<void>(
-          context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text('Пользователь не найден!', style: TextStyle(fontSize: 18),)
-                  ],
-                ),
+    {
+      // _noUser = false;
+      // _wrongPassword = false;
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Пользователь не найден!', style: TextStyle(fontSize: 18),)
+                ],
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Ок'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Ок'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
     else return null;
   }
 

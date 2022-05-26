@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_diplom_first/pages/login_page.dart';
 
+import '../pages/register_page.dart';
+
 class FireAuth {
   static Future<User?> registerUsingEmailPassword({
     required String name,
@@ -24,6 +26,7 @@ class FireAuth {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
+        RegisterPage.exeptBool = true;
         print('The account already exists for that email.');
       }
     } catch (e) {

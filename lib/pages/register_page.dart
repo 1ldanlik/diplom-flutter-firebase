@@ -5,6 +5,9 @@ import '../utils/fire_auth.dart';
 import '../utils/validator.dart';
 
 class RegisterPage extends StatefulWidget {
+  static bool exeptBool = false;
+
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -16,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
+  static bool _exBool = RegisterPage.exeptBool;
   final _focusName = FocusNode();
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
@@ -51,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           name: value,
                         ),
                         decoration: InputDecoration(
-                          hintText: "Name",
+                          hintText: "ФИО",
                           errorBorder: UnderlineInputBorder(
                             borderRadius: BorderRadius.circular(6.0),
                             borderSide: BorderSide(
@@ -86,7 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           password: value,
                         ),
                         decoration: InputDecoration(
-                          hintText: "Password",
+                          hintText: "Пароль",
                           errorBorder: UnderlineInputBorder(
                             borderRadius: BorderRadius.circular(6.0),
                             borderSide: BorderSide(
@@ -117,6 +121,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     _passwordTextController.text,
                                   );
 
+                                  // exceptionMethod(_exBool);
+
                                   setState(() {
                                     _isProcessing = false;
                                   });
@@ -131,10 +137,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                       ModalRoute.withName('/'),
                                     );
                                   }
+                                  else {
+                                    exceptionMethod(_exBool);
+                                  }
                                 }
                               },
                               child: Text(
-                                'Sign up',
+                                'Зарегистрироваться',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -151,4 +160,36 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+  exceptionMethod(bool exBool) {
+    if(exBool == true)
+    {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Пользователь с таким Email уже существует!', style: TextStyle(fontSize: 18),)
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Ок'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else return null;
+  }
+
 }

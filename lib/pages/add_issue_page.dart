@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:test_diplom_first/res/custom_colors.dart';
 import 'package:test_diplom_first/utils/created_issue_get.dart';
 import 'package:test_diplom_first/utils/projects_get.dart';
 import '../utils/validator.dart';
@@ -62,7 +63,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
+        backgroundColor: CustomColors.customPurple,
         title: Text('Добавление задачи', style: TextStyle(fontSize: 24, color: Colors.white),),
         actions: [
           Padding(
