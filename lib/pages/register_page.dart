@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:test_diplom_first/res/custom_colors.dart';
 import 'profile_page.dart';
 import '../utils/fire_auth.dart';
 import '../utils/validator.dart';
@@ -36,7 +37,9 @@ class _RegisterPageState extends State<RegisterPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Register'),
+          backgroundColor: CustomColors.customPurple,
+          leading: BackButton(color: CustomColors.customWhite,),
+          title: Text('Регистрация', style: TextStyle(color: CustomColors.customWhite),),
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -48,53 +51,95 @@ class _RegisterPageState extends State<RegisterPage> {
                   key: _registerFormKey,
                   child: Column(
                     children: <Widget>[
-                      TextFormField(
-                        controller: _nameTextController,
-                        focusNode: _focusName,
-                        validator: (value) => Validator.validateName(
-                          name: value,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: "ФИО",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                      Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: _nameTextController,
+                          focusNode: _focusName,
+                          validator: (value) => Validator.validateName(
+                            name: value,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 20, right: 20),
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue, width: 52.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            hintText: "ФИО",
+                            errorBorder: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ),
                       ),
                       SizedBox(height: 16.0),
-                      TextFormField(
-                        controller: _emailTextController,
-                        focusNode: _focusEmail,
-                        validator: (value) => Validator.validateEmail(
-                          email: value,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: "Email",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                      Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: _emailTextController,
+                          focusNode: _focusEmail,
+                          validator: (value) => Validator.validateEmail(
+                            email: value,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 20, right: 20),
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            hintText: "Email",
+                            errorBorder: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ),
                       ),
                       SizedBox(height: 16.0),
-                      TextFormField(
-                        controller: _passwordTextController,
-                        focusNode: _focusPassword,
-                        obscureText: true,
-                        validator: (value) => Validator.validatePassword(
-                          password: value,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: "Пароль",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                      Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: _passwordTextController,
+                          focusNode: _focusPassword,
+                          obscureText: true,
+                          validator: (value) => Validator.validatePassword(
+                            password: value,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 20, right: 20),
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            hintText: "Пароль",
+                            errorBorder: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ),
@@ -140,11 +185,26 @@ class _RegisterPageState extends State<RegisterPage> {
                                   else {
                                     exceptionMethod(_exBool);
                                   }
+
                                 }
+
+                                await Future.delayed(Duration(seconds: 3));
+
+                                setState(() {
+                                  _isProcessing = false;
+                                });
                               },
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18.0),
+                                      )
+                                  )
+                              ),
                               child: Text(
                                 'Зарегистрироваться',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white, fontSize: 18),
                               ),
                             ),
                           ),

@@ -75,19 +75,19 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Email',
                               contentPadding: EdgeInsets.only(left: 20, right: 20),
                               enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                  borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
                               ),
                               border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                  borderSide: BorderSide(color: Colors.blue, width: 3.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                  borderSide: BorderSide(color: Colors.blue, width: 3.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
@@ -112,19 +112,19 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Пароль',
                               contentPadding: EdgeInsets.only(left: 20, right: 20),
                               enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                  borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
                               ),
                               border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                  borderSide: BorderSide(color: Colors.blue, width: 3.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                borderSide: BorderSide(color: Colors.blue, width: 3.0),
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(30.0),
                                 ),
