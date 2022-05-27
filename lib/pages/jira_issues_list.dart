@@ -138,11 +138,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
       body:
       Container(
         color: CustomColors.customWhite,
-        child: Column(
-          children: [
-            Container(
-              height: 500,
-              child: Visibility(
+        child: Visibility(
                 visible: isLoaded,
                 child:
                 ListView.builder(
@@ -345,24 +341,8 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                   child: CircularProgressIndicator(),
                 ),
               ),
-            ),
-
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                  color: CustomColors.customPurple,
-                  borderRadius: BorderRadius.circular(30)
-              ),
-              child: IconButton(
-                  icon: Icon(Icons.add, color: CustomColors.customWhite, size: 40,),
-                  onPressed: () {
-                  }),
-            )
-          ],
         ),
-      )
-    );
+      );
   }
 
   Future<List<Issue>?> getIssues() async {
@@ -460,31 +440,6 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     });
   }
 
-  void addMinutes() {
-    setState(() {
-      _minutes++;
-    });
-  }
-
-  void minusHours() {
-    setState(() {
-      if (_hours != 0)
-        _hours--;
-    });
-  }
-
-  void addHours() {
-    setState(() {
-      _hours++;
-    });
-  }
-
-  void minusMinutes() {
-    setState(() {
-      if (_minutes != 0)
-        _minutes--;
-    });
-  }
 
   Future? sortMethod () async {
     issueList = await issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)).toList();

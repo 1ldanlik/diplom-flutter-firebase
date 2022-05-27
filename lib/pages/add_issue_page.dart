@@ -9,6 +9,7 @@ import '../utils/validator.dart';
 
 class AddIssuePage extends StatefulWidget {
   const AddIssuePage({Key? key}) : super(key: key);
+  // static const IconData check = IconData(0xe156, fontFamily: 'MaterialIcons');
 
   @override
   State<AddIssuePage> createState() => _AddIssuePageState();
@@ -64,6 +65,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColors.customPurple,
+        leading: BackButton(color: CustomColors.customWhite,),
         title: Text('Добавление задачи', style: TextStyle(fontSize: 24, color: Colors.white),),
         actions: [
           Padding(
@@ -82,8 +84,9 @@ class _AddIssuePageState extends State<AddIssuePage> {
                       _minutes);
                 },
                 child: Icon(
-                  Icons.confirmation_num,
+                  Icons.check,
                   size: 26.0,
+                  color: CustomColors.customWhite,
                 ),
               )
           ),
@@ -182,6 +185,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                     TextFormField(
                       maxLength: 100,
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 20, right: 20),
                           enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey, width: 3.0),
                               borderRadius: const BorderRadius.all(
@@ -207,86 +211,35 @@ class _AddIssuePageState extends State<AddIssuePage> {
                     ),
                     Text('Описание', style: TextStyle(fontSize: 18),),
                     TextFormField(
-                      maxLength: 500,
-                      maxLines: 4,
-                      decoration: const InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(30.0),
-                              )
-                          ),
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(30.0),
-                              )
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(30.0),
-                              )
-                          )
+                        maxLength: 500,
+                        maxLines: 6,
+                        decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            )
+                        ),
+                        controller: _descriptionTextController,
+                        focusNode: _focusDescription,
+                        validator: (value) => Validator.validateSummary(summary: value),
                       ),
-                      controller: _descriptionTextController,
-                      focusNode: _focusDescription,
-                      validator: (value) => Validator.validateSummary(summary: value),
-                    ),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Недели:', style: TextStyle(fontSize: 18),),
-                  SizedBox(width: 30,),
-                  Container(
-                    width: 40,
-                    child: FloatingActionButton(
-                      onPressed: addWeeks,
-                      child: Icon(Icons.add, color: Colors.black,),
-                      backgroundColor: Colors.white,),
-                  ),
-                  SizedBox(width: 10,),
-                  Text('$_weeks',
-                      style: TextStyle(fontSize: 24.0)),
-                  SizedBox(width: 10,),
-                  Container(
-                    width: 40,
-                    child: FloatingActionButton(
-                      onPressed: minusWeeks,
-                      child: Icon(Icons.remove),
-                    backgroundColor: Colors.white,),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Дни:', style: TextStyle(fontSize: 18),),
-                  SizedBox(width: 60,),
-                  Container(
-                    width: 40,
-                    child: FloatingActionButton(
-                      onPressed: addDays,
-                      child: Icon(Icons.add, color: Colors.black,),
-                      backgroundColor: Colors.white,),
-                  ),
-                  SizedBox(width: 10,),
-                  Text('$_days',
-                      style: TextStyle(fontSize: 24.0)),
-                  SizedBox(width: 10,),
-                  Container(
-                    width: 40,
-                    child: FloatingActionButton(
-                      onPressed: minusDays,
-                      child: Icon(Icons.remove),
-                    backgroundColor: Colors.white,),
-                  ),
-                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -295,7 +248,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   Text('Часы:', style: TextStyle(fontSize: 18),),
                   SizedBox(width: 50,),
                   Container(
-                    width: 40,
+                    width: 60,
                     child: FloatingActionButton(
                       onPressed: addHours,
                       child: Icon(Icons.add, color: Colors.black,),
@@ -306,7 +259,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                       style: TextStyle(fontSize: 24.0)),
                   SizedBox(width: 10,),
                   Container(
-                    width: 40,
+                    width: 60,
                     child: FloatingActionButton(
                       onPressed: minusHours,
                       child: Icon(Icons.remove),
@@ -314,6 +267,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   ),
                 ],
               ),
+              SizedBox(height: 20,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
@@ -321,7 +275,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   Text('Минуты:', style: TextStyle(fontSize: 18),),
                   SizedBox(width: 30,),
                   Container(
-                    width: 40,
+                    width: 60,
                     child: FloatingActionButton(
                       onPressed: addMinutes,
                       child: Icon(Icons.add, color: Colors.black,),
@@ -332,7 +286,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                       style: TextStyle(fontSize: 24.0)),
                   SizedBox(width: 10,),
                   Container(
-                    width: 40,
+                    width: 60,
                     child: FloatingActionButton(
                       onPressed: minusMinutes,
                       child: Icon(Icons.remove),
