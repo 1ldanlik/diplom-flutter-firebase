@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
@@ -6,6 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:test_diplom_first/widgets/add_item_form.dart';
 import 'package:test_diplom_first/widgets/telegram_list.dart';
 import 'dart:io' as io;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:http/http.dart' as http;
 
 import '../res/custom_colors.dart';
 import '../utils/database.dart';
@@ -27,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //TODO Secret API Key
   final telegram = Telegram('5319164055:AAH44FhYObq6qHBr4_D_DVezT9kmk2cBvx0');
   TeleDart? teleDart;
+  firebase_storage.Reference? ref;
   String botName = '';
   var msgId = 0;
   final _formKey = GlobalKey<FormState>();
@@ -152,11 +158,12 @@ class _MyHomePageState extends State<MyHomePage> {
           final tPhoto = data.photo!.last;
           final tFile = await teleDart!.telegram.getFile(tPhoto.file_id);
           final tFileLink = tFile.getDownloadLink(telegramApiKey);
-          Database.addItem(title: data.caption.toString(),
-              description: tFileLink.toString(),
-              date: Timestamp.fromDate(data.date_),
-              type: 'Telegram').then((value) => print(''
-              'Message'+ data.caption.toString()));
+          // Database.addItem(title: data.caption.toString(),
+          //     description: tFileLink.toString(),
+          //     date: Timestamp.fromDate(data.date_),
+          //     type: 'Telegram').then((value) => print(''
+          //     'Message'+ data.caption.toString()));
+          uploadFile(data.caption.toString(), tFileLink.toString(), data.date_);
           print('???????tFileLink' + tFileLink.toString() + '??????????');
           final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
           print('???????request' + request.toString() + '??????????');
@@ -222,6 +229,23 @@ class _MyHomePageState extends State<MyHomePage> {
   //   print(_msgs);
   // });
 
+
+  Future uploadFile(String caption,
+      String tFileLink,
+      DateTime date) async {
+    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/${tFileLink}');
+    final ByteData imageData = await NetworkAssetBundle(Uri.parse(tFileLink)).load("");
+    final Uint8List bytes = imageData.buffer.asUint8List();
+    await ref!.putData(bytes).whenComplete(() async {
+      await ref!.getDownloadURL().then((value) {
+        Database.addItem(title: caption,
+            description: value,
+            date: Timestamp.fromDate(date),
+            type: 'Telegram').then((value) => print(''
+            'Message'+ caption.toString()));;
+      });
+    });
+  }
 
   botSendMessage(String msg) {
     teleDart!.telegram.sendMessage(msgId, msg);

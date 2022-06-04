@@ -98,9 +98,16 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 30,),
             Container(
               decoration: BoxDecoration(
-                // border: ,
                 color: CustomColors.customWhite,
-                borderRadius: BorderRadius.circular(18.0),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(width: 2),
+                boxShadow: [
+                  BoxShadow(
+                      offset: Offset(0, 3),
+                      blurRadius: 3,
+                      color: Colors.grey
+                  ),
+                ],
               ),
               width: 320,
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -170,22 +177,46 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 16.0),
                   _currentUser!.emailVerified
-                      ? Text(
+                      ? Container(
+                    color: CustomColors.customGreen,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
                     'Email verified',
                     style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(color: Colors.green),
-                  )
-                      : Text(
+                            .of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: Colors.green),
+                  ),
+                        ),
+                      )
+                      : Container(
+                        height: 30,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
                     'Email not verified',
                     style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(color: Colors.red),
+                            .of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: CustomColors.customWhite),
                   ),
+                        ),
+                    // color: CustomColors.customRed,
+                    decoration: BoxDecoration(
+                      color: CustomColors.customRed,
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 3),
+                            blurRadius: 3,
+                            color: Colors.grey
+                        ),
+                      ],
+                    ),
+                      ),
                   ElevatedButton(
                     onPressed: () async {
                       await _currentUser!.sendEmailVerification();
