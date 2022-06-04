@@ -14,7 +14,6 @@ class _AddNewsPageState extends State<AddNewsPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

@@ -117,26 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
     teleDart = TeleDart(telegram, event);
     teleDart!.start();
 
-    // teleDart!
-    //     .onMessage(entityType: 'bot_command', keyword: 'start')
-    //     .listen((message) {
-    //   msgId = message.chat.id;
-    //   teleDart!.telegram.sendMessage(msgId, 'Hello I am Flutter bot');
-    // });
-    //
-    // teleDart!
-    //     .onMessage(entityType: 'bot_command', keyword: 'dart')
-    //     .listen((message) {
-    //   msgId = message.chat.id;
-    //   setState(() {
-    //     _msgs.add({message.chat.username.toString(): message.text!});
-    //   });
-    //   print('+++++++++++' + message.text!);
-    //   print('-----------' + message.photo.toString());
-    //   print(_msgs);
-    // });
-
-
     teleDart!.onMessage().listen((message) {
       msgId = message.chat.id;
       setState(() {
@@ -144,12 +124,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
-    // teleDart!.onMessage(keyword: 'Load images').listen((message) async {
-    //
-    //   // ask user to select one photo
-    //   teleDart!.telegram.sendMessage(message.chat.id, 'choose one');
-
-      // subscribe to user input
       final subscription = teleDart!.onMessage().listen((_) {});
 
       subscription.onData((data) async {
@@ -174,19 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         }
       });
-    // });
-    // teleDart!.onMessage(keyword: 'lol').listen((message) {
-    //   print('--------MESAGETEXT----------' + message.text.toString() + '------');
-    //   teleDart!.telegram.sendMessage(message.chat.id, 'image deleted' + message.caption.toString());
-
-    // });
-    // execute this if user hit 'Delete images' button
-    teleDart!.onMessage(keyword: 'Delete images').listen((message) {
-      // delete folder and image in it
-      deletePhotosDirectory(teleDart!, message).then((value) =>
-          teleDart!.telegram.sendMessage(message.chat.id, 'image deleted'));
-    });
-
   }
 
   Future<void> deletePhotosDirectory(
@@ -216,19 +177,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final response = await request.close();
     await response.pipe(io.File(path).openWrite()) as io.File;
   }
-
-
-// teleDart!.fetcher.onUpdate().listen((event) {
-  //   msgId = event.message!.chat.id;
-  //   setState(() {
-  //     _msgs.add({event.message!.chat.username.toString(): {event.message!.text! : event.message!.photo.toString()}});
-  //   });
-  //   print('+++++++++++' + event.message!.text!);
-  //   print('-----------' + event.message!.photo.toString());
-  //   print(_msgs);
-  //   print(_msgs);
-  // });
-
 
   Future uploadFile(String caption,
       String tFileLink,
