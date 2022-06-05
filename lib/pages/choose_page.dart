@@ -4,6 +4,7 @@ import 'package:test_diplom_first/pages/jira_issues_list.dart';
 import 'package:test_diplom_first/pages/profile_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 
+import 'login_page.dart';
 import 'news_page.dart';
 
 class ChoosePage extends StatefulWidget {
@@ -73,6 +74,28 @@ class _ChoosePageState extends State<ChoosePage> {
                 ), icon:
           Image.asset("assets/jira_icon.png", width: 30, color: Colors.white,), label: Text('Jira', style: TextStyle(fontSize: 36, fontWeight: FontWeight.w500, color: CustomColors.customWhite),)),
               ),
+              SizedBox(height: 100,),
+              SizedBox(
+                width: 150,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  },
+                  child: Text('Выйти', style: TextStyle(color:  CustomColors.customWhite, fontSize: 18),),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(CustomColors.customGrey),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ))),
+                ),
+              )
             ],
           ),
         ),

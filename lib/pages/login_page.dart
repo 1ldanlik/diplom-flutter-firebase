@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
               return Column(
                 children: [
                   Text('Авторизация', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 36)),
-                  SizedBox(height: 125,),
+                  SizedBox(height: 80,),
                   Text('${textException}', style: TextStyle(fontSize: 18, color: CustomColors.customRed),),
                   Form(
                     key: _formKey,
@@ -70,7 +70,8 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           height: 50,
                           child: TextFormField(
-                            style: TextStyle(fontSize: 24),
+                            cursorColor: CustomColors.customBlack,
+                            style: TextStyle(fontSize: 18),
                             decoration: const InputDecoration(
                               hintText: 'Email',
                               contentPadding: EdgeInsets.only(left: 20, right: 20),
@@ -81,13 +82,13 @@ class _LoginPageState extends State<LoginPage> {
                                   )
                               ),
                               border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue, width: 3.0),
+                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue, width: 3.0),
+                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
@@ -107,7 +108,8 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           height: 50,
                           child: TextFormField(
-                            style: TextStyle(fontSize: 24),
+                            cursorColor: CustomColors.customBlack,
+                            style: TextStyle(fontSize: 18),
                             decoration: const InputDecoration(
                               hintText: 'Пароль',
                               contentPadding: EdgeInsets.only(left: 20, right: 20),
@@ -118,13 +120,13 @@ class _LoginPageState extends State<LoginPage> {
                                   )
                               ),
                               border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue, width: 3.0),
+                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(30.0),
                                   )
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue, width: 3.0),
+                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(30.0),
                                 ),

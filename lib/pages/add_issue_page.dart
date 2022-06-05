@@ -104,38 +104,81 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   Row(
                     children: [
                       Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                      DropdownButton(
-                        value: projectValue,
-                          items:
-                          strCB.map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              projectValue = newValue!;
-                            });
-                          },),
+                      new DropdownButtonHideUnderline(
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: CustomColors.customWhite,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(0, 3),
+                                  blurRadius: 3,
+                                  color: Colors.grey
+                              ),
+                            ],
+                          ),
+                          child: DropdownButton(
+                            value: projectValue,
+                              items:
+                              strCB.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: 10,),
+                                      Text(value),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  projectValue = newValue!;
+                                });
+                              },),
+                        ),
+                      ),
                     ],
                   ),
                   Row(
                     children: [
                       Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                      DropdownButton<String>(
-                        value: typeIssueValue,
-                        items: <String>['Task', 'Epic'].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            typeIssueValue = newValue!;
-                          });
-                        },),
+                      SizedBox(width: 10,),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: CustomColors.customWhite,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 3),
+                                blurRadius: 3,
+                                color: Colors.grey
+                            ),
+                          ],
+                        ),
+                        child: ButtonTheme(
+                          child: new DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: typeIssueValue,
+                              items: <String>['Task', 'Epic'].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child:
+                                  Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      child: Text(value)),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  typeIssueValue = newValue!;
+                                });
+                              },),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -144,33 +187,46 @@ class _AddIssuePageState extends State<AddIssuePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Приоритет:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                  // Expanded(
-                  // child:
+                  SizedBox(width: 10,),
                   DropdownButtonHideUnderline(
-                    child: ButtonTheme(
-                      child: DropdownButton<String>(
-                        value: priorityValue,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            priorityValue = newValue!;
-                          });
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: CustomColors.customWhite,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 3),
+                              blurRadius: 3,
+                              color: Colors.grey
+                          ),
+                        ],
+                      ),
+                      child: ButtonTheme(
+                        child: DropdownButton<String>(
+                          value: priorityValue,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              priorityValue = newValue!;
+                            });
 
-                          print(priorityValue);
-                        },
-                        items: priorityMap.map((Map map) {
-                          return new DropdownMenuItem<String>(
-                            value: map["name"].toString(),
-                            child: Row(
-                              children: <Widget>[
-                                SvgPicture.asset(map['image'],width: 30,
-                                ),
-                                Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: Text(map["name"])),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                            print(priorityValue);
+                          },
+                          items: priorityMap.map((Map map) {
+                            return new DropdownMenuItem<String>(
+                              value: map["name"].toString(),
+                              child: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(map['image'],width: 30,
+                                  ),
+                                  Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      child: Text(map["name"])),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ),
@@ -182,24 +238,26 @@ class _AddIssuePageState extends State<AddIssuePage> {
                 child: Column(
                   children: [
                     Text('Название', style: TextStyle(fontSize: 18),),
+                    SizedBox(height: 10,),
                     TextFormField(
+                      cursorColor: CustomColors.customBlack,
                       maxLength: 100,
                       decoration: const InputDecoration(
                           contentPadding: EdgeInsets.only(left: 20, right: 20),
                           enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                              borderSide: BorderSide(color: Colors.grey, width: 2.0),
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(30.0),
                               )
                           ),
                           border: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(30.0),
                               )
                           ),
                           focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(30.0),
                               )
@@ -210,25 +268,27 @@ class _AddIssuePageState extends State<AddIssuePage> {
                       validator: (value) => Validator.validateSummary(summary: value),
                     ),
                     Text('Описание', style: TextStyle(fontSize: 18),),
+                    SizedBox(height: 10,),
                     TextFormField(
+                      cursorColor: CustomColors.customBlack,
                         maxLength: 500,
                         maxLines: 6,
                         decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 30),
                             enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(30.0),
                                 )
                             ),
                             border: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(30.0),
                                 )
                             ),
                             focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(30.0),
                                 )

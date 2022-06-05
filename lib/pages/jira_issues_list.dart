@@ -83,8 +83,20 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
               child: Row(
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                      color: CustomColors.customWhite,
+                      borderRadius: BorderRadius.circular(8),
+                      // border: Border.all(width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(0, 3),
+                            blurRadius: 3,
+                            color: Colors.grey
+                        ),
+                      ],
+                    ),
                     height: 30,
-                    color: CustomColors.customWhite,
+                    // color: CustomColors.customWhite,
                     child: DropdownButtonHideUnderline(
                       child: ButtonTheme(
                         child: DropdownButton<String>(
@@ -117,6 +129,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                       ),
                     ),
                   ),
+                  SizedBox(width: 10,),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(

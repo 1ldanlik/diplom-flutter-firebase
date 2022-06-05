@@ -103,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(width: 30,),
                         ElevatedButton(
                             onPressed: () => chooseImage(),
-                            child: Text('Выбрать картинку', style: TextStyle(color: CustomColors.customWhite),),
+                            child: Text('Выбрать картинку', style: TextStyle(color: CustomColors.customWhite, fontSize: 16),),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -260,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(18.0),
                                 ))),
-                        child: Text('Подтвердить почту', style: TextStyle(color: CustomColors.customWhite,)
+                        child: Text('Подтвердить почту', style: TextStyle(color: CustomColors.customWhite, fontSize: 16)
                         ),
                       ),
                     ],
@@ -274,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   EditProfilePage(name: _currentUser!.displayName, mail: _currentUser!.email, subdivision: subDiv, user: _currentUser!)
                           ));
                     },
-                    child: Text('Редактировать профиль', style: TextStyle(color: CustomColors.customWhite),),
+                    child: Text('Редактировать профиль', style: TextStyle(color: CustomColors.customWhite, fontSize: 16),),
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -304,6 +304,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
+            SizedBox(height: 10,),
             SizedBox(
               width: 150,
               child: ElevatedButton(
@@ -316,9 +317,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     );
                   },
-                  child: Text('Выйти', style: TextStyle(color:  CustomColors.customWhite),),
+                  child: Text('Выйти', style: TextStyle(color:  CustomColors.customWhite, fontSize: 16),),
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(CustomColors.customRed),
+                    backgroundColor: MaterialStateProperty.all(CustomColors.customGrey),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
