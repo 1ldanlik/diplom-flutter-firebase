@@ -189,7 +189,6 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                   Text(issueList![index].fields.summary.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                                   SizedBox(height: 10.0,),
                                   Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                                  Text(priority.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                                   SizedBox(height: 10.0,),
                                   Row(
                                     children: [
@@ -327,6 +326,8 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                                   fontWeight: FontWeight.bold)),
                                         ),
                                       ),
+                                      SizedBox(width: 150,),
+                                      SvgPicture.asset(priorityToImage(priority.toString()).toString(),width: 40,)
                                     ],
                                   ),
                                   SizedBox(height: 10,)
@@ -482,6 +483,19 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
       return '4';
     if(name == 'Lowest')
       return '5';
+  }
+
+  String? priorityToImage(String name) {
+    if(name == 'Highest')
+      return "assets/highest.svg";
+    if(name == 'High')
+      return "assets/high.svg";
+    if(name == 'Medium')
+      return "assets/medium.svg";
+    if(name == 'Low')
+      return "assets/low.svg";
+    if(name == 'Lowest')
+      return "assets/lowest.svg";
   }
 
 }

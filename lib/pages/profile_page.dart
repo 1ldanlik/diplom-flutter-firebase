@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:drop_shadow_image/drop_shadow_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -113,6 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
               ],
             ),
+            Text(_currentUser!.photoURL.toString().replaceRange(0, 109, '').replaceRange(19, _currentUser!.photoURL.toString().length - 109, '')),
             SizedBox(height: 30,),
             Container(
               decoration: BoxDecoration(
@@ -332,14 +334,13 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  chooseImage() async {
+  Future chooseImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      // _image.add(File(pickedFile!.path));
+    setState(() async {
       _image = File(pickedFile!.path);
+      await uploadFile().whenComplete(() => refreshUser());
     });
-    await uploadFile();
-    print(_image.path);
+
     if (pickedFile!.path == null) retrieveLostData();
   }
 
@@ -359,13 +360,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future uploadFile() async {
-    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/${Path.basename(_image.path)}');
+    firebase_storage.FirebaseStorage.instance.refFromURL(_currentUser!.photoURL.toString()).delete();
+    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/avatarImgs/${Path.basename(_image.path)}');
     await ref!.putFile(_image).whenComplete(() async {
-      await ref!.getDownloadURL().then((value) {
-        _currentUser!.updatePhotoURL(value);
+      await ref!.getDownloadURL().then((value) async {
+        await _currentUser!.updatePhotoURL(value);
+        // refreshUser();
       });
     });
-    refreshUser();
   }
 
 
@@ -376,6 +378,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _currentUser = user;
       });
     }
+    print('eeeeeeeeeeeeeeeeeeeeee');
   }
 
   // timeMethod() async{

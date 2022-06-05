@@ -181,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future uploadFile(String caption,
       String tFileLink,
       DateTime date) async {
-    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/${tFileLink}');
+    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/telegramImgs/${tFileLink.toString().replaceRange(0, 86, '')}');
     final ByteData imageData = await NetworkAssetBundle(Uri.parse(tFileLink)).load("");
     final Uint8List bytes = imageData.buffer.asUint8List();
     await ref!.putData(bytes).whenComplete(() async {
