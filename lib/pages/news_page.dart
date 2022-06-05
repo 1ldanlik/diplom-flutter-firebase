@@ -57,50 +57,65 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
-            // SizedBox(width: 20,),
             Text('Новости',
               style: TextStyle(fontSize: 24, color: Colors.white),),
           ],
         ),
+        actions: [
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AddNewsPage()
+                      ));
+                  },
+                child: Icon(
+                  Icons.add, color: CustomColors.customWhite,
+                  size: 26.0,
+                ),
+              ),
+              SizedBox(width: 20,)
+            ],
+          ),
+        ],
       ),
       body: Container(
-        child: Column(
-          children: [
-            SizedBox(height: 20,),
-            Container(
-              height: MediaQuery.of(context).size.height / 1.38,
-              child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left:16.0,
-                  right:16.0,
-                  // bottom:20.0,
-                ),
-                child: ItemList(),
-              ),
-              ),
-            ),
-            SizedBox(height: 20,),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: CustomColors.customPurple,
-                borderRadius: BorderRadius.circular(30)
-              ),
-              child: IconButton(
-                  icon: Icon(Icons.add, color: CustomColors.customWhite, size: 40,),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) =>
-                            AddNewsPage()
-                        ));
-                    }),
-            )
-          ],
-        ),
+        child: ItemList()
+            // SizedBox(height: 20,),
+            // Container(
+            //   height: MediaQuery.of(context).size.height / 1.38,
+            //   child: SafeArea(
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(
+            //       left:16.0,
+            //       right:16.0,
+            //       // bottom:20.0,
+            //     ),
+            //     child: ItemList(),
+            //   ),
+            //   ),
+            // ),
+            // SizedBox(height: 20,),
+            // Container(
+            //   width: 60,
+            //   height: 60,
+            //   decoration: BoxDecoration(
+            //     color: CustomColors.customPurple,
+            //     borderRadius: BorderRadius.circular(30)
+            //   ),
+            //   child: IconButton(
+            //       icon: Icon(Icons.add, color: CustomColors.customWhite, size: 40,),
+            //       onPressed: () {
+            //         Navigator.of(context).push(
+            //             MaterialPageRoute(
+            //                 builder: (context) =>
+            //                 AddNewsPage()
+            //             ));
+            //         }),
+            // )
       ),
     );
   }

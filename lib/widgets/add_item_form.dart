@@ -183,7 +183,7 @@ class _AddItemFormState extends State<AddItemForm> {
   }
 
   Future uploadFile() async {
-    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/${Path.basename(_choosedImage.path)}');
+    ref = firebase_storage.FirebaseStorage.instance.ref().child('images/newsAppImgs/${Path.basename(_choosedImage.path)}');
     await ref!.putFile(_choosedImage).whenComplete(() async {
       await ref!.getDownloadURL().then((value) {
         Database.addItem(title: _descriptionController.text, description: value, date: Timestamp.now(), type: 'App');

@@ -114,7 +114,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
               ],
             ),
-            Text(_currentUser!.photoURL.toString().replaceRange(0, 109, '').replaceRange(19, _currentUser!.photoURL.toString().length - 109, '')),
             SizedBox(height: 30,),
             Container(
               decoration: BoxDecoration(
