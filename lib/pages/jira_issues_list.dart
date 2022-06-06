@@ -129,20 +129,20 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10,),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) =>
-                        AddIssuePage())
-                      );
-                    },
-                    child: Icon(
-                      Icons.add, color: CustomColors.customWhite,
-                      size: 26.0,
+                    SizedBox(width: 10,),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                          AddIssuePage())
+                        );
+                      },
+                      child: Icon(
+                        Icons.add, color: CustomColors.customWhite,
+                        size: 26.0,
+                      ),
                     ),
-                  ),
                 ],
               )
           ),
@@ -376,17 +376,17 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     Uri uri = Uri.parse("https://jirasoftwareildan.atlassian.net/rest/api/2/search");
     uri.replace(query: body);
 
-    var lol = await http.get(uri, headers: headers);
-    print( 'GET ISSUES' + lol.body);
-    print( 'GET LENGTH' + lol.statusCode.toString());
-    print('REDACT ISSUES' + jsonDecode(lol.body).toString());
-    if (lol.statusCode == 200 || lol.statusCode == 201) {
-      var json1 = lol.body;
+    var response = await http.get(uri, headers: headers);
+    print( 'GET ISSUES' + response.body);
+    print( 'GET LENGTH' + response.statusCode.toString());
+    print('REDACT ISSUES' + jsonDecode(response.body).toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var json1 = response.body;
       print('LLLLLLLLLL' + getIssuesFromJson(json1).issues.toString());
       return getIssuesFromJson(json1).issues;
     }
     else {
-      throw Exception('http.get error: statusCode= ${lol.statusCode}');
+      throw Exception('http.get error: statusCode= ${response.statusCode}');
     }
 
   }
@@ -438,12 +438,12 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
 
     var url = Uri.parse(
         'https://jirasoftwareildan.atlassian.net/rest/api/3/issue/$_issueKey/worklog');
-    var lol = await http.post(url, headers: headers,
+    var response = await http.post(url, headers: headers,
         body: body,
         encoding: Encoding.getByName("utf-8"));
-    if (lol.statusCode != 201 || lol.statusCode != 204) throw Exception(
-        'http.get error: statusCode= ${lol.statusCode}');
-    print(lol.body.toString() + 'lllllllllll');
+    if (response.statusCode != 201 || response.statusCode != 204) throw Exception(
+        'http.get error: statusCode= ${response.statusCode}');
+    print(response.body.toString() + 'lllllllllll');
 
   }
 

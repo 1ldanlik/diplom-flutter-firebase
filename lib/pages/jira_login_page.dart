@@ -49,20 +49,29 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Firebase Authentication'),
-      // ),
+      appBar: AppBar(
+        backgroundColor: CustomColors.customPurple,
+        leading: BackButton(color: CustomColors.customWhite,),
+        title: Row(
+          children: [
+            Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
+            SizedBox(width: 20,),
+            Text('Авторизация Jira',
+              style: TextStyle(fontSize: 24, color: Colors.white),),
+          ],
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 100, left: 20, right: 20),
+        padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
         child: FutureBuilder(
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Column(
                 children: [
-                  Text('Авторизация', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 36)),
-                  SizedBox(height: 80,),
-                  Text('${textException}', style: TextStyle(fontSize: 18, color: CustomColors.customRed),),
+                  Image.asset("assets/jira_icon.png", width: 60, color: CustomColors.customGrey,),
+                  Text('Jira', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 36, color: CustomColors.customGrey)),
+                  SizedBox(height: 20,),
                   Form(
                     key: _formKey,
                     child: Column(
@@ -111,7 +120,7 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                             cursorColor: CustomColors.customBlack,
                             style: TextStyle(fontSize: 18),
                             decoration: const InputDecoration(
-                              hintText: 'Пароль',
+                              hintText: 'Пароль (API Token)',
                               contentPadding: EdgeInsets.only(left: 20, right: 20),
                               enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey, width: 2.0),
@@ -140,7 +149,7 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                             controller: _passwordTextController,
                             focusNode: _focusPassword,
                             obscureText: true,
-                            validator: (value) => Validator.validatePassword(password: value),
+                            validator: (value) => Validator.validateJiraPassword(password: value),
                           ),
                         ),
                       ],
@@ -149,10 +158,10 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(height: 20.0,),
+                      SizedBox(height: 70.0,),
                       SizedBox(
-                        width: 250,
-                        height: 40,
+                        width: 400,
+                        height: 50,
                         child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
@@ -189,32 +198,6 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      SizedBox(
-                        width: 250,
-                        height: 40,
-                        child:
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => RegisterPage()),
-                            );
-                          },
-                          child: Text(
-                            'Регистрация',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  )
-                              )
-                          ),
-                        ),
-
-                      )
                     ],
                   )
                 ],

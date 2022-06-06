@@ -67,9 +67,22 @@ class Validator {
       return null;
     }
     if (password.isEmpty) {
-      return 'Password can\'t be empty';
+      return 'Пароль не должен отсутствовать';
     } else if (password.length < 6) {
-      return 'Enter a password with length at least 6';
+      return 'Пароль должен содержать хотя бы 6 символов';
+    }
+
+    return null;
+  }
+
+  static String? validateJiraPassword({required String? password}) {
+    if (password == null) {
+      return null;
+    }
+    if (password.isEmpty) {
+      return 'Пароль не должен отсутствовать';
+    } else if (password.length < 24) {
+      return 'API Token должен иметь 24 символа и более';
     }
 
     return null;

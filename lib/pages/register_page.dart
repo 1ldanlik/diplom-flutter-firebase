@@ -54,6 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Container(
                         height: 50,
                         child: TextFormField(
+                          cursorColor: CustomColors.customBlack,
                           controller: _nameTextController,
                           focusNode: _focusName,
                           validator: (value) => Validator.validateName(
@@ -67,6 +68,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                   const Radius.circular(30.0),
                                 )
                             ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              ),
+                            ),
                             border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue, width: 52.0),
                                 borderRadius: const BorderRadius.all(
@@ -74,10 +81,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 )
                             ),
                             hintText: "ФИО",
-                            errorBorder: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(6.0),
-                              borderSide: BorderSide(
-                                color: Colors.red,
+                            errorBorder: const OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
                               ),
                             ),
                           ),
@@ -87,10 +93,51 @@ class _RegisterPageState extends State<RegisterPage> {
                       Container(
                         height: 50,
                         child: TextFormField(
+                          cursorColor: CustomColors.customBlack,
                           controller: _emailTextController,
                           focusNode: _focusEmail,
                           validator: (value) => Validator.validateEmail(
                             email: value,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 20, right: 20),
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              ),
+                            ),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(30.0),
+                                )
+                            ),
+                            hintText: "Email",
+                            errorBorder: const OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      Container(
+                        height: 50,
+                        child: TextFormField(
+                          cursorColor: CustomColors.customBlack,
+                          controller: _passwordTextController,
+                          focusNode: _focusPassword,
+                          obscureText: true,
+                          validator: (value) => Validator.validatePassword(
+                            password: value,
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(left: 20, right: 20),
@@ -106,39 +153,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                   const Radius.circular(30.0),
                                 )
                             ),
-                            hintText: "Email",
-                            errorBorder: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(6.0),
-                              borderSide: BorderSide(
-                                color: Colors.red,
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      Container(
-                        height: 50,
-                        child: TextFormField(
-                          controller: _passwordTextController,
-                          focusNode: _focusPassword,
-                          obscureText: true,
-                          validator: (value) => Validator.validatePassword(
-                            password: value,
-                          ),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 20, right: 20),
-                            enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(30.0),
-                                )
-                            ),
                             hintText: "Пароль",
-                            errorBorder: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(6.0),
-                              borderSide: BorderSide(
-                                color: Colors.red,
+                            errorBorder: const OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
                               ),
                             ),
                           ),
@@ -147,69 +171,67 @@ class _RegisterPageState extends State<RegisterPage> {
                       SizedBox(height: 32.0),
                       _isProcessing
                           ? CircularProgressIndicator()
-                          : Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                setState(() {
-                                  _isProcessing = true;
-                                });
+                          : Container(
+                        width: 400,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              _isProcessing = true;
+                            });
 
-                                if (_registerFormKey.currentState!
-                                    .validate()) {
-                                  User? user = await FireAuth
-                                      .registerUsingEmailPassword(
-                                    name: _nameTextController.text,
-                                    email: _emailTextController.text,
-                                    password:
-                                    _passwordTextController.text,
-                                  );
+                            if (_registerFormKey.currentState!
+                                .validate()) {
+                              User? user = await FireAuth
+                                  .registerUsingEmailPassword(
+                                name: _nameTextController.text,
+                                email: _emailTextController.text,
+                                password:
+                                _passwordTextController.text,
+                              );
 
-                                  // exceptionMethod(_exBool);
+                              // exceptionMethod(_exBool);
 
-                                  setState(() {
-                                    _isProcessing = false;
-                                  });
+                              setState(() {
+                                _isProcessing = false;
+                              });
 
-                                  if (user != null) {
-                                    Navigator.of(context)
-                                        .pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProfilePage(user: user),
-                                      ),
-                                      ModalRoute.withName('/'),
-                                    );
-                                  }
-                                  else {
-                                    exceptionMethod(_exBool);
-                                  }
+                              if (user != null) {
+                                Navigator.of(context)
+                                    .pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProfilePage(user: user),
+                                  ),
+                                  ModalRoute.withName('/'),
+                                );
+                              }
+                              else {
+                                exceptionMethod(_exBool);
+                              }
 
-                                }
+                            }
 
-                                await Future.delayed(Duration(seconds: 3));
+                            await Future.delayed(Duration(seconds: 3));
 
-                                setState(() {
-                                  _isProcessing = false;
-                                });
-                              },
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18.0),
-                                      )
+                            setState(() {
+                              _isProcessing = false;
+                            });
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
                                   )
-                              ),
-                              child: Text(
-                                'Зарегистрироваться',
-                                style: TextStyle(color: Colors.white, fontSize: 18),
-                              ),
-                            ),
+                              )
                           ),
-                        ],
-                      )
+                          child: Text(
+                            'Зарегистрироваться',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 )

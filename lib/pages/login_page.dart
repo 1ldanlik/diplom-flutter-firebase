@@ -53,171 +53,176 @@ class _LoginPageState extends State<LoginPage> {
       //   title: Text('Firebase Authentication'),
       // ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 100, left: 20, right: 20),
+        padding: const EdgeInsets.only(top: 170, left: 20, right: 20),
         child: FutureBuilder(
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Column(
-                children: [
-                  Text('Авторизация', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 36)),
-                  SizedBox(height: 80,),
-                  Text('${textException}', style: TextStyle(fontSize: 18, color: CustomColors.customRed),),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 50,
-                          child: TextFormField(
-                            cursorColor: CustomColors.customBlack,
-                            style: TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              hintText: 'Email',
-                              contentPadding: EdgeInsets.only(left: 20, right: 20),
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(30.0),
-                                  )
-                              ),
-                              border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(30.0),
-                                  )
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(30.0),
-                                  )
-                              ),
-                              errorBorder: const OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(30.0),
-                                ),
-                              ),
-                            ),
-                            controller: _emailTextController,
-                            focusNode: _focusEmail,
-                            validator: (value) => Validator.validateEmail(email: value),
-                          ),
-                        ),
-                        SizedBox(height: 18.0),
-                        Container(
-                          height: 50,
-                          child: TextFormField(
-                            cursorColor: CustomColors.customBlack,
-                            style: TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              hintText: 'Пароль',
-                              contentPadding: EdgeInsets.only(left: 20, right: 20),
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(30.0),
-                                  )
-                              ),
-                              border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(30.0),
-                                  )
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(30.0),
-                                ),
-                              ),
-                              errorBorder: const OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(30.0),
-                                ),
-                              ),
-                            ),
-                            controller: _passwordTextController,
-                            focusNode: _focusPassword,
-                            obscureText: true,
-                            validator: (value) => Validator.validatePassword(password: value),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Column(
                     children: [
-                      SizedBox(height: 20.0,),
-                      SizedBox(
-                        width: 250,
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              User? user = await FireAuth.signInUsingEmailPassword(
-                                email: _emailTextController.text,
-                                password: _passwordTextController.text,
-                              );
-
-
-                              if (user != null) {
-                                Database.commonId = 'main';
-                                Navigator.of(context)
-                                    .pushReplacement(
-                                  MaterialPageRoute(builder: (context) => ChoosePage(user: user)),
-                                );
-                              }
-                              else
-                              {
-                                exceptionMethod(_noUser, _wrongPassword);
-                              }
-                            }
-                          },
-                          child: Text(
-                            'Войти',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  )
-                              )
-                          ),
+                      Text('Авторизация', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 36)),
+                      SizedBox(height: 50,),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 50,
+                              child: TextFormField(
+                                obscureText: true,
+                                cursorColor: CustomColors.customBlack,
+                                style: TextStyle(fontSize: 18),
+                                decoration: const InputDecoration(
+                                  hintText: 'Email',
+                                  contentPadding: EdgeInsets.only(left: 20, right: 20),
+                                  enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(30.0),
+                                      )
+                                  ),
+                                  border: const OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(30.0),
+                                      )
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(30.0),
+                                      )
+                                  ),
+                                  errorBorder: const OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(30.0),
+                                    ),
+                                  ),
+                                ),
+                                controller: _emailTextController,
+                                focusNode: _focusEmail,
+                                validator: (value) => Validator.validateEmail(email: value),
+                              ),
+                            ),
+                            SizedBox(height: 18.0),
+                            Container(
+                              height: 50,
+                              child: TextFormField(
+                                obscureText: true,
+                                cursorColor: CustomColors.customBlack,
+                                style: TextStyle(fontSize: 18),
+                                decoration: const InputDecoration(
+                                  hintText: 'Пароль',
+                                  contentPadding: EdgeInsets.only(left: 20, right: 20),
+                                  enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(30.0),
+                                      )
+                                  ),
+                                  border: const OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(30.0),
+                                      )
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(30.0),
+                                    ),
+                                  ),
+                                  errorBorder: const OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(30.0),
+                                    ),
+                                  ),
+                                ),
+                                controller: _passwordTextController,
+                                focusNode: _focusPassword,
+                                validator: (value) => Validator.validatePassword(password: value),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      SizedBox(
-                        width: 250,
-                        height: 40,
-                        child:
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => RegisterPage()),
-                            );
-                          },
-                          child: Text(
-                            'Регистрация',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  )
-                              )
-                          ),
-                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(height: 20.0,),
+                          SizedBox(
+                            width: 400,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  User? user = await FireAuth.signInUsingEmailPassword(
+                                    email: _emailTextController.text,
+                                    password: _passwordTextController.text,
+                                  );
 
+
+                                  if (user != null) {
+                                    Database.commonId = 'main';
+                                    Navigator.of(context)
+                                        .pushReplacement(
+                                      MaterialPageRoute(builder: (context) => ChoosePage(user: user)),
+                                    );
+                                  }
+                                  else
+                                  {
+                                    exceptionMethod(_noUser, _wrongPassword);
+                                  }
+                                }
+                              },
+                              child: Text(
+                                'Войти',
+                                style: TextStyle(color: Colors.white, fontSize: 18),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18.0),
+                                      )
+                                  )
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          SizedBox(
+                            width: 400,
+                            height: 50,
+                            child:
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                                );
+                              },
+                              child: Text(
+                                'Регистрация',
+                                style: TextStyle(color: Colors.white, fontSize: 18),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18.0),
+                                      )
+                                  )
+                              ),
+                            ),
+
+                          )
+                        ],
                       )
                     ],
-                  )
-                ],
+                  ),
+                ),
               );
             }
             return Center(

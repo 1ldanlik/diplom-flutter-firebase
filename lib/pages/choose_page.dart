@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_diplom_first/pages/jira_issues_list.dart';
+import 'package:test_diplom_first/pages/jira_login_page.dart';
 import 'package:test_diplom_first/pages/profile_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 
@@ -63,7 +64,7 @@ class _ChoosePageState extends State<ChoosePage> {
                 height: 80,
                 child: ElevatedButton.icon(onPressed: () { Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) =>
-                  JiraIssuesList(),
+                  JiraLoginPage(),
                 ));},style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
