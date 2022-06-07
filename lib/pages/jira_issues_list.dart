@@ -9,6 +9,7 @@ import 'package:test_diplom_first/utils/jira_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../utils/projects_get.dart';
 import '../utils/validator.dart';
 
 class JiraIssuesList extends StatefulWidget {
@@ -23,6 +24,9 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   var isLoaded = false;
   List<Issue>? issueList;
   List<Issue>? filterList;
+  late List<Value> projectsList;
+  String projectValue = 'Все';
+  List<String> strCB = [];
   DateTime? dateTime;
   final zero = DateTime;
   int _hours = 0;
@@ -44,19 +48,53 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
   @override
   void initState() {
     super.initState();
+    getProjectData();
     getData();
   }
 
+  getProjectData() async {
+    strCB.add('Все');
+    projectsList = await getProjects();
+    if(projectsList != null){
+      setState(() {
+        for(var proj in projectsList)
+        {
+          strCB.add(proj.name);
+          print(strCB);
+        }
+        projectValue = strCB[0];
+        // isLoaded = true;
+      });
+    }
+  }
+
   getData() async{
-    if(priorityValue == 'Все') {
+    if(priorityValue == 'Все' && projectValue == 'Все') {
       issueList = await getIssues();
     }
+    else if (priorityValue != 'Все' && projectValue != 'Все')
+    {
+      issueList = await getIssues();
+      issueList = issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)
+          && element.key.contains(projectValue)).toList();
+    }
+    else if (priorityValue != 'Все' && projectValue == 'Все')
+    {
+      issueList = await getIssues();
+      issueList = issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)).toList();
+    }
+    else if (priorityValue == 'Все' && projectValue != 'Все')
+    {
+      issueList = await getIssues();
+      issueList = issueList!.where((element) => element.key.contains(projectValue)).toList();
+    }
     else
-      {
-        issueList = await getIssues();
-        issueList = issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)).toList();
-      }
-    if(issueList != null){
+    {
+      issueList = await getIssues();
+      issueList = issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)).toList();
+    }
+
+    if(issueList != null) {
           setState(() {
             isLoaded = true;
         });
@@ -97,37 +135,127 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                     ),
                     height: 30,
                     // color: CustomColors.customWhite,
-                    child: DropdownButtonHideUnderline(
-                      child: ButtonTheme(
-                        child: DropdownButton<String>(
-                          value: priorityValue,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              priorityValue = newValue!;
-                              // sortMethod()!.whenComplete(() => getData());
-                              getData();
-                            });
+                    child:
 
-                            print(priorityValue);
-                          },
-                          items: priorityMap.map((Map map) {
-                            return new DropdownMenuItem<String>(
-                              value: map["name"].toString(),
-                              child: Row(
-                                children: <Widget>[
-                                  map['image'] != 'null' ?
-                                  SvgPicture.asset(map['image'],width: 30,
-                                  ) : SizedBox(),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      child: Text(map["name"])),
-                                ],
-                              ),
-                            );
-                          }).toList(),
+                    PopupMenuButton(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 6
                         ),
+                        child:Text("Фильтры", style: TextStyle(color: CustomColors.customBlack),),
                       ),
-                    ),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Text("Приоритет: "),
+                                StatefulBuilder(
+                                  builder: (BuildContext context, StateSetter setState) {
+                                    return Container(
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: CustomColors.customWhite,
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0, 3),
+                                              blurRadius: 3,
+                                              color: Colors.grey
+                                          ),
+                                        ],
+                                      ),
+                                      child: DropdownButtonHideUnderline(
+                                        child: ButtonTheme(
+                                          child: DropdownButton<String>(
+                                            value: priorityValue,
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                priorityValue = newValue!;
+                                                // sortMethod()!.whenComplete(() => getData());
+                                                getData();
+                                              });
+
+                                              print(priorityValue);
+                                            },
+                                            items: priorityMap.map((Map map) {
+                                              return new DropdownMenuItem<String>(
+                                                value: map["name"].toString(),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    map['image'] != 'null' ?
+                                                    SvgPicture.asset(
+                                                      map['image'], width: 30,
+                                                    ) : SizedBox(),
+                                                    Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: 10),
+                                                        child: Text(map["name"])),
+                                                  ],
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                ),
+                              ],
+                            ),
+                            value: 1,
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Text("Проект: "),
+                                SizedBox(width: 25,),
+                                StatefulBuilder(
+                                  builder: (BuildContext context, StateSetter setState) {
+                                    return DropdownButtonHideUnderline(
+                                      child: Container(
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: CustomColors.customWhite,
+                                          borderRadius: BorderRadius.circular(8),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                offset: Offset(0, 3),
+                                                blurRadius: 3,
+                                                color: Colors.grey
+                                            ),
+                                          ],
+                                        ),
+                                        child: DropdownButton(
+                                          value: projectValue,
+                                          items:
+                                          strCB.map<DropdownMenuItem<String>>((String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(width: 10,),
+                                                  Text(value),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              projectValue = newValue!;
+                                              getData();
+                                            });
+                                          },),
+                                      ),
+                                    );
+                                  }
+                                ),
+                              ],
+                            ),
+                            value: 2,
+                          )
+                        ]
+                    )
                   ),
                     SizedBox(width: 10,),
                     GestureDetector(
@@ -457,6 +585,33 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
 
   Future? sortMethod () async {
     issueList = await issueList!.where((element) => element.fields.priority.id == priorityToIdMethod(priorityValue)).toList();
+  }
+
+
+  Future getProjects() async {
+    String credentials = "dawani2016@mail.ru:Xm6EN8qHwuRFXvLXclBUA0BB";
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(credentials);
+    print('ENCODED' + encoded.toString());
+
+    var headers = {
+      'Authorization': 'Basic $encoded',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    var getUrl = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/api/3/project/search');
+
+    var getRequest = await http.get(getUrl, headers: headers);
+
+    if (getRequest.statusCode == 200 || getRequest.statusCode == 201 || getRequest.statusCode == 204) {
+      var json1 = getRequest.body;
+      print('LLLLLLLLLL' + getProjectsFromJson(json1).toString());
+      return getProjectsFromJson(json1).values;
+    }
+    else {
+      throw Exception('http.get error: statusCode= ${getRequest.statusCode}');
+    }
   }
 
   String? priorityToNameMethod(int id) {

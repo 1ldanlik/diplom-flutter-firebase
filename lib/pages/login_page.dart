@@ -72,7 +72,6 @@ class _LoginPageState extends State<LoginPage> {
                             Container(
                               height: 50,
                               child: TextFormField(
-                                obscureText: true,
                                 cursorColor: CustomColors.customBlack,
                                 style: TextStyle(fontSize: 18),
                                 decoration: const InputDecoration(

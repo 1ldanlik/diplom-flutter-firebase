@@ -1,7 +1,9 @@
 import 'package:test_diplom_first/pages/choose_page.dart';
+import 'package:test_diplom_first/pages/jira_issues_list.dart';
 import 'package:test_diplom_first/pages/news_page.dart';
 
 import '../res/custom_colors.dart';
+import '../utils/jira_auth.dart';
 import '../utils/validator.dart';
 import '../utils/database.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -165,23 +167,26 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              User? user = await FireAuth.signInUsingEmailPassword(
-                                email: _emailTextController.text,
-                                password: _passwordTextController.text,
-                              );
+                              // User? user = await FireAuth.signInUsingEmailPassword(
+                              //   email: _emailTextController.text,
+                              //   password: _passwordTextController.text,
+                              // );
+                              JiraAuth.BasicAuthJira(_emailTextController.text,
+                                  _passwordTextController.text).whenComplete(() => {
+                              if (JiraAuth.statusCode == 200 ||
+                              JiraAuth.statusCode == 201) {
+                                  Navigator.of(context)
+                                  .pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => JiraIssuesList()),
+                              )
+                            }
+                            else {
+                              exceptionMethod(_noUser, _wrongPassword)
+                            }
+                              });
 
 
-                              if (user != null) {
-                                Database.commonId = 'main';
-                                Navigator.of(context)
-                                    .pushReplacement(
-                                  MaterialPageRoute(builder: (context) => ChoosePage(user: user)),
-                                );
-                              }
-                              else
-                              {
-                                exceptionMethod(_noUser, _wrongPassword);
-                              }
                             }
                           },
                           child: Text(

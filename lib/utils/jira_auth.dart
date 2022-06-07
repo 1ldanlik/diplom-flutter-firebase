@@ -5,14 +5,13 @@ import 'dart:convert';
 import 'package:test_diplom_first/utils/issues_get.dart';
 
 
-class JiraService {
-  static String? loginJira = "dawani2016@mail.ru";
-  static String? passwordJira = "Xm6EN8qHwuRFXvLXclBUA0BB";
+class JiraAuth {
   static String? encoded;
+  static int? statusCode;
   static var headers;
 
-  void BasicAuthJira(String login, String password) async {
-    String credentials = "${loginJira.toString()}:${passwordJira.toString()}";
+  static Future BasicAuthJira(String login, String password) async {
+    String credentials = "${login}:${password}";
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String encoded = stringToBase64.encode(credentials);
     headers = {
@@ -22,11 +21,11 @@ class JiraService {
     };
 
     var url = Uri.parse(
-        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
+        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/createmeta');
     var response = await http.get(url, headers: headers);
+    statusCode = response.statusCode;
     if(response.statusCode != 200 || response.statusCode != 201)
       throw Exception('http.get Auth error: statusCode= ${response.statusCode}');
-
   }
 }
 
