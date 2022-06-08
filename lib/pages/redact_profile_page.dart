@@ -60,8 +60,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         appBar: AppBar(
           title: Row(
             children: [
-              SizedBox(width: 80,),
-              Text('Профиль', style: TextStyle(fontSize: 24, color: CustomColors.customWhite),),
+              Text('Редактирование профиля', style: TextStyle(fontSize: 24, color: CustomColors.customWhite),),
             ],
           ),
           backgroundColor: CustomColors.customPurple,
