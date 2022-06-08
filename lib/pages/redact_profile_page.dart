@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../res/custom_colors.dart';
 import '../utils/database.dart';
 import 'profile_page.dart';
 import '../utils/fire_auth.dart';
@@ -57,7 +58,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child:
       Scaffold(
         appBar: AppBar(
-          title: Text('Register'),
+          title: Row(
+            children: [
+              SizedBox(width: 80,),
+              Text('Профиль', style: TextStyle(fontSize: 24, color: CustomColors.customWhite),),
+            ],
+          ),
+          backgroundColor: CustomColors.customPurple,
+          leading: BackButton(color: CustomColors.customWhite,),
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -77,10 +85,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         decoration: InputDecoration(
                           hintText: "ФИО",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(30.0),
+                            ),
+                          ),
+                          errorBorder: const OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(30.0),
                             ),
                           ),
                         ),
@@ -94,10 +113,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         decoration: InputDecoration(
                           hintText: "Email",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(30.0),
+                            ),
+                          ),
+                          errorBorder: const OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(30.0),
                             ),
                           ),
                         ),
@@ -111,10 +141,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         decoration: InputDecoration(
                           hintText: "Подразделение",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              )
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(30.0),
+                            ),
+                          ),
+                          errorBorder: const OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(30.0),
                             ),
                           ),
                         ),
@@ -127,6 +168,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18.0),
+                                      ))),
                               onPressed: () async {
                                 setState(() {
                                   _isProcessing = true;

@@ -84,38 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         child: ItemList()
-            // SizedBox(height: 20,),
-            // Container(
-            //   height: MediaQuery.of(context).size.height / 1.38,
-            //   child: SafeArea(
-            //   child: Padding(
-            //     padding: const EdgeInsets.only(
-            //       left:16.0,
-            //       right:16.0,
-            //       // bottom:20.0,
-            //     ),
-            //     child: ItemList(),
-            //   ),
-            //   ),
-            // ),
-            // SizedBox(height: 20,),
-            // Container(
-            //   width: 60,
-            //   height: 60,
-            //   decoration: BoxDecoration(
-            //     color: CustomColors.customPurple,
-            //     borderRadius: BorderRadius.circular(30)
-            //   ),
-            //   child: IconButton(
-            //       icon: Icon(Icons.add, color: CustomColors.customWhite, size: 40,),
-            //       onPressed: () {
-            //         Navigator.of(context).push(
-            //             MaterialPageRoute(
-            //                 builder: (context) =>
-            //                 AddNewsPage()
-            //             ));
-            //         }),
-            // )
       ),
     );
   }

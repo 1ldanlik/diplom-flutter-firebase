@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:test_diplom_first/pages/choose_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 import 'profile_page.dart';
 import '../utils/fire_auth.dart';
@@ -201,7 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     .pushAndRemoveUntil(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        ProfilePage(user: user),
+                                        ChoosePage(user: user,),
                                   ),
                                   ModalRoute.withName('/'),
                                 );

@@ -54,6 +54,7 @@ class _ItemListState extends State<ItemList> {
               String date2 = DateFormat("yyyy-MM-dd - kk:mm").format(date.toDate().add(duration));
 
               return Ink(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
                 child:
                   Container(
                   width: 160,
@@ -71,7 +72,6 @@ class _ItemListState extends State<ItemList> {
                   ),
                   child: Column(
                     children: [
-                      SizedBox(height: 10,),
                       Row(
                         children: [
                       Container(

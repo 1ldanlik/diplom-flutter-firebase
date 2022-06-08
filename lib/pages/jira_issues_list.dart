@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:test_diplom_first/pages/add_issue_page.dart';
+import 'package:test_diplom_first/pages/choose_page.dart';
+import 'package:test_diplom_first/pages/jira_login_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
+import 'package:test_diplom_first/utils/fire_auth.dart';
 import 'package:test_diplom_first/utils/issues_get.dart';
 import 'package:test_diplom_first/utils/jira_auth.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +17,7 @@ import '../utils/validator.dart';
 
 class JiraIssuesList extends StatefulWidget {
   const JiraIssuesList({Key? key}) : super(key: key);
+  static List<Issue>? issueListSt = [];
 
   @override
   State<JiraIssuesList> createState() => _JiraIssuesListState();
@@ -106,7 +110,13 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColors.customPurple,
-        leading: BackButton(color: CustomColors.customWhite,),
+        leading: BackButton(color: CustomColors.customWhite, onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) =>
+            JiraLoginPage()
+            )
+          );
+        },),
         title: Row(
           children: [
             Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
@@ -143,7 +153,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                             horizontal: 5,
                             vertical: 6
                         ),
-                        child:Text("Фильтры", style: TextStyle(color: CustomColors.customBlack),),
+                        child:Text("Фильтры", style: TextStyle(color: CustomColors.customBlack, fontWeight: FontWeight.w500),),
                       ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
@@ -215,6 +225,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                     return DropdownButtonHideUnderline(
                                       child: Container(
                                         height: 40,
+                                        width: 125,
                                         decoration: BoxDecoration(
                                           color: CustomColors.customWhite,
                                           borderRadius: BorderRadius.circular(8),
@@ -260,7 +271,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                     SizedBox(width: 10,),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
+                        Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                               builder: (context) =>
                           AddIssuePage())
@@ -412,9 +423,10 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                                       TextButton(
                                                         onPressed: () {
                                                           Navigator.pop(context, 'Добавить');
-                                                          logSpentTime(_hours, _minutes,
+                                                          logSpentTime(int.parse(_hourTextController.text), (int.parse(_minuteTextController.text)),
                                                               issueList![index].key).whenComplete(() {
                                                                 getData();
+                                                                print('LOGGED TIME');
                                                                 toNull();
                                                               }
                                                           );
@@ -566,11 +578,11 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
 
     var url = Uri.parse(
         'https://jirasoftwareildan.atlassian.net/rest/api/3/issue/$_issueKey/worklog');
-    var response = await http.post(url, headers: headers,
+    var response = await http.post(url, headers: JiraAuth.headers,
         body: body,
         encoding: Encoding.getByName("utf-8"));
     if (response.statusCode != 201 || response.statusCode != 204) throw Exception(
-        'http.get error: statusCode= ${response.statusCode}');
+        'http.get LOG TIME error: statusCode= ${response.statusCode}');
     print(response.body.toString() + 'lllllllllll');
 
   }

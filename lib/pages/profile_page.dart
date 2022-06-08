@@ -97,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         fit: BoxFit.cover,
                         height: 100,
                         width: 100,
-                      ) : null
+                      ) : Image.asset("assets/avatar_null.png", width: 100,)
                     ),
                   ),
                 ),
@@ -139,6 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Container(
                       child: dateTime == null ? Row(
                         children: [
+                          SizedBox(width: 30,),
                       Text('Дата рождения: ', style: TextStyle(fontSize: 16)),
                           TextButton(onPressed: () {
                             DatePicker.showDatePicker(context,
@@ -156,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 }, currentTime: DateTime.now(), locale: LocaleType.en);
                           },
                             child: Text(
-                              'Выбрать дату рождения',
+                              'Выбрать дату',
                               style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.w500),
                             ),
                           ),

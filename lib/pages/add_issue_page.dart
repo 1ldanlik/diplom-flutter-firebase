@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:test_diplom_first/pages/jira_issues_list.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 import 'package:test_diplom_first/utils/created_issue_get.dart';
+import 'package:test_diplom_first/utils/jira_auth.dart';
 import 'package:test_diplom_first/utils/projects_get.dart';
 import '../utils/validator.dart';
 
@@ -20,6 +22,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
   final _focusDescription = FocusNode();
   final _summaryTextController = TextEditingController();
   final _descriptionTextController = TextEditingController();
+  bool isProcess = false;
   late List<Value> projectsList;
   List<String> strCB = [];
   String projectValue = 'null';
@@ -65,30 +68,41 @@ class _AddIssuePageState extends State<AddIssuePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColors.customPurple,
-        leading: BackButton(color: CustomColors.customWhite,),
+        leading: BackButton(color: CustomColors.customWhite, onPressed: () {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) =>
+                  JiraIssuesList()
+              )
+          );
+        },),
         title: Text('Добавление задачи', style: TextStyle(fontSize: 24, color: Colors.white),),
         actions: [
           Padding(
               padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
+              child: isProcess == false ? GestureDetector(
                 onTap: () {
-                  if(_summaryTextController.text !='null')
+                  if(_summaryTextController.text !='null' && _descriptionTextController.text != 'null'
+                  && _hours != 0 && _minutes != 0)
+                    setState(() {
+                      isProcess = true;
+                    });
                   createIssue(projectValue,
                       typeIssueValue,
                       priorityValue,
                       _summaryTextController.text,
                       _descriptionTextController.text,
-                      _weeks,
-                      _days,
                       _hours,
-                      _minutes);
+                      _minutes)
+                      .whenComplete(() => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => JiraIssuesList())
+                  ) );
                 },
                 child: Icon(
                   Icons.check,
                   size: 26.0,
                   color: CustomColors.customWhite,
                 ),
-              )
+              ) : const CircularProgressIndicator()
           ),
         ],
       ),
@@ -444,9 +458,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
       String priorityValue,
       String summary,
       String description,
-      int week,
       int hour,
-      int day,
       int minute, ) async {
     var headers = {
       'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
@@ -458,7 +470,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
 
     var url = Uri.parse(
         'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
-    var lol = await http.post(url, headers: headers,
+    var lol = await http.post(url, headers: JiraAuth.headers,
         body: body,
         encoding: Encoding.getByName("utf-8"));
     if (lol.statusCode != 201) throw Exception(
@@ -470,11 +482,10 @@ class _AddIssuePageState extends State<AddIssuePage> {
     // var res = await http.get(url, headers: headers);
     // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
     // print(res.body.toString() + '999999999999999999');
-    await createWorkLog(week, day, hour, minute, _json.key);
+    await createWorkLog(hour, minute, _json.key);
   }
 
-  createWorkLog(int _week,
-      int _day,
+  createWorkLog(
       int _hour,
       int _minute,
       String _issueKey) async {
@@ -485,7 +496,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
     };
 
     // String body = '{ "timeSpent": "${week}w${day}d${hour}h${minute}m" }';
-    String body = '{ "update": { "timetracking":[ { "edit": { "originalEstimate":"${_week}w ${_day}d ${_hour}h ${_minute}m", "remainingEstimate":"${_week}w ${_day}d ${_hour}h ${_minute}m" } } ] } }';
+    String body = '{ "update": { "timetracking":[ { "edit": { "originalEstimate":"${_hour}h ${_minute}m", "remainingEstimate":"${_hour}h ${_minute}m" } } ] } }';
 
     var url = Uri.parse(
         'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/$_issueKey');
