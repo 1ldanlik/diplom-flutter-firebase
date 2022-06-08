@@ -46,6 +46,7 @@ dependencies:
   flutter_svg: ^1.0.3
   path_provider: ^2.0.10
   drop_shadow_image: ^0.9.1
+  adaptive_spinner: ^2.0.0
 #  atlassian_apis: ^0.7.0
 #  flutter_session: ^0.1.1
 

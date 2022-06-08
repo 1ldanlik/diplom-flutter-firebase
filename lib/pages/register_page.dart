@@ -53,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        height: 50,
+                        // height: 50,
                         child: TextFormField(
                           cursorColor: CustomColors.customBlack,
                           controller: _nameTextController,
@@ -62,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             name: value,
                           ),
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 20, right: 20),
+                            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                             enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                 borderRadius: const BorderRadius.all(
@@ -92,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       SizedBox(height: 16.0),
                       Container(
-                        height: 50,
+                        // height: 50,
                         child: TextFormField(
                           cursorColor: CustomColors.customBlack,
                           controller: _emailTextController,
@@ -101,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             email: value,
                           ),
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 20, right: 20),
+                            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                             enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                 borderRadius: const BorderRadius.all(
@@ -131,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       SizedBox(height: 16.0),
                       Container(
-                        height: 50,
+                        // height: 50,
                         child: TextFormField(
                           cursorColor: CustomColors.customBlack,
                           controller: _passwordTextController,
@@ -141,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             password: value,
                           ),
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 20, right: 20),
+                            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                             enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                 borderRadius: const BorderRadius.all(

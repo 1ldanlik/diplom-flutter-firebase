@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:adaptive_spinner/adaptive_spinner.dart';
 import 'package:drop_shadow_image/drop_shadow_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,6 +42,8 @@ class _ProfilePageState extends State<ProfilePage> {
   late Future<DateTime> time;
   late DateTime? dateTime = null;
   late String? subDiv = null;
+  double valueIndicator = 0;
+  bool isProcess = false;
 
 
   @override
@@ -75,6 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(_currentUser!.photoURL.toString()),
             Row(
               children: [
                 SizedBox(width: 65,),
@@ -89,15 +93,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       )
                     ],
                   ),
-                  child: ClipRRect(
+                  child: isProcess == true ?
+                  AdaptiveSpinner() :
+                  ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: ClipRRect(
-                      child: _currentUser!.photoURL != null ? Image.network(
+                    child: _currentUser!.photoURL != null ? ClipRRect(
+                      child: Image.network(
                         _currentUser!.photoURL.toString(),
                         fit: BoxFit.cover,
                         height: 100,
                         width: 100,
-                      ) : Image.asset("assets/avatar_null.png", width: 100,)
+                      )) : ClipRRect(
+                      child: Image.asset("assets/avatar_null.png",
+                        fit: BoxFit.cover,
+                        height: 100,
+                        width: 100,
+                      )
                     ),
                   ),
                 ),
@@ -360,7 +371,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future uploadFile() async {
-    firebase_storage.FirebaseStorage.instance.refFromURL(_currentUser!.photoURL.toString()).delete();
+    if(_currentUser!.photoURL != null) {
+      firebase_storage.FirebaseStorage.instance.refFromURL(
+          _currentUser!.photoURL.toString()).delete();
+    }
     ref = firebase_storage.FirebaseStorage.instance.ref().child('images/avatarImgs/${Path.basename(_image.path)}');
     await ref!.putFile(_image).whenComplete(() async {
       await ref!.getDownloadURL().then((value) async {

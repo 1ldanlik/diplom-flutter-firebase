@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:adaptive_spinner/adaptive_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -102,7 +103,8 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   size: 26.0,
                   color: CustomColors.customWhite,
                 ),
-              ) : const CircularProgressIndicator()
+              ) :
+              AdaptiveSpinner(withRadius: 30,),
           ),
         ],
       ),

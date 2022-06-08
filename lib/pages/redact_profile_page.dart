@@ -83,6 +83,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           name: value,
                         ),
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                           hintText: "ФИО",
                           border: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.blue, width: 1.0),
@@ -111,6 +112,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           email: value,
                         ),
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                           hintText: "Email",
                           border: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.blue, width: 1.0),
@@ -139,6 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           subDivis: value,
                         ),
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                           hintText: "Подразделение",
                           border: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.blue, width: 1.0),
