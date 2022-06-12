@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:test_diplom_first/dialogs/policy_dialog.dart';
 import 'package:test_diplom_first/pages/choose_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 import 'profile_page.dart';
@@ -20,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _nameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+  bool isChecked = false;
 
   static bool _exBool = RegisterPage.exeptBool;
   final _focusName = FocusNode();
@@ -168,6 +170,25 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                         ),
+                              ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            checkColor: Colors.white,
+                            fillColor: MaterialStateProperty.all(CustomColors.customPurple),
+                            value: isChecked,
+                            onChanged: (bool? value) {
+                              showDialog(context: context, builder: (context) {
+                                return PolicyDialog(
+                                  mdFileName: 'privacy_policy.md',);
+                              },);
+                              setState(() {
+                                isChecked = value!;
+                              });
+                            },
+                          ),
+                          Text("Пользовательское соглашение", style: TextStyle(fontSize: 16),)
+                        ],
                       ),
                       SizedBox(height: 32.0),
                       _isProcessing
@@ -182,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
 
                             if (_registerFormKey.currentState!
-                                .validate()) {
+                                .validate() && isChecked == true) {
                               User? user = await FireAuth
                                   .registerUsingEmailPassword(
                                 name: _nameTextController.text,
@@ -208,7 +229,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 );
                               }
                               else {
-                                exceptionMethod(_exBool);
+                                ExceptionMethod(_exBool);
                               }
 
                             }
@@ -244,7 +265,38 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  exceptionMethod(bool exBool) {
+  ExceptionMethod(bool exBool) {
+    if(exBool == true)
+    {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Пользователь с таким Email уже существует!', style: TextStyle(fontSize: 18),)
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Ок'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else return null;
+  }
+
+  TermsOfUseDialog(bool exBool) {
     if(exBool == true)
     {
       return showDialog<void>(

@@ -47,6 +47,7 @@ dependencies:
   path_provider: ^2.0.10
   drop_shadow_image: ^0.9.1
   adaptive_spinner: ^2.0.0
+  flutter_markdown: ^0.6.10
 #  atlassian_apis: ^0.7.0
 #  flutter_session: ^0.1.1
 
@@ -79,6 +80,7 @@ flutter:
     - assets/lowest.svg
     - assets/jira_icon.png
     - assets/avatar_null.png
+    - assets/privacy_policy.md
 
   # To add assets to your application, add an assets section, like this:
 #assets:

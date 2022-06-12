@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Center(
                   child: Column(
                     children: [
-                      Text('Авторизация', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 36)),
+                      Text('Авторизация', style: TextStyle(fontSize: 36, fontWeight: FontWeight.w500)),
                       SizedBox(height: 50,),
                       Form(
                         key: _formKey,

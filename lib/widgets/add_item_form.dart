@@ -78,7 +78,7 @@ class _AddItemFormState extends State<AddItemForm> {
                     SizedBox(width: 30,),
                     ElevatedButton(
                       onPressed: () => chooseImage(),
-                      child: Text('Выбрать изображение', style: TextStyle(color: CustomColors.customWhite),),
+                      child: Text('Выбрать изображение', style: TextStyle(color: CustomColors.customWhite, fontSize: 16),),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(CustomColors.customPurple)
                     ),),
@@ -168,7 +168,7 @@ class _AddItemFormState extends State<AddItemForm> {
                 child: Text(
                   'Добавить',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: CustomColors.customWhite,
                     letterSpacing: 2,

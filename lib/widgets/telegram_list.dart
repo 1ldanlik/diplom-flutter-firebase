@@ -23,13 +23,6 @@ class _ItemListState extends State<ItemList> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance?.addPostFrameCallback((_){
-    //   if (_scrollController.hasClients)
-    //     _scrollController.position.maxScrollExtent;
-    //   else{
-    //     print('nononononononononon');
-    //   }
-    // });
   }
 
   Widget build(BuildContext context) {
@@ -37,7 +30,7 @@ class _ItemListState extends State<ItemList> {
       stream: Database.readItems(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          // return Text('Something went wrong');
+          return Text('Что-то пошлло не так!');
           return Text(snapshot.error.toString());
         } else if (snapshot.hasData || snapshot.data != null) {
           return ListView.separated(
@@ -80,24 +73,33 @@ class _ItemListState extends State<ItemList> {
                           left: 10.0),
                         child: type == "Telegram" ? Icon(
                           ItemList.telegram,
-                          color: Colors.blue,
-                          size: 30,
-                        ) : SizedBox(width: 25.0,),
+                          color: CustomColors.customBlack,
+                          size: 35,
+                        ) : SizedBox(width: 40.0,),
                       ),
-                      SizedBox(width: 70,),
-                      Text(date2,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500
-                      )),
+                      SizedBox(width: 180,),
+                      Column(
+                        children: [
+                          SizedBox(height: 10,),
+                          Text(date2,
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500
+                          )),
+                        ],
+                      ),
                         ],
                       ),
                       SizedBox(height: 10),
                       ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            description,
-                            width: 100.0,
+                          child: AspectRatio(
+                            aspectRatio: 15/8,
+                            child: Image.network(
+                              description,
+                              width: 100.0,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       SizedBox(height: 20),
