@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:test_diplom_first/pages/jira_issues_list.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 import 'package:test_diplom_first/utils/created_issue_get.dart';
+import 'package:test_diplom_first/utils/issue_types_get.dart';
 import 'package:test_diplom_first/utils/jira_auth.dart';
 import 'package:test_diplom_first/utils/projects_get.dart';
 import '../utils/validator.dart';
@@ -25,9 +26,11 @@ class _AddIssuePageState extends State<AddIssuePage> {
   final _descriptionTextController = TextEditingController();
   bool isProcess = false;
   late List<Value> projectsList;
+  late List<IssueType> issueTypesList;
   List<String> strCB = [];
+  List<String> typeList = [];
   String projectValue = 'null';
-  String typeIssueValue = 'Task';
+  String typeIssueValue = 'null';
   String priorityValue = 'Medium';
   late int hours;
   late int minutes;
@@ -46,7 +49,27 @@ class _AddIssuePageState extends State<AddIssuePage> {
   @override
   void initState() {
     super.initState();
-    getData();
+    refreshData();
+  }
+
+  refreshData() async {
+    await getData();
+    refreshIssueTypes();
+  }
+
+  refreshIssueTypes() async {
+    issueTypesList = await getIssueTypes(projectValue);
+    if(issueTypesList != null) {
+      typeList.clear();
+      setState(() {
+        for(var type in issueTypesList)
+        {
+          typeList.add(type.name);
+          print(';;;;;;;;;;;;;;' + typeList.toString());
+        }
+        typeIssueValue = typeList[0];
+      });
+    }
   }
 
   getData() async {
@@ -80,31 +103,44 @@ class _AddIssuePageState extends State<AddIssuePage> {
         actions: [
           Padding(
               padding: EdgeInsets.only(right: 20.0),
-              child: isProcess == false ? GestureDetector(
+              child: isProcess ?
+              AdaptiveSpinner(withRadius: 30,) :
+              GestureDetector(
                 onTap: () {
-                  if(_summaryTextController.text !='null' && _descriptionTextController.text != 'null'
-                  && _hours != 0 && _minutes != 0)
-                    setState(() {
-                      isProcess = true;
+                  setState(() {
+                    isProcess = true;
+                  });
+                  if(_summaryTextController.text != null
+                      && _descriptionTextController.text != null
+                  && (_hours != 0 || _minutes != 0)) {
+                    createIssue(
+                        projectValue,
+                        typeIssueValue,
+                        priorityValue,
+                        _summaryTextController.text,
+                        _descriptionTextController.text,
+                        _hours,
+                        _minutes)
+                        .whenComplete(() =>
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => JiraIssuesList())
+                        ));
+                  }
+                  else {
+                    ExDialog();
+                  }
+                    setState(() async{
+                      await Future.delayed(Duration(seconds: 3));
+                      isProcess = false;
                     });
-                  createIssue(projectValue,
-                      typeIssueValue,
-                      priorityValue,
-                      _summaryTextController.text,
-                      _descriptionTextController.text,
-                      _hours,
-                      _minutes)
-                      .whenComplete(() => Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => JiraIssuesList())
-                  ) );
                 },
                 child: Icon(
                   Icons.check,
                   size: 26.0,
                   color: CustomColors.customWhite,
                 ),
-              ) :
-              AdaptiveSpinner(withRadius: 30,),
+              )
           ),
         ],
       ),
@@ -114,10 +150,11 @@ class _AddIssuePageState extends State<AddIssuePage> {
           child: Column(
             children: [
               SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
                   Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
                       new DropdownButtonHideUnderline(
@@ -149,15 +186,18 @@ class _AddIssuePageState extends State<AddIssuePage> {
                                 );
                               }).toList(),
                               onChanged: (String? newValue) {
-                                setState(() {
-                                  projectValue = newValue!;
+                                setState(() async {
+                                  projectValue = await newValue!;
+                                  refreshIssueTypes();
                                 });
                               },),
                         ),
                       ),
                     ],
                   ),
+              SizedBox(height: 10,),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
                       SizedBox(width: 10,),
@@ -178,7 +218,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                           child: new DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               value: typeIssueValue,
-                              items: <String>['Task', 'Epic'].map<DropdownMenuItem<String>>((String value) {
+                              items: typeList.map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child:
@@ -197,8 +237,9 @@ class _AddIssuePageState extends State<AddIssuePage> {
                       ),
                     ],
                   ),
-                ],
-              ),
+              //   ],
+              // ),
+              SizedBox(height: 10,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -249,6 +290,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   // ),
                 ]
               ),
+              SizedBox(height: 10,),
               Container(
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Column(
@@ -403,6 +445,95 @@ class _AddIssuePageState extends State<AddIssuePage> {
     }
   }
 
+  Future createIssue(String projectValue,
+      String typeIssueValue,
+      String priorityValue,
+      String summary,
+      String description,
+      int hour,
+      int minute, ) async {
+
+    String body = '{ "fields": { "project": { "key": "$projectValue" }, "summary": "$summary", "description": "$description", "issuetype": { "name": "$typeIssueValue" }, "priority":{ "name": "$priorityValue" } } }';
+
+    var url = Uri.parse(
+        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
+    var lol = await http.post(url, headers: JiraAuth.headers,
+        body: body,
+        encoding: Encoding.getByName("utf-8"));
+    if (lol.statusCode != 201) throw Exception(
+        'http.get error: statusCode= ${lol.statusCode}');
+    print(lol.body.toString() + 'CreateIssue');
+    var _json = await getCreatedIssueFromJson(lol.body);
+
+    // var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/auth/1/session/');
+    // var res = await http.get(url, headers: headers);
+    // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
+    // print(res.body.toString() + '999999999999999999');
+    await createWorkLog(hour, minute, _json.key);
+  }
+
+  createWorkLog(
+      int _hour,
+      int _minute,
+      String _issueKey) async {
+
+    String body = '{ "update": { "timetracking":[ { "edit": { "originalEstimate":"${_hour}h ${_minute}m", "remainingEstimate":"${_hour}h ${_minute}m" } } ] } }';
+
+    var url = Uri.parse(
+        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/$_issueKey');
+    var response = await http.put(url, headers: JiraAuth.headers,
+        body: body,
+        encoding: Encoding.getByName("utf-8"));
+    if (response.statusCode != 200 || response.statusCode != 201 || response.statusCode != 204) throw Exception(
+        'http.get error: statusCode= ${response.statusCode}');
+    print(response.body.toString() + 'lllllllllll');
+
+  }
+
+  Future getIssueTypes(
+      String _projectKey) async {
+    var url = Uri.parse(
+        'https://jirasoftwareildan.atlassian.net/rest/api/2/project/$_projectKey');
+    var getRequest = await http.get(url, headers: JiraAuth.headers);
+
+    if (getRequest.statusCode == 200 || getRequest.statusCode == 201 ||
+        getRequest.statusCode == 204) {
+      var json1 = getRequest.body;
+      print(json1.toString());
+      return getIssueTypesFromJson(json1).issueTypes;
+    }
+    else {
+      throw Exception('http.get error: statusCode= ${getRequest.statusCode}');
+    }
+  }
+
+  ExDialog() {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Поля и значения не должны быть нулевыми!', style: TextStyle(fontSize: 18),)
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ок'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void minusHours() {
     setState(() {
       if (_hours != 0)
@@ -453,62 +584,6 @@ class _AddIssuePageState extends State<AddIssuePage> {
     setState(() {
       _days++;
     });
-  }
-
-  Future createIssue(String projectValue,
-      String typeIssueValue,
-      String priorityValue,
-      String summary,
-      String description,
-      int hour,
-      int minute, ) async {
-    var headers = {
-      'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-
-    String body = '{ "fields": { "project": { "key": "$projectValue" }, "summary": "$summary", "description": "$description", "issuetype": { "name": "$typeIssueValue" }, "priority":{ "name": "$priorityValue" } } }';
-
-    var url = Uri.parse(
-        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
-    var lol = await http.post(url, headers: JiraAuth.headers,
-        body: body,
-        encoding: Encoding.getByName("utf-8"));
-    if (lol.statusCode != 201) throw Exception(
-        'http.get error: statusCode= ${lol.statusCode}');
-    print(lol.body.toString() + 'CreateIssue');
-    var _json = await getCreatedIssueFromJson(lol.body);
-
-    // var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/auth/1/session/');
-    // var res = await http.get(url, headers: headers);
-    // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
-    // print(res.body.toString() + '999999999999999999');
-    await createWorkLog(hour, minute, _json.key);
-  }
-
-  createWorkLog(
-      int _hour,
-      int _minute,
-      String _issueKey) async {
-    var headers = {
-      'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-
-    // String body = '{ "timeSpent": "${week}w${day}d${hour}h${minute}m" }';
-    String body = '{ "update": { "timetracking":[ { "edit": { "originalEstimate":"${_hour}h ${_minute}m", "remainingEstimate":"${_hour}h ${_minute}m" } } ] } }';
-
-    var url = Uri.parse(
-        'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/$_issueKey');
-    var lol = await http.put(url, headers: headers,
-        body: body,
-        encoding: Encoding.getByName("utf-8"));
-    if (lol.statusCode != 201 || lol.statusCode != 204) throw Exception(
-        'http.get error: statusCode= ${lol.statusCode}');
-    print(lol.body.toString() + 'lllllllllll');
-
   }
 
 }

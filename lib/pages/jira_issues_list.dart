@@ -24,6 +24,8 @@ class JiraIssuesList extends StatefulWidget {
 }
 
 class _JiraIssuesListState extends State<JiraIssuesList> {
+  final _logFormKey = GlobalKey<FormState>();
+
   late String? issues;
   var isLoaded = false;
   List<Issue>? issueList;
@@ -346,93 +348,110 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                                   ],
                                                 ),
                                                 content:  Container(
-                                                  child: Column(
-                                                    children: [
-                                                      const Text('Часы:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
-                                                      const SizedBox(height: 10,),
-                                                      Container(
-                                                        height: 50,
-                                                        width: 200,
-                                                        child: TextFormField(
-                                                          style: TextStyle(fontSize: 24),
-                                                          decoration: const InputDecoration(
-                                                              enabledBorder:  OutlineInputBorder(
-                                                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                                                  borderRadius: BorderRadius.all(
-                                                                     Radius.circular(30.0),
+                                                  height: 240,
+                                                  child: Form(
+                                                    key: _logFormKey,
+                                                    child: Container(
+                                                      child: Column(
+                                                        children: [
+                                                          const Text('Часы:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                                                          const SizedBox(height: 10,),
+                                                          Container(
+                                                            child: TextFormField(
+                                                              style: TextStyle(fontSize: 18),
+                                                              decoration: const InputDecoration(
+                                                                  contentPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 15),
+                                                                  enabledBorder:  OutlineInputBorder(
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                                      borderRadius: BorderRadius.all(
+                                                                         Radius.circular(30.0),
+                                                                      )
+                                                                  ),
+                                                                  border: OutlineInputBorder(
+                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderRadius: BorderRadius.all(
+                                                                         Radius.circular(30.0),
+                                                                      )
+                                                                  ),
+                                                                  focusedBorder:  OutlineInputBorder(
+                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderRadius:  BorderRadius.all(
+                                                                         Radius.circular(30.0),
+                                                                      )
                                                                   )
                                                               ),
-                                                              border: OutlineInputBorder(
-                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                                  borderRadius: BorderRadius.all(
-                                                                     Radius.circular(30.0),
-                                                                  )
-                                                              ),
-                                                              focusedBorder:  OutlineInputBorder(
-                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                                  borderRadius:  BorderRadius.all(
-                                                                     Radius.circular(30.0),
-                                                                  )
-                                                              )
+                                                              controller: _hourTextController,
+                                                              focusNode: _focusHour,
+                                                              validator: (value) => Validator.validateNumber(number: value),
+                                                            ),
                                                           ),
-                                                          controller: _hourTextController,
-                                                          focusNode: _focusHour,
-                                                          validator: (value) => Validator.validateNumber(number: value),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 10,),
-                                                      const Text('Минуты:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
-                                                      const SizedBox(height: 10,),
-                                                      Container(
-                                                        height: 50,
-                                                        width: 200,
-                                                        child: TextFormField(
-                                                          style: TextStyle(fontSize: 24),
-                                                          decoration: const InputDecoration(
-                                                              enabledBorder:  OutlineInputBorder(
-                                                                  borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                                                                  borderRadius: BorderRadius.all(
-                                                                     Radius.circular(30.0),
+                                                          const SizedBox(height: 10,),
+                                                          const Text('Минуты:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                                                          const SizedBox(height: 10,),
+                                                          Container(
+                                                            child: TextFormField(
+                                                              style: TextStyle(fontSize: 18),
+                                                              decoration: const InputDecoration(
+                                                                  contentPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 15),
+                                                                  enabledBorder:  OutlineInputBorder(
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                                      borderRadius: BorderRadius.all(
+                                                                         Radius.circular(30.0),
+                                                                      )
+                                                                  ),
+                                                                  border: OutlineInputBorder(
+                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderRadius: BorderRadius.all(
+                                                                         Radius.circular(30.0),
+                                                                      )
+                                                                  ),
+                                                                  focusedBorder:  OutlineInputBorder(
+                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderRadius:  BorderRadius.all(
+                                                                         Radius.circular(30.0),
+                                                                      )
                                                                   )
                                                               ),
-                                                              border: OutlineInputBorder(
-                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                                  borderRadius: BorderRadius.all(
-                                                                     Radius.circular(30.0),
-                                                                  )
-                                                              ),
-                                                              focusedBorder:  OutlineInputBorder(
-                                                                  borderSide: BorderSide(color: Colors.blue, width: 5.0),
-                                                                  borderRadius:  BorderRadius.all(
-                                                                     Radius.circular(30.0),
-                                                                  )
-                                                              )
+                                                              controller: _minuteTextController,
+                                                              focusNode: _focusMinute,
+                                                              validator: (value) => Validator.validateNumber(number: value),
+                                                            ),
                                                           ),
-                                                          controller: _minuteTextController,
-                                                          focusNode: _focusMinute,
-                                                          validator: (value) => Validator.validateNumber(number: value),
-                                                        ),
+                                                        ],
                                                       ),
-                                                    ],
+                                                      height: 192,
+                                                    ),
                                                   ),
-                                                  height: 192,
                                                 ),
                                                 actions: <Widget>[
                                                   Row(
                                                     children: [
                                                       TextButton(
                                                         onPressed: () {
-                                                          Navigator.pop(context, 'Добавить');
-                                                          logSpentTime(int.parse(_hourTextController.text), (int.parse(_minuteTextController.text)),
-                                                              issueList![index].key).whenComplete(() {
-                                                                getData();
-                                                                print('LOGGED TIME');
-                                                                toNull();
-                                                              }
-                                                          );
+                                                          if(_logFormKey.currentState!.validate()) {
+                                                            Navigator.pop(
+                                                                context,
+                                                                'Добавить');
+                                                            logSpentTime(
+                                                                int.parse(
+                                                                    _hourTextController
+                                                                        .text),
+                                                                (int.parse(
+                                                                    _minuteTextController
+                                                                        .text)),
+                                                                issueList![index]
+                                                                    .key)
+                                                                .whenComplete(() {
+                                                              getData();
+                                                              print(
+                                                                  'LOGGED TIME');
+                                                              toNull();
+                                                            }
+                                                            );
+                                                          }
                                                         },
                                                         child: Text('Добавить',
-                                                          style: TextStyle(fontSize: 24),),
+                                                          style: TextStyle(fontSize: 24, color: CustomColors.customPurple),),
                                                       ),
                                                     ],
                                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -550,14 +569,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
 
     if (deleteRequest.statusCode == 200 || deleteRequest.statusCode == 201 || deleteRequest.statusCode == 204) {
       var json1 = deleteRequest.body;
-      print('LLLLLLLLLL' + getIssuesFromJson(json1).issues.toString());
-      // JiraIssuesList.strIssues = jsonDecode(lol.body);
       return getIssuesFromJson(json1).issues;
-      // setState(() {
-      //   issues = lol.body.toString();
-      //   print('HOHOHOH' + issues.toString());
-      //   print('KOKOKOKO' + lol.toString());
-      // });
     }
     else {
       throw Exception('http.get error: statusCode= ${deleteRequest.statusCode}');

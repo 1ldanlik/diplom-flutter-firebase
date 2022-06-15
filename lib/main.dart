@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_diplom_first/res/custom_colors.dart';
 import 'pages/login_page.dart';
 
 import 'dart:io';
@@ -10,11 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Authentication',
+      title: 'IT park app',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
-        primaryColor: Colors.purple
+        primarySwatch: Colors.grey,
+        primaryColor: CustomColors.customPurple
       ),
       home: LoginPage(),
     );

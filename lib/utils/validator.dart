@@ -32,8 +32,11 @@ class Validator {
     }
     RegExp numberRegExp = RegExp("r'[0-9]");
 
-    if (!numberRegExp.hasMatch(number)) {
-      return 'Можно вводить только цифры';
+    if(number == '') {
+      return 'Поле не должно быть пустым';
+    }
+    else if (!numberRegExp.hasMatch(number)) {
+    return 'Можно вводить только цифры';
     }
 
     return null;

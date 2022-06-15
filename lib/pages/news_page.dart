@@ -115,20 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
           final tPhoto = data.photo!.last;
           final tFile = await teleDart!.telegram.getFile(tPhoto.file_id);
           final tFileLink = tFile.getDownloadLink(telegramApiKey);
-          // Database.addItem(title: data.caption.toString(),
-          //     description: tFileLink.toString(),
-          //     date: Timestamp.fromDate(data.date_),
-          //     type: 'Telegram').then((value) => print(''
-          //     'Message'+ data.caption.toString()));
           uploadFile(data.caption.toString(), tFileLink.toString(), data.date_);
-          print('???????tFileLink' + tFileLink.toString() + '??????????');
           final request = await io.HttpClient().getUrl(Uri.parse(tFileLink!));
-          print('???????request' + request.toString() + '??????????');
           final response = await request.close();
-          print('???????response' + response.toString() + '??????????');
-          setState(() {
-
-          });
         }
       });
   }

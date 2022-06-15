@@ -27,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _focusName = FocusNode();
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
+  User? user;
 
   bool _isProcessing = false;
 
@@ -178,16 +179,22 @@ class _RegisterPageState extends State<RegisterPage> {
                             fillColor: MaterialStateProperty.all(CustomColors.customPurple),
                             value: isChecked,
                             onChanged: (bool? value) {
-                              showDialog(context: context, builder: (context) {
-                                return PolicyDialog(
-                                  mdFileName: 'privacy_policy.md',);
-                              },);
+                              // showDialog(context: context, builder: (context) {
+                              //   return PolicyDialog(
+                              //     mdFileName: 'privacy_policy.md',);
+                              // },);
                               setState(() {
                                 isChecked = value!;
                               });
                             },
                           ),
-                          Text("Пользовательское соглашение", style: TextStyle(fontSize: 16),)
+                          TextButton(onPressed: () {
+                            showDialog(context: context, builder: (context) {
+                              return PolicyDialog(
+                                mdFileName: 'privacy_policy.md',);
+                            },);
+                          }, child: Text("Пользовательское соглашение", style: TextStyle(fontSize: 16, color: CustomColors.customBlack),))
+
                         ],
                       ),
                       SizedBox(height: 32.0),
@@ -203,14 +210,19 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
 
                             if (_registerFormKey.currentState!
-                                .validate() && isChecked == true) {
-                              User? user = await FireAuth
-                                  .registerUsingEmailPassword(
-                                name: _nameTextController.text,
-                                email: _emailTextController.text,
-                                password:
-                                _passwordTextController.text,
-                              );
+                                .validate()) {
+                              if(isChecked == true) {
+                                user = await FireAuth
+                                    .registerUsingEmailPassword(
+                                  name: _nameTextController.text,
+                                  email: _emailTextController.text,
+                                  password:
+                                  _passwordTextController.text,
+                                );
+                              }
+                              else {
+                                TermsOfUseDialog();
+                              }
 
                               // exceptionMethod(_exBool);
 
@@ -296,9 +308,7 @@ class _RegisterPageState extends State<RegisterPage> {
     else return null;
   }
 
-  TermsOfUseDialog(bool exBool) {
-    if(exBool == true)
-    {
+  TermsOfUseDialog() {
       return showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -308,7 +318,7 @@ class _RegisterPageState extends State<RegisterPage> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Пользователь с таким Email уже существует!', style: TextStyle(fontSize: 18),)
+                  Text('Для регистрации необходимо принять пользовательское соглашение!', style: TextStyle(fontSize: 18),)
                 ],
               ),
             ),
@@ -323,8 +333,6 @@ class _RegisterPageState extends State<RegisterPage> {
           );
         },
       );
-    }
-    else return null;
   }
 
 }

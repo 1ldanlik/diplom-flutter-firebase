@@ -246,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Пользователь не найден!', style: TextStyle(fontSize: 18),)
+                  Text('Пользователь с такими данными не найден!', style: TextStyle(fontSize: 18),)
                 ],
               ),
             ),

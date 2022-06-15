@@ -55,7 +55,7 @@ class PolicyDialog extends StatelessWidget {
                   height: 50,
                   width: double.infinity,
                   child: Text(
-                    "CLOSE",
+                    "ЗАКРЫТЬ",
                     style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
