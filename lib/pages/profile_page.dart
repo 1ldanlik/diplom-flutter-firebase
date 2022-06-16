@@ -408,12 +408,4 @@ class _ProfilePageState extends State<ProfilePage> {
     print('eeeeeeeeeeeeeeeeeeeeee');
   }
 
-  methodSub() {
-    setState(() {
-      subDiv = ProfilePage.subdivision;
-    });
-  }
-
-
-
 }
