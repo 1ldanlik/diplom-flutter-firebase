@@ -16,13 +16,10 @@ import 'login_page.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
 import '../utils/database.dart';
-import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   final User? user;
   const ProfilePage({required this.user});
-  static DateTime? dateBirth;
-  static String? subdivision;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -35,9 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late User? _currentUser;
   firebase_storage.Reference? ref;
   final picker = ImagePicker();
-  // Map<String, dynamic> _dateOfBirth = Database.readDateOfBirthday(_currentUser!.uid).data;
-  // String? _dateOfBirth;
-  // List<File> _image = [];
+
   late  File _image;
   late Future<DateTime> time;
   late DateTime? dateTime = null;
@@ -48,17 +43,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    super.initState();
     refreshUser();
     _currentUser = widget.user;
-    main();
     Database.userUid = _currentUser!.uid.toString();
-    Database.readDateOfBirthday(_currentUser!.uid).then((value) =>
-        methodDateBirth()
+    Database.readDateOfBirthday(_currentUser!.uid).then((value) {
+      setState(() {
+        dateTime = value;
+        print('[[[[[[[[[[[[[[[[[[[[[[[' + value.toString());
+      });
+    }
     );
-    Database.readSubdivision(_currentUser!.uid).then((value) =>
-        methodSub()
+    Database.readSubdivision(_currentUser!.uid).then((value) {
+      setState(() {
+        subDiv = value;
+        print('[[[[[[[[[[[[[[[[[[[[[[[' + value.toString());
+      });
+    }
     );
-    super.initState();
   }
 
   @override
@@ -406,38 +408,10 @@ class _ProfilePageState extends State<ProfilePage> {
     print('eeeeeeeeeeeeeeeeeeeeee');
   }
 
-  // timeMethod() async{
-  //     var time2 = await Database.readDateOfBirthday(_currentUser!.uid);
-  //     setState(() {
-  //       dateTime = time2;
-  //     });
-  // }
-  methodDateBirth() {
-    setState(() {
-      dateTime = ProfilePage.dateBirth;
-    });
-  }
-
   methodSub() {
     setState(() {
       subDiv = ProfilePage.subdivision;
     });
-  }
-
-  void main() async {
-    var headers = {
-      'Authorization': 'Basic ZGF3YW5pMjAxNkBtYWlsLnJ1OlhtNkVOOHFId3VSRlh2TFhjbEJVQTBCQg==',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-
-    String body = '{ "expand": "names,schema", "startAt": 0, "maxResults": 50, "total": 1, "issues": [ { "expand": "", "id": "10001", "self": "https://jirasoftwareildan.atlassian.net/rest/api/2/issue/10001", "key": "GEEK-4"} ] }';
-
-    var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
-    var lol = await http.post(url, headers: headers, body: body, encoding: Encoding.getByName("utf-8"));
-    if (lol.statusCode != 201) throw Exception('http.get error: statusCode= ${lol.statusCode}');
-    print(lol.body.toString() + 'GET ISSUES');
-
   }
 
 

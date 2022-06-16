@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:test_diplom_first/pages/profile_page.dart';
+
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection = _firestore.collection('notes');
 
@@ -130,22 +131,15 @@ class Database {
     print('11111111111111111111111111111111111111' + notesItemCollection.snapshots.toString());
     return notesItemCollection.snapshots();
   }
-  // static Stream<DocumentSnapshot> readDateOfBirthday(String? userId) {
-  //   DocumentReference notesItemCollection =
-  //   _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(userId);
-  //
-  //   print('11111111111111111111111111111111111111' + notesItemCollection.snapshots.toString());
-  //   return notesItemCollection.snapshots();
-  // }
+
   static Future<DateTime> readDateOfBirthday(String? userID) async{
     var notesItemCollection =
     _mainCollection.doc(commonId).collection('userDateOfBirthData').doc(userID);
     var lol = await notesItemCollection.get();
     Map<String, dynamic>? data = lol.data();
-    Timestamp kruto = data!['dateOfBirth'];
-    ProfilePage.dateBirth = kruto.toDate();
-    print('11111111111111111111111111111111111111' + kruto.toString());
-    return kruto.toDate();
+    Timestamp timestamp = data!['dateOfBirth'];
+    print('11111111111111111111111111111111111111' + timestamp.toString());
+    return timestamp.toDate();
   }
 
   static Future<String?> readSubdivision(String? userID) async{
@@ -153,10 +147,9 @@ class Database {
     _mainCollection.doc(commonId).collection('userSubdivisionData').doc(userID);
     var lol = await notesItemCollection.get();
     Map<String, dynamic>? data = lol.data();
-    String kruto = data!['subdivision'];
-    ProfilePage.subdivision = kruto.toString();
-    print('11111111111111111111111111111111111111' + kruto.toString());
-    return kruto;
+    String subdivision = data!['subdivision'];
+    print('11111111111111111111111111111111111111' + subdivision.toString());
+    return subdivision;
   }
 
   static Future<void> deleteItem({
