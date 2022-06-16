@@ -78,7 +78,6 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(_currentUser!.photoURL.toString()),
             Row(
               children: [
                 SizedBox(width: 65,),
@@ -93,9 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       )
                     ],
                   ),
-                  child: isProcess == true ?
-                  AdaptiveSpinner() :
-                  ClipRRect(
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: _currentUser!.photoURL != null ? ClipRRect(
                       child: Image.network(
@@ -103,6 +100,20 @@ class _ProfilePageState extends State<ProfilePage> {
                         fit: BoxFit.cover,
                         height: 100,
                         width: 100,
+                        frameBuilder: (context, child, frame, wasSynchronousLoaded) {
+                          return child;
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if(loadingProgress == null) {
+                            return child;
+                          }
+                          else {
+                            return Container(
+                              height: 100,
+                                width: 100,
+                                child: AdaptiveSpinner(withRadius: 30,));
+                          }
+                        },
                       )) : ClipRRect(
                       child: Image.asset("assets/avatar_null.png",
                         fit: BoxFit.cover,

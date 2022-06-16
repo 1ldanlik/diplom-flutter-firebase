@@ -1,3 +1,4 @@
+import 'package:adaptive_spinner/adaptive_spinner.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -99,6 +100,17 @@ class _ItemListState extends State<ItemList> {
                               description,
                               width: 100.0,
                               fit: BoxFit.contain,
+                              frameBuilder: (context, child, frame, wasSynchronousLoaded) {
+                                return child;
+                              },
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if(loadingProgress == null) {
+                                  return child;
+                                }
+                                else {
+                                  return AdaptiveSpinner();
+                                }
+                              },
                             ),
                           ),
                         ),
@@ -122,11 +134,7 @@ class _ItemListState extends State<ItemList> {
         }
 
         return Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.orangeAccent,
-            ),
-          ),
+          child: AdaptiveSpinner()
         );
       },
     );
