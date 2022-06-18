@@ -8,6 +8,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:test_diplom_first/pages/choose_page.dart';
 import 'package:test_diplom_first/pages/redact_profile_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 import '../utils/fire_auth.dart';
@@ -74,7 +75,11 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         backgroundColor: CustomColors.customPurple,
-        leading: BackButton(color: CustomColors.customWhite,),
+        leading: BackButton(onPressed: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+          ChoosePage(user: _currentUser)
+          ));
+        },color: CustomColors.customWhite,),
       ),
       body: Center(
         child: Column(

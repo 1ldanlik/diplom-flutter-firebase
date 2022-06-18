@@ -106,10 +106,12 @@ class _AddIssuePageState extends State<AddIssuePage> {
               child: isProcess ?
               AdaptiveSpinner(withRadius: 30,) :
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   setState(() {
                     isProcess = true;
                   });
+
+
                   if(_summaryTextController.text != null
                       && _descriptionTextController.text != null
                   && (_hours != 0 || _minutes != 0)) {
@@ -130,10 +132,10 @@ class _AddIssuePageState extends State<AddIssuePage> {
                   else {
                     ExDialog();
                   }
-                    setState(() async{
-                      await Future.delayed(Duration(seconds: 3));
-                      isProcess = false;
-                    });
+                  await Future.delayed(Duration(seconds: 3));
+                  setState(() {
+                    isProcess = false;
+                  });
                 },
                 child: Icon(
                   Icons.check,

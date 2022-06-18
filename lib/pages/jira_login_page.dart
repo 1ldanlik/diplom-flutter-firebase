@@ -78,14 +78,12 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          height: 50,
-                          child: TextFormField(
+                          TextFormField(
                             cursorColor: CustomColors.customBlack,
                             style: TextStyle(fontSize: 18),
                             decoration: const InputDecoration(
                               hintText: 'Email',
-                              contentPadding: EdgeInsets.only(left: 20, right: 20),
+                              contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                               enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                   borderRadius: const BorderRadius.all(
@@ -114,16 +112,13 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                             focusNode: _focusEmail,
                             validator: (value) => Validator.validateEmail(email: value),
                           ),
-                        ),
                         SizedBox(height: 18.0),
-                        Container(
-                          height: 50,
-                          child: TextFormField(
+                          TextFormField(
                             cursorColor: CustomColors.customBlack,
                             style: TextStyle(fontSize: 18),
                             decoration: const InputDecoration(
                               hintText: 'Пароль (API Token)',
-                              contentPadding: EdgeInsets.only(left: 20, right: 20),
+                              contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                               enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                   borderRadius: const BorderRadius.all(
@@ -153,7 +148,6 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                             obscureText: true,
                             validator: (value) => Validator.validateJiraPassword(password: value),
                           ),
-                        ),
                       ],
                     ),
                   ),

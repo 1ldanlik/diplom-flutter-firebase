@@ -169,57 +169,68 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           : Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18.0),
-                                      ))),
-                              onPressed: () async {
-                                setState(() {
-                                  _isProcessing = true;
-                                });
+                            child: Container(
+                              width: 400,
+                              height: 50,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(18.0),
+                                        ))),
+                                onPressed: () async {
+                                  setState(() {
+                                    _isProcessing = true;
+                                  });
 
-                                if (_registerFormKey.currentState!
-                                    .validate()) {
-                                  if(_nameTextController.text != null) {
-                                    widget.user!.updateDisplayName(_nameTextController.text);
-                                  }
-                                  if(_emailTextController.text != null) {
-                                    widget.user!.updateEmail(_emailTextController.text);
-                                  }
-                                  if(widget.subdivision == null)
-                                    {
-                                      Database.addUserSubdivision(subdivision: _subdivisionTextController.text);
+                                  if (_registerFormKey.currentState!
+                                      .validate()) {
+                                    if(_nameTextController.text != null) {
+                                      widget.user!.updateDisplayName(_nameTextController.text);
                                     }
-                                  else
-                                    {
-                                      Database.updateUserSubdivision(subdivision: _subdivisionTextController.text, docId: widget.user!.uid).whenComplete(() =>
-                                          print('PRINT USER UID' + widget.user!.uid));
+                                    if(_emailTextController.text != null) {
+                                      widget.user!.updateEmail(_emailTextController.text);
                                     }
+                                    if(widget.subdivision == null)
+                                      {
+                                        Database.addUserSubdivision(subdivision: _subdivisionTextController.text);
+                                      }
+                                    else
+                                      {
+                                        Database.updateUserSubdivision(subdivision: _subdivisionTextController.text, docId: widget.user!.uid).whenComplete(() =>
+                                            print('PRINT USER UID' + widget.user!.uid));
+                                      }
 
 
 
+                                    setState(() {
+                                      _isProcessing = false;
+                                    });
+
+                                    if (widget.user != null) {
+                                      Navigator.of(context)
+                                          .pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfilePage(user: widget.user),
+                                        ),
+                                        ModalRoute.withName('/'),
+                                      );
+                                    }
+                                  }
+
+
+                                  await Future.delayed(Duration(seconds: 3));
                                   setState(() {
                                     _isProcessing = false;
                                   });
 
-                                  if (widget.user != null) {
-                                    Navigator.of(context)
-                                        .pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProfilePage(user: widget.user),
-                                      ),
-                                      ModalRoute.withName('/'),
-                                    );
-                                  }
-                                }
-                              },
-                              child: Text(
-                                'Сохранить',
-                                style: TextStyle(color: Colors.white),
+                                },
+                                child: Text(
+                                  'Сохранить',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                           ),

@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
 import '../utils/database.dart';
 import '../utils/validator.dart';
-import '../widgets/custom_form_field.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
 
@@ -33,7 +31,6 @@ class _AddItemFormState extends State<AddItemForm> {
 
   bool _isProcessing = false;
 
-  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
   @override
@@ -86,7 +83,7 @@ class _AddItemFormState extends State<AddItemForm> {
                 ),
                 SizedBox(height: 24.0),
                 Text(
-                  'Сообщение',
+                  'Описание',
                   style: TextStyle(
                     fontSize: 22.0,
                     letterSpacing: 1,
@@ -112,13 +109,11 @@ class _AddItemFormState extends State<AddItemForm> {
                         ),
                     ),
                     labelStyle: TextStyle(color: Colors.yellow),
-                    hintText: 'Введите ваше сообщение',
+                    hintText: 'Введите описание',
                     errorStyle: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold,
                     ),
-                  // label: 'Сообщение',
-                  // hintText: 'Введите ваше сообщение',
                 )
                 )],
             ),

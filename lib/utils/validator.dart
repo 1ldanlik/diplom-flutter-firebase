@@ -59,7 +59,7 @@ class Validator {
       return null;
     }
     if (subDivis.isEmpty) {
-      return 'Name can\'t be empty';
+      return 'Поле подразделения не должно быть пустым';
     }
 
     return null;
@@ -104,7 +104,7 @@ class Validator {
 
   static String? validateField({required String value}) {
     if (value.isEmpty) {
-      return 'Строка не может быть пустой';
+      return 'Поле ввода описания не должно быть пустым';
     }
 
     return null;
