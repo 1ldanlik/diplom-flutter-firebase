@@ -221,6 +221,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                        SizedBox(width: 10,),
                         new DropdownButtonHideUnderline(
                           child: Container(
                             height: 40,
@@ -241,11 +242,13 @@ class _AddIssuePageState extends State<AddIssuePage> {
                               strCB.map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
-                                  child: Row(
-                                    children: [
-                                      SizedBox(width: 10,),
-                                      Text(value),
-                                    ],
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 10,),
+                                        Text(value),
+                                      ],
+                                    ),
                                   ),
                                 );
                               }).toList(),

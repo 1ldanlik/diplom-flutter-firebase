@@ -76,9 +76,12 @@ class _AddItemFormState extends State<AddItemForm> {
                     ElevatedButton(
                       onPressed: () => chooseImage(),
                       child: Text('Выбрать изображение', style: TextStyle(color: CustomColors.customWhite, fontSize: 16),),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(CustomColors.customPurple)
-                    ),),
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              ))),),
                   ],
                 ),
                 SizedBox(height: 24.0),
