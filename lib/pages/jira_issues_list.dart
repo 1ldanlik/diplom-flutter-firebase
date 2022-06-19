@@ -313,7 +313,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
 
                       return Column(
                         children: [
-                          SizedBox(height: 13,),
+                          SizedBox(height: 6,),
                           Ink(
                             width: 370,
                             child: Container(
@@ -327,14 +327,16 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                   SizedBox(height: 10.0,),
                                   Text(issueList![index].key != null ? 'Ключ: ${issueList![index].key}' : 'Без срока', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                                   SizedBox(height: 10.0,),
-                                  Text(issueList![index].fields.summary.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                                  Text(issueList![index].fields.summary.toString(),textAlign: TextAlign.left, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                                   SizedBox(height: 10.0,),
-                                  Text(issueList![index].fields.description.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                  Text(issueList![index].fields.description.toString(), textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                                   SizedBox(height: 10.0,),
                                   Row(
                                     children: [
                                       Container(
                                         child: ElevatedButton(onPressed: () {
+                                          _hourTextController.text = '';
+                                          _minuteTextController.text = '';
                                           showDialog<dynamic>(
                                             context: context,
                                             builder: (BuildContext context) => Container(
@@ -358,23 +360,24 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                                           const SizedBox(height: 10,),
                                                           Container(
                                                             child: TextFormField(
+                                                                keyboardType: TextInputType.number,
                                                               style: TextStyle(fontSize: 18),
                                                               decoration: const InputDecoration(
                                                                   contentPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 15),
                                                                   enabledBorder:  OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                                                       borderRadius: BorderRadius.all(
                                                                          Radius.circular(30.0),
                                                                       )
                                                                   ),
                                                                   border: OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                                                       borderRadius: BorderRadius.all(
                                                                          Radius.circular(30.0),
                                                                       )
                                                                   ),
                                                                   focusedBorder:  OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                                                       borderRadius:  BorderRadius.all(
                                                                          Radius.circular(30.0),
                                                                       )
@@ -390,23 +393,24 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                                           const SizedBox(height: 10,),
                                                           Container(
                                                             child: TextFormField(
+                                                              keyboardType: TextInputType.number,
                                                               style: TextStyle(fontSize: 18),
                                                               decoration: const InputDecoration(
                                                                   contentPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 15),
                                                                   enabledBorder:  OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 2.0),
                                                                       borderRadius: BorderRadius.all(
                                                                          Radius.circular(30.0),
                                                                       )
                                                                   ),
                                                                   border: OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                                                       borderRadius: BorderRadius.all(
                                                                          Radius.circular(30.0),
                                                                       )
                                                                   ),
                                                                   focusedBorder:  OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Colors.blue, width: 5.0),
+                                                                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
                                                                       borderRadius:  BorderRadius.all(
                                                                          Radius.circular(30.0),
                                                                       )
@@ -451,7 +455,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                                                           }
                                                         },
                                                         child: Text('Добавить',
-                                                          style: TextStyle(fontSize: 24, color: CustomColors.customPurple),),
+                                                          style: TextStyle(fontSize: 18, color: CustomColors.customPurple),),
                                                       ),
                                                     ],
                                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -506,6 +510,7 @@ class _JiraIssuesListState extends State<JiraIssuesList> {
                               ),
                             ),
                           ),
+                          SizedBox(height: 7,),
                         ],
                       );
                     },

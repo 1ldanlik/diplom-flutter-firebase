@@ -60,7 +60,7 @@ class _AddItemFormState extends State<AddItemForm> {
                 SizedBox(height: 8.0),
                 Row(
                   children: [
-                    SizedBox(width: 30,),
+                    SizedBox(width: 10,),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: ClipRRect(

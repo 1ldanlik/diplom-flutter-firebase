@@ -30,7 +30,7 @@ class Validator {
     if (number == null) {
       return null;
     }
-    RegExp numberRegExp = RegExp("r'[0-9]");
+    RegExp numberRegExp = RegExp(r'[0-9]');
 
     if(number == '') {
       return 'Поле не должно быть пустым';

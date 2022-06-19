@@ -152,147 +152,6 @@ class _AddIssuePageState extends State<AddIssuePage> {
           child: Column(
             children: [
               SizedBox(height: 10,),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                      new DropdownButtonHideUnderline(
-                        child: Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: CustomColors.customWhite,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                  offset: Offset(0, 3),
-                                  blurRadius: 3,
-                                  color: Colors.grey
-                              ),
-                            ],
-                          ),
-                          child: DropdownButton(
-                            value: projectValue,
-                              items:
-                              strCB.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Row(
-                                    children: [
-                                      SizedBox(width: 10,),
-                                      Text(value),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() async {
-                                  projectValue = await newValue!;
-                                  refreshIssueTypes();
-                                });
-                              },),
-                        ),
-                      ),
-                    ],
-                  ),
-              SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                      SizedBox(width: 10,),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: CustomColors.customWhite,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                                offset: Offset(0, 3),
-                                blurRadius: 3,
-                                color: Colors.grey
-                            ),
-                          ],
-                        ),
-                        child: ButtonTheme(
-                          child: new DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              value: typeIssueValue,
-                              items: typeList.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child:
-                                  Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      child: Text(value)),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  typeIssueValue = newValue!;
-                                });
-                              },),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-              //   ],
-              // ),
-              SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Приоритет:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                  SizedBox(width: 10,),
-                  DropdownButtonHideUnderline(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: CustomColors.customWhite,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0, 3),
-                              blurRadius: 3,
-                              color: Colors.grey
-                          ),
-                        ],
-                      ),
-                      child: ButtonTheme(
-                        child: DropdownButton<String>(
-                          value: priorityValue,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              priorityValue = newValue!;
-                            });
-
-                            print(priorityValue);
-                          },
-                          items: priorityMap.map((Map map) {
-                            return new DropdownMenuItem<String>(
-                              value: map["name"].toString(),
-                              child: Row(
-                                children: <Widget>[
-                                  SvgPicture.asset(map['image'],width: 30,
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      child: Text(map["name"])),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // ),
-                ]
-              ),
-              SizedBox(height: 10,),
               Container(
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Column(
@@ -358,6 +217,141 @@ class _AddIssuePageState extends State<AddIssuePage> {
                         focusNode: _focusDescription,
                         validator: (value) => Validator.validateSummary(summary: value),
                       ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Проект:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                        new DropdownButtonHideUnderline(
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: CustomColors.customWhite,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                    offset: Offset(0, 3),
+                                    blurRadius: 3,
+                                    color: Colors.grey
+                                ),
+                              ],
+                            ),
+                            child: DropdownButton(
+                              value: projectValue,
+                              items:
+                              strCB.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: 10,),
+                                      Text(value),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() async {
+                                  projectValue = await newValue!;
+                                  refreshIssueTypes();
+                                });
+                              },),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Тип задачи:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                        SizedBox(width: 10,),
+                        Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: CustomColors.customWhite,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(0, 3),
+                                  blurRadius: 3,
+                                  color: Colors.grey
+                              ),
+                            ],
+                          ),
+                          child: ButtonTheme(
+                            child: new DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: typeIssueValue,
+                                items: typeList.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child:
+                                    Container(
+                                        margin: EdgeInsets.only(left: 10),
+                                        child: Text(value)),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    typeIssueValue = newValue!;
+                                  });
+                                },),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Приоритет:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                          SizedBox(width: 10,),
+                          DropdownButtonHideUnderline(
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: CustomColors.customWhite,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 3,
+                                      color: Colors.grey
+                                  ),
+                                ],
+                              ),
+                              child: ButtonTheme(
+                                child: DropdownButton<String>(
+                                  value: priorityValue,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      priorityValue = newValue!;
+                                    });
+
+                                    print(priorityValue);
+                                  },
+                                  items: priorityMap.map((Map map) {
+                                    return new DropdownMenuItem<String>(
+                                      value: map["name"].toString(),
+                                      child: Row(
+                                        children: <Widget>[
+                                          SvgPicture.asset(map['image'],width: 30,
+                                          ),
+                                          Container(
+                                              margin: EdgeInsets.only(left: 10),
+                                              child: Text(map["name"])),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                    ),
+                    SizedBox(height: 10,),
                   ],
                 ),
               ),
