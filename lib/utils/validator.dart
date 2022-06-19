@@ -3,8 +3,13 @@ class Validator {
     if (name == null) {
       return null;
     }
+    RegExp numberRegExp = RegExp(r'[0-9]');
+
     if (name.isEmpty) {
-      return 'Name can\'t be empty';
+      return 'Поле ФИО не может быть пустым';
+    }
+    else if (numberRegExp.hasMatch(name)) {
+      return 'ФИО не должно содержать цифры';
     }
 
     return null;
