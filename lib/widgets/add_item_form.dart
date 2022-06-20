@@ -147,7 +147,7 @@ class _AddItemFormState extends State<AddItemForm> {
                 widget.titleFocusNode.unfocus();
                 widget.descriptionFocusNode.unfocus();
 
-                if (_addItemFormKey.currentState!.validate()) {
+                if (_addItemFormKey.currentState!.validate() && _choosedImageStr != 'null') {
                   setState(() {
                     _isProcessing = true;
                   });
@@ -160,7 +160,33 @@ class _AddItemFormState extends State<AddItemForm> {
 
                   Navigator.of(context).pop();
                 }
-              },
+                else {
+                      return showDialog<void>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  Text('Выберите изображение и введите описание!', style: TextStyle(fontSize: 18),)
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Ок', style: TextStyle(color: CustomColors.customPurple),),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                },
               child: Padding(
                 padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
                 child: Text(

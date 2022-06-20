@@ -32,8 +32,6 @@ class _AddNewsPageState extends State<AddNewsPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // Image.asset("assets/jira_icon.png", width: 20, color: Colors.white,),
-              // SizedBox(width: 20,),
               Text('Добавление новости',
                 style: TextStyle(fontSize: 24, color: Colors.white),),
             ],

@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? subDiv = null;
   double valueIndicator = 0;
   bool isProcess = false;
-
+  bool isAuthInJira = false;
 
   @override
   void initState() {
@@ -51,17 +51,24 @@ class _ProfilePageState extends State<ProfilePage> {
     Database.readDateOfBirthday(_currentUser!.uid).then((value) {
       setState(() {
         dateTime = value;
-        print('[[[[[[[[[[[[[[[[[[[[[[[' + value.toString());
       });
     }
     );
     Database.readSubdivision(_currentUser!.uid).then((value) {
       setState(() {
         subDiv = value;
-        print('[[[[[[[[[[[[[[[[[[[[[[[' + value.toString());
       });
     }
     );
+    checkOnAuthInJira();
+  }
+
+  checkOnAuthInJira() {
+    Database.readJiraAuthData(FireAuth.user!.uid).then((value) {
+      setState(() {
+        isAuthInJira = value;
+      });
+    });
   }
 
   @override
@@ -296,7 +303,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20,),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -336,6 +342,22 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             SizedBox(height: 10,),
+            isAuthInJira == true ? SizedBox(
+              width: 150,
+              child: ElevatedButton(
+                  onPressed: () {
+                    Database.deleteJiraAuthData(docId: FireAuth.user!.uid).whenComplete(() =>
+                        checkOnAuthInJira());
+                  },
+                  child: Text('Выйти из Jira', style: TextStyle(color:  CustomColors.customWhite, fontSize: 16),),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(CustomColors.customGrey),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ))),
+              ),
+            ) : SizedBox(height: 10,),
             SizedBox(
               width: 150,
               child: ElevatedButton(

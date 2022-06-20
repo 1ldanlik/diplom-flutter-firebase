@@ -161,14 +161,13 @@ class _JiraLoginPageState extends State<JiraLoginPage> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              // User? user = await FireAuth.signInUsingEmailPassword(
-                              //   email: _emailTextController.text,
-                              //   password: _passwordTextController.text,
-                              // );
-                              JiraAuth.BasicAuthJira(_emailTextController.text,
+                              JiraAuth.basicAuthJira(_emailTextController.text,
                                   _passwordTextController.text).whenComplete(() => {
                               if (JiraAuth.statusCode == 200 ||
-                              JiraAuth.statusCode == 201) {
+                              JiraAuth.statusCode == 201 ||
+                              JiraAuth.statusCode == 204) {
+                                Database.addLoginJiraData(login: _emailTextController.text,
+                                    password: _passwordTextController.text),
                                   Navigator.of(context)
                                   .pushReplacement(
                                 MaterialPageRoute(

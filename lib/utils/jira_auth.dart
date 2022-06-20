@@ -10,7 +10,7 @@ class JiraAuth {
   static int? statusCode;
   static var headers;
 
-  static Future BasicAuthJira(String login, String password) async {
+  static Future basicAuthJira(String login, String password) async {
     String credentials = "${login}:${password}";
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String encoded = stringToBase64.encode(credentials);
@@ -28,17 +28,3 @@ class JiraAuth {
       throw Exception('http.get Auth error: statusCode= ${response.statusCode}');
   }
 }
-
-
-//     String body = '{ "fields": { "project": { "key": "GEEK" }, "summary": "REST ye merry gentlemen.", "description": "Creating of an issue using project keys and issue type names using the REST API", "issuetype": { "id": "10001" } } }';
-//
-//     var url = Uri.parse(
-//         'https://jirasoftwareildan.atlassian.net/rest/api/2/issue/');
-//     var lol = await http.post(url, headers: headers,
-//         body: body,
-//         encoding: Encoding.getByName("utf-8"));
-//     if (lol.statusCode != 201) throw Exception(
-//         'http.get error: statusCode= ${lol.statusCode}');
-//     print(lol.body.toString() + 'lllllllllll');
-//   }
-// }

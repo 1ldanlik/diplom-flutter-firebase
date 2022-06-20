@@ -157,17 +157,17 @@ class _LoginPageState extends State<LoginPage> {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  User? user = await FireAuth.signInUsingEmailPassword(
+                                   FireAuth.user = await FireAuth.signInUsingEmailPassword(
                                     email: _emailTextController.text,
                                     password: _passwordTextController.text,
                                   );
 
 
-                                  if (user != null) {
+                                  if (FireAuth.user != null) {
                                     Database.commonId = 'main';
                                     Navigator.of(context)
                                         .pushReplacement(
-                                      MaterialPageRoute(builder: (context) => ChoosePage(user: user)),
+                                      MaterialPageRoute(builder: (context) => ChoosePage(user: FireAuth.user)),
                                     );
                                   }
                                   else
@@ -235,11 +235,9 @@ class _LoginPageState extends State<LoginPage> {
   exceptionMethod(bool userBool, bool passBool) {
     if(userBool == true || passBool == true)
     {
-      // _noUser = false;
-      // _wrongPassword = false;
       return showDialog<void>(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Ошибка', style: TextStyle(fontSize: 18),),
@@ -252,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Ок'),
+                child:  Text('Ок', style: TextStyle(color: CustomColors.customPurple),),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

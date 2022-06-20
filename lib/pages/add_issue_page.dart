@@ -419,24 +419,13 @@ class _AddIssuePageState extends State<AddIssuePage> {
   }
 
   Future getProjects() async {
-    String credentials = "dawani2016@mail.ru:Xm6EN8qHwuRFXvLXclBUA0BB";
-    Codec<String, String> stringToBase64 = utf8.fuse(base64);
-    String encoded = stringToBase64.encode(credentials);
-    print('ENCODED' + encoded.toString());
-
-    var headers = {
-      'Authorization': 'Basic $encoded',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
 
     var getUrl = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/api/3/project/search');
 
-    var getRequest = await http.get(getUrl, headers: headers);
+    var getRequest = await http.get(getUrl, headers: JiraAuth.headers);
 
     if (getRequest.statusCode == 200 || getRequest.statusCode == 201 || getRequest.statusCode == 204) {
       var json1 = getRequest.body;
-      print('LLLLLLLLLL' + getProjectsFromJson(json1).toString());
       return getProjectsFromJson(json1).values;
     }
     else {
@@ -463,11 +452,6 @@ class _AddIssuePageState extends State<AddIssuePage> {
         'http.get error: statusCode= ${lol.statusCode}');
     print(lol.body.toString() + 'CreateIssue');
     var _json = await getCreatedIssueFromJson(lol.body);
-
-    // var url = Uri.parse('https://jirasoftwareildan.atlassian.net/rest/auth/1/session/');
-    // var res = await http.get(url, headers: headers);
-    // if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
-    // print(res.body.toString() + '999999999999999999');
     await createWorkLog(hour, minute, _json.key);
   }
 

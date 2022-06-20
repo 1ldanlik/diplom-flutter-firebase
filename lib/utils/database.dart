@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:test_diplom_first/pages/profile_page.dart';
+import 'package:test_diplom_first/utils/jira_auth.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection = _firestore.collection('notes');
@@ -22,6 +23,25 @@ class Database {
       "description": description,
       "date": date,
       "type": type,
+    };
+
+    await documentReferencer
+        .set(data)
+        .whenComplete(() => print("Note item added to the database"))
+        .catchError((e) => print(e));
+    // data.clear();
+  }
+
+  static Future<void> addLoginJiraData({
+    required String login,
+    required String password,
+  }) async {
+    DocumentReference documentReferencer =
+    _mainCollection.doc(commonId).collection('jiraAuthData').doc(userUid);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "login": login,
+      "password": password,
     };
 
     await documentReferencer
@@ -126,9 +146,8 @@ class Database {
 
   static Stream<QuerySnapshot> readItems() {
     Query notesItemCollection =
-    _mainCollection.doc(commonId).collection('items').orderBy("date");
+    _mainCollection.doc(commonId).collection('items').orderBy("date", descending: true);
 
-    print('11111111111111111111111111111111111111' + notesItemCollection.snapshots.toString());
     return notesItemCollection.snapshots();
   }
 
@@ -138,8 +157,20 @@ class Database {
     var lol = await notesItemCollection.get();
     Map<String, dynamic>? data = lol.data();
     Timestamp timestamp = data!['dateOfBirth'];
-    print('11111111111111111111111111111111111111' + timestamp.toString());
+
     return timestamp.toDate();
+  }
+
+  static Future<bool> readJiraAuthData(String? userID) async{
+    var notesItemCollection =
+    _mainCollection.doc(commonId).collection('jiraAuthData').doc(userID);
+    var document = await notesItemCollection.get();
+    Map<String, dynamic>? data = document.data();
+    if(data != null) {
+      JiraAuth.basicAuthJira(data!['login'], data!['password']);
+      return true;
+    }
+    return false;
   }
 
   static Future<String?> readSubdivision(String? userID) async{
@@ -148,7 +179,7 @@ class Database {
     var lol = await notesItemCollection.get();
     Map<String, dynamic>? data = lol.data();
     String subdivision = data!['subdivision'];
-    print('11111111111111111111111111111111111111' + subdivision.toString());
+
     return subdivision;
   }
 
@@ -157,6 +188,18 @@ class Database {
   }) async {
     DocumentReference documentReferencer =
     _mainCollection.doc(commonId).collection('items').doc(docId);
+
+    await documentReferencer
+        .delete()
+        .whenComplete(() => print('Note item deleted from the database'))
+        .catchError((e) => print(e));
+  }
+
+  static Future<void> deleteJiraAuthData({
+    required String docId,
+  }) async {
+    DocumentReference documentReferencer =
+    _mainCollection.doc(commonId).collection('jiraAuthData').doc(docId);
 
     await documentReferencer
         .delete()

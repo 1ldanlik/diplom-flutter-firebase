@@ -4,6 +4,8 @@ import 'package:test_diplom_first/pages/jira_issues_list.dart';
 import 'package:test_diplom_first/pages/jira_login_page.dart';
 import 'package:test_diplom_first/pages/profile_page.dart';
 import 'package:test_diplom_first/res/custom_colors.dart';
+import 'package:test_diplom_first/utils/database.dart';
+import 'package:test_diplom_first/utils/fire_auth.dart';
 
 import 'login_page.dart';
 import 'news_page.dart';
@@ -62,10 +64,21 @@ class _ChoosePageState extends State<ChoosePage> {
               SizedBox(
                 width: 240,
                 height: 80,
-                child: ElevatedButton.icon(onPressed: () { Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) =>
-                  JiraLoginPage(),
-                ));},style: ButtonStyle(
+                child: ElevatedButton.icon(onPressed: () async {
+                  bool isAuth = await Database.readJiraAuthData(FireAuth.user!.uid);
+                  if(isAuth) {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) =>
+                            JiraIssuesList()
+                        ));
+                  }
+                  else {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) =>
+                            JiraLoginPage(),
+                        ));
+                  }
+                  },style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(CustomColors.customPurple),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(

@@ -6,6 +6,8 @@ import 'package:test_diplom_first/pages/login_page.dart';
 import '../pages/register_page.dart';
 
 class FireAuth {
+  static User? user;
+
   static Future<User?> registerUsingEmailPassword({
     required String name,
     required String email,
