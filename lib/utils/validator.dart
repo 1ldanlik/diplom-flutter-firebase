@@ -4,12 +4,16 @@ class Validator {
       return null;
     }
     RegExp numberRegExp = RegExp(r'[0-9]');
+    RegExp fullNameRegExp = RegExp(r"^\s*([A-Za-zА-Яа-я]{1,}([\.,] |[-']| ))+[A-Za-zА-Яа-я]+\.?\s*$");
 
     if (name.isEmpty) {
       return 'Поле ФИО не может быть пустым';
     }
     else if (numberRegExp.hasMatch(name)) {
       return 'ФИО не должно содержать цифры';
+    }
+    else if (!fullNameRegExp.hasMatch(name)) {
+      return 'ФИО должно иметь формат "Иванов Иван" или "Иванов Иван Иванович"';
     }
 
     return null;

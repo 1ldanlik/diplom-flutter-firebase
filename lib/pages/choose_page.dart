@@ -58,7 +58,9 @@ class _ChoosePageState extends State<ChoosePage> {
                         )
                     )
                 ), icon:
-          Icon(Icons.newspaper_rounded, size: 40, color: Colors.white,), label: Text('Новости', style: TextStyle(fontSize: 36, fontWeight: FontWeight.w500, color: CustomColors.customWhite),
+          Icon(Icons.newspaper_rounded, size: 40, color: Colors.white,),
+                    label: Text('Новости',
+                      style: TextStyle(fontSize: 36, fontWeight: FontWeight.w500, color: CustomColors.customWhite),
               ))),
               SizedBox(height: 20,),
               SizedBox(
