@@ -1,4 +1,4 @@
-# test_diplom_first
+# Diplom app on Flutter dart/firebase
 
 A new Flutter project.
 
